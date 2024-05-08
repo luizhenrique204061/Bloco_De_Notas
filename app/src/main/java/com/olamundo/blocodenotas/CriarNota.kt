@@ -19,11 +19,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CriarNota : AppCompatActivity() {
-    val notaId: Long = 0
+    var notaId: Long = 0
     val hora = System.currentTimeMillis()
     private lateinit var bancoDeDados: NotaDao
     val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var binding: ActivityCriarNotaBinding
+    private lateinit var titulo: String
+    private lateinit var descricao: String
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityCriarNotaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -31,6 +33,18 @@ class CriarNota : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         bancoDeDados = AppDataBase.getInstance(this).NotaDao()
+
+        val id = intent.getLongExtra("id", 0L)
+        val recuperarTitulo = intent.getStringExtra("titulo")
+        val recuperarDescricao = intent.getStringExtra("descricao")
+        val recuperarHora = intent.getLongExtra("data", hora)
+
+        if (id != null && recuperarTitulo != null && recuperarDescricao != null) {
+            notaId = id
+            titulo = binding.titulo.setText(recuperarTitulo).toString()
+            descricao = binding.descricao.setText(recuperarDescricao).toString()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -64,8 +78,8 @@ class CriarNota : AppCompatActivity() {
     }
 
     private suspend fun salvar() {
-        var titulo = binding.titulo.text.toString()
-        var descricao = binding.descricao.text.toString()
+        titulo = binding.titulo.text.toString()
+        descricao = binding.descricao.text.toString()
 
         if (titulo.isEmpty() && descricao.isEmpty()) {
             withContext(Dispatchers.Main) {
@@ -85,6 +99,7 @@ class CriarNota : AppCompatActivity() {
             )
             scope.launch {
                 withContext(Dispatchers.Main) {
+                    Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
                     Intent(this@CriarNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
@@ -99,6 +114,21 @@ class CriarNota : AppCompatActivity() {
             )
             scope.launch {
                 withContext(Dispatchers.Main) {
+                    Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                    Intent(this@CriarNota, MainActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
+            }
+        } else {
+            criarNota(notaId, titulo, descricao, hora)
+            Log.d(
+                "CriarNota",
+                "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
+            )
+            scope.launch {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
                     Intent(this@CriarNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
@@ -108,8 +138,8 @@ class CriarNota : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        var titulo = binding.titulo.text.toString()
-        var descricao = binding.descricao.text.toString()
+        titulo = binding.titulo.text.toString()
+        descricao = binding.descricao.text.toString()
 
         when {
             titulo.isEmpty() && descricao.isEmpty() -> {
@@ -155,7 +185,7 @@ class CriarNota : AppCompatActivity() {
             else -> {
                 scope.launch {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                         Intent(this@CriarNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }

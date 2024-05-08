@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "203030070680",
+    "project_id": "bloco-de-notas-5fe2e",
+    "storage_bucket": "bloco-de-notas-5fe2e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203030070680:android:6e1a43bd7737f8afdd17ed",
+        "android_client_info": {
+          "package_name": "com.olamundo.blocodenotas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIRjN8LmD3Ak79hPRDc4uYevNVtnv1BGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

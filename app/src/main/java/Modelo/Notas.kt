@@ -9,5 +9,6 @@ class Notas(
     val id: Long = 0,
     val titulo: String,
     val descricao: String,
-    val data: Long
+    val data: Long,
+    var isChecked: Boolean = false
 )

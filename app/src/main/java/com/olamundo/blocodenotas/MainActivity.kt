@@ -2,6 +2,7 @@ package com.olamundo.blocodenotas
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -39,6 +40,13 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
+    fun toggleToolbarVisibility(visibilidade: Boolean) {
+        if (visibilidade) {
+            supportActionBar?.show()
+        } else {
+            supportActionBar?.hide()
+        }
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

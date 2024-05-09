@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/nav_tela_principal"
-        android:name="com.olamundo.blocodenotas.ui.home.HomeFragment"
+        android:name="com.olamundo.blocodenotas.ui.home.FragmentoTelaPrincipal"
         android:label="@string/menu_tela_principal"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragmento_tela_principal" />
 
     <fragment
         android:id="@+id/nav_gallery"

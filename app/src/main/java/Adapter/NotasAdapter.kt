@@ -21,12 +21,19 @@ class ListaNotasAdapter(
     val listener: OnItemSelectedListener
 ) : RecyclerView.Adapter<ListaNotasAdapter.ViewHolder>() {
 
+    private var longClick = false
+
+    fun isLongClick(): Boolean {
+        return longClick
+    }
+
     inner class ViewHolder(private val binding: NotasItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
             // Configurar o clique longo para ativar o modo de seleção
             binding.root.setOnLongClickListener {
+                longClick = true // Define que houve um clique longo
                 toggleSelectionMode(adapterPosition)
                 true
             }
@@ -35,9 +42,6 @@ class ListaNotasAdapter(
             binding.checkbox.setOnClickListener {
                 toggleItemSelection(adapterPosition)
             }
-
-            // Inicialmente, o checkbox está invisível
-            binding.checkbox.visibility = View.GONE
         }
 
         fun vincula(notas: Notas, position: Int) {
@@ -53,16 +57,6 @@ class ListaNotasAdapter(
             val dataHoraFormatada = formatoDataHora.format(Date(notas.data))
             data.text = context.getString(R.string.edicao_em, dataHoraFormatada)
 
-            // Configurar o clique do item
-            binding.root.setOnClickListener {
-                if (selecaoAtiva) {
-                    toggleItemSelection(adapterPosition) // Se o modo de seleção estiver ativado, alternar seleção
-                } else {
-                    // Se não estiver em modo de seleção, lidar com o clique normal
-                    onItemClicked(notas)
-                }
-            }
-
             // Definindo visibilidade do Checkbox baseado no modo de seleção
             if (selecaoAtiva) {
                 binding.checkbox.visibility = View.VISIBLE
@@ -71,6 +65,16 @@ class ListaNotasAdapter(
             } else {
                 // Exibir checkbox sem marcação
                 binding.checkbox.visibility = View.GONE
+            }
+
+            // Configurar o clique do item
+            binding.root.setOnClickListener {
+                if (selecaoAtiva) {
+                    toggleItemSelection(adapterPosition) // Se o modo de seleção estiver ativado, alternar seleção
+                } else {
+                    // Se não estiver em modo de seleção, lidar com o clique normal
+                    onItemClicked(notas)
+                }
             }
         }
 
@@ -91,18 +95,21 @@ class ListaNotasAdapter(
             listaNotas.forEach { it.isChecked = false }
             // Marcar o item clicado longamente
             listaNotas[position].isChecked = true
+            listener.onItemLongClicked()
             notifyDataSetChanged()
         }
 
         private fun onItemClicked(notas: Notas) {
-            Log.i("Clicando", "Clique")
-            val intent = Intent(context, CriarNota::class.java).apply {
-                putExtra("id", notas.id)
-                putExtra("titulo", notas.titulo)
-                putExtra("descricao", notas.descricao)
-                putExtra("data", notas.data)
+            if (!selecaoAtiva) {
+                Log.i("Clicando", "Clique")
+                val intent = Intent(context, CriarNota::class.java).apply {
+                    putExtra("id", notas.id)
+                    putExtra("titulo", notas.titulo)
+                    putExtra("descricao", notas.descricao)
+                    putExtra("data", notas.data)
+                }
+                context.startActivity(intent)
             }
-            context.startActivity(intent)
         }
     }
 
@@ -137,5 +144,6 @@ class ListaNotasAdapter(
     // Interface para comunicação de eventos de seleção
     interface OnItemSelectedListener {
         fun onItemSelected(selectedItemCount: Int)
+        fun onItemLongClicked()
     }
 }

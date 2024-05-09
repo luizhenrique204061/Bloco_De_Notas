@@ -14,23 +14,25 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.olamundo.blocodenotas.CriarNota
-import com.olamundo.blocodenotas.databinding.FragmentHomeBinding
+import com.olamundo.blocodenotas.MainActivity
+import com.olamundo.blocodenotas.databinding.FragmentoTelaPrincipalBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeFragment : Fragment() {
+class FragmentoTelaPrincipal : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentoTelaPrincipalBinding? = null
     private lateinit var bancoDeDados: NotaDao
     private val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var adapter: ListaNotasAdapter
     private val listaNotas: MutableList<Notas> = mutableListOf()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private lateinit var mainActivity: MainActivity
 
-    // This property is only valid between oAnCreateView and onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -38,8 +40,9 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentoTelaPrincipalBinding.inflate(inflater, container, false)
         floatingActionButton = binding.fabPrincipal
+        mainActivity = requireActivity() as MainActivity
         return binding.root
     }
 
@@ -50,7 +53,15 @@ class HomeFragment : Fragment() {
 
         adapter = ListaNotasAdapter(requireContext(), listaNotas, object : ListaNotasAdapter.OnItemSelectedListener {
             override fun onItemSelected(selectedItemCount: Int) {
-                Log.i("CliqueLongo", "Dando Clique Longo")
+                // Verifica se foi um clique longo e oculta a toolbar
+                if (selectedItemCount == 0) {
+                    mainActivity.toggleToolbarVisibility(!adapter.isLongClick()) // Mostra a toolbar se não for um clique longo
+                }
+            }
+
+            override fun onItemLongClicked() {
+                // Oculta a toolbar ao iniciar o clique longo
+                mainActivity.toggleToolbarVisibility(false)
             }
         })
         recyclerView.adapter = adapter
@@ -67,6 +78,8 @@ class HomeFragment : Fragment() {
             override fun handleOnBackPressed() {
                 if (adapter.isSelecaoAtiva()) {
                     adapter.desativarModoSelecao()
+                    // Mostra a toolbar ao pressionar o botão de voltar
+                    mainActivity.toggleToolbarVisibility(true)
                 } else {
                     isEnabled = false
                     requireActivity().onBackPressed()

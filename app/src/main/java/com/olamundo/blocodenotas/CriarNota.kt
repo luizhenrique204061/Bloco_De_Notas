@@ -37,6 +37,7 @@ class CriarNota : AppCompatActivity() {
         val id = intent.getLongExtra("id", 0L)
         val recuperarTitulo = intent.getStringExtra("titulo")
         val recuperarDescricao = intent.getStringExtra("descricao")
+        val recuperarHora = intent.getLongExtra("data", hora)
 
         if (id != null && recuperarTitulo != null && recuperarDescricao != null) {
             notaId = id

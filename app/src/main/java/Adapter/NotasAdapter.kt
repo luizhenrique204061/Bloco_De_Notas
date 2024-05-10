@@ -44,6 +44,7 @@ class ListaNotasAdapter(
             }
         }
 
+
         fun vincula(notas: Notas, position: Int) {
             val titulo = binding.titulo
             titulo.text = notas.titulo
@@ -83,19 +84,23 @@ class ListaNotasAdapter(
                 // Trocar o estado de marcação do item clicado
                 listaNotas[position].isChecked = !listaNotas[position].isChecked
                 // Notificar o listener sobre a mudança no número de itens selecionados
-                listener.onItemSelected(listaNotas.count { it.isChecked })
+                val selectedCount = listaNotas.count { it.isChecked }
+                listener.onItemSelected(selectedCount)
+                listener.updateSelectedItemCount(selectedCount)
                 // Atualizar a exibição do item clicado
                 notifyItemChanged(position)
             }
         }
 
+
         private fun toggleSelectionMode(position: Int) {
             selecaoAtiva = true
-            // Desmarcar todos os itens antes de marcar o selecionado
-            listaNotas.forEach { it.isChecked = false }
             // Marcar o item clicado longamente
             listaNotas[position].isChecked = true
             listener.onItemLongClicked()
+            // Notificar o listener sobre a mudança no número de itens selecionados
+            listener.onItemSelected(1) // Inicia a contagem com o item atual
+            listener.updateSelectedItemCount(1) // Inicia a contagem com o item atual
             notifyDataSetChanged()
         }
 
@@ -145,5 +150,6 @@ class ListaNotasAdapter(
     interface OnItemSelectedListener {
         fun onItemSelected(selectedItemCount: Int)
         fun onItemLongClicked()
+        fun updateSelectedItemCount(selectedItemCount: Int) // Novo método para contar itens selecionados
     }
 }

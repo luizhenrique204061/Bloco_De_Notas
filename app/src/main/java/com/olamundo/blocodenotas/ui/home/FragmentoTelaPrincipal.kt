@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.olamundo.blocodenotas.CriarNota
 import com.olamundo.blocodenotas.MainActivity
+import com.olamundo.blocodenotas.R
 import com.olamundo.blocodenotas.databinding.FragmentoTelaPrincipalBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +51,7 @@ class FragmentoTelaPrincipal : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.recyclerview
+        mainActivity.setSupportActionBar(binding.toolbar)
 
         adapter = ListaNotasAdapter(requireContext(), listaNotas, object : ListaNotasAdapter.OnItemSelectedListener {
             override fun onItemSelected(selectedItemCount: Int) {
@@ -62,6 +64,12 @@ class FragmentoTelaPrincipal : Fragment() {
             override fun onItemLongClicked() {
                 // Oculta a toolbar ao iniciar o clique longo
                 mainActivity.toggleToolbarVisibility(false)
+                binding.toolbar.visibility = View.VISIBLE
+            }
+
+            override fun updateSelectedItemCount(selectedItemCount: Int) {
+                Log.i("Contando", "$selectedItemCount")
+                binding.toolbar.title = getString(R.string.itens_selecionados, selectedItemCount.toString())
             }
         })
         recyclerView.adapter = adapter
@@ -80,6 +88,7 @@ class FragmentoTelaPrincipal : Fragment() {
                     adapter.desativarModoSelecao()
                     // Mostra a toolbar ao pressionar o botão de voltar
                     mainActivity.toggleToolbarVisibility(true)
+                    binding.toolbar.visibility = View.GONE
                 } else {
                     isEnabled = false
                     requireActivity().onBackPressed()

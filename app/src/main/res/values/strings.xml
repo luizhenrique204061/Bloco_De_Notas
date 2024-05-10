@@ -13,6 +13,7 @@
     <string name="nenhum_texto_digitado">Nenhum texto digitado</string>
     <string name="anotacao_salva_com_sucesso">Anotação salva com sucesso</string>
     <string name="sem_anotacoes">Você não tem anotações</string>
+    <string name="itens_selecionados">Itens selecionados: %s</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

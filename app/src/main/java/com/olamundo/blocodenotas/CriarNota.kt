@@ -65,7 +65,9 @@ class CriarNota : AppCompatActivity() {
             }
 
             R.id.menu_remover -> {
-
+                scope.launch {
+                    deletar()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -136,6 +138,11 @@ class CriarNota : AppCompatActivity() {
         }
     }
 
+    private suspend fun deletar() {
+        bancoDeDados.remover(notaId)
+        finish()
+    }
+
     override fun onBackPressed() {
         titulo = binding.titulo.text.toString()
         descricao = binding.descricao.text.toString()
@@ -183,6 +190,7 @@ class CriarNota : AppCompatActivity() {
             }
             else -> {
                 scope.launch {
+                    criarNota(notaId, titulo, descricao, hora)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                         Intent(this@CriarNota, MainActivity::class.java).apply {

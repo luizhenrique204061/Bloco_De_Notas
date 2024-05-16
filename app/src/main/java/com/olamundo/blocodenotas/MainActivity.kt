@@ -1,6 +1,7 @@
 package com.olamundo.blocodenotas
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import com.google.android.material.navigation.NavigationView

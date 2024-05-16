@@ -11,12 +11,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.google.android.material.snackbar.Snackbar
 import com.olamundo.blocodenotas.databinding.ActivityCriarNotaBinding
+import firebase.com.protolitewrapper.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class CriarNota : AppCompatActivity() {
     var notaId: Long = 0
@@ -61,7 +64,7 @@ class CriarNota : AppCompatActivity() {
             }
 
             R.id.menu_compartilhar -> {
-
+                    compartilharNota()
             }
 
             R.id.menu_remover -> {
@@ -100,7 +103,7 @@ class CriarNota : AppCompatActivity() {
             )
             scope.launch {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                     Intent(this@CriarNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
@@ -115,7 +118,7 @@ class CriarNota : AppCompatActivity() {
             )
             scope.launch {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                     Intent(this@CriarNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
@@ -142,6 +145,34 @@ class CriarNota : AppCompatActivity() {
         bancoDeDados.remover(notaId)
         finish()
     }
+
+    private fun compartilharNota() {
+        titulo = binding.titulo.text.toString()
+        descricao = binding.descricao.text.toString()
+
+        val txtDados = "${titulo}\n${descricao}"
+
+        val nomeArquivo = "$titulo.txt"
+        val arquivo = File(filesDir, nomeArquivo)
+
+        arquivo.writeText(txtDados)
+
+        val uri = FileProvider.getUriForFile(
+            this@CriarNota,
+            "com.olamundo.blocodenotas.fileprovider",
+            arquivo
+        )
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_TEXT, "Confira a nota: $titulo")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        startActivity(Intent.createChooser(intent, "Compartilhar nota via"))
+    }
+
 
     override fun onBackPressed() {
         titulo = binding.titulo.text.toString()

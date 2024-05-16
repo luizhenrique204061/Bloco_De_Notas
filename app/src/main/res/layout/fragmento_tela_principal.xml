@@ -15,8 +15,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_compartilhar_remover"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white">
+
+        <ImageButton
+            android:id="@+id/deletar"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_remover" />
+
+        <ImageButton
+            android:id="@+id/compartilhar"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_compartilhar" />
+
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -34,6 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:visibility="gone"
         android:text="@string/sem_anotacoes"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"

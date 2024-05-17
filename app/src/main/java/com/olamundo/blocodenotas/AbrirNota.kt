@@ -12,49 +12,42 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
-import com.olamundo.blocodenotas.databinding.ActivityCriarNotaBinding
+import com.olamundo.blocodenotas.databinding.ActivityAbrirNotaBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 
-
-class CriarNota : AppCompatActivity() {
+class AbrirNota : AppCompatActivity() {
+    private lateinit var binding: ActivityAbrirNotaBinding
     var notaId: Long = 0
     val hora = System.currentTimeMillis()
     private lateinit var bancoDeDados: NotaDao
     val scope = CoroutineScope(Dispatchers.IO)
-    private lateinit var binding: ActivityCriarNotaBinding
     private lateinit var titulo: String
     private lateinit var descricao: String
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityCriarNotaBinding.inflate(layoutInflater)
+        binding = ActivityAbrirNotaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         bancoDeDados = AppDataBase.getInstance(this).NotaDao()
-
-        val id = intent.getLongExtra("id", 0L)
-        val recuperarTitulo = intent.getStringExtra("titulo")
-        val recuperarDescricao = intent.getStringExtra("descricao")
-
-        if (id != null && recuperarTitulo != null && recuperarDescricao != null) {
-            notaId = id
-            titulo = binding.titulo.setText(recuperarTitulo).toString()
-            descricao = binding.descricao.setText(recuperarDescricao).toString()
-        }
+        abrirNotas()
 
         //Adicionando TextWatcher para monitorar o título
-        binding.titulo.addTextChangedListener(object : TextWatcher{
+        binding.titulo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // Nenhuma ação necessária antes da mudança de texto
             }
@@ -64,11 +57,11 @@ class CriarNota : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // Atualizar o TextView com a contagem de caracteres
+                //Atualizar o TextView com contagem de caracteres
                 val tituloLength = s?.length ?: 0
                 binding.contadorCaracteres.text = "$tituloLength/${MAX_TITULO_LENGTH}"
 
-                // Verificar se o limite foi atingido
+                //Verifica se o limite foi atingido
                 if (tituloLength >= MAX_TITULO_LENGTH) {
                     // Alterar a cor do contador para vermelho
                     binding.contadorCaracteres.setTextColor(Color.RED)
@@ -78,11 +71,8 @@ class CriarNota : AppCompatActivity() {
 
                     // Mover o cursor para o final do texto
                     binding.titulo.setSelection(binding.titulo.length())
-
-                    // Exibir um Toast informando que o limite foi atingido
-                   // Toast.makeText(this@CriarNota, getString(R.string.limite_de_caracteres_do_titulo), Toast.LENGTH_SHORT).show()
                 } else {
-                    // Caso contrário, manter a cor padrão do contador
+                    //Caso contrário, manter a cor padrão do contador
                     binding.contadorCaracteres.setTextColor(Color.parseColor("#676767"))
                 }
             }
@@ -105,7 +95,7 @@ class CriarNota : AppCompatActivity() {
             }
 
             R.id.menu_compartilhar -> {
-                    compartilharNota()
+                compartilharNota()
             }
 
             R.id.menu_remover -> {
@@ -116,7 +106,6 @@ class CriarNota : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
     private suspend fun criarNota(id: Long, titulo: String, descricao: String, data: Long) {
         val nota = Notas(id, titulo, descricao, data)
         bancoDeDados.salva(nota)
@@ -136,31 +125,33 @@ class CriarNota : AppCompatActivity() {
                     }
             }
         } else if (titulo.isEmpty()) {
-            titulo = descricao
-            criarNota(notaId, titulo, descricao, hora)
-            Log.d(
-                "CriarNota",
-                "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
-            )
+                criarNota(notaId, titulo, descricao, hora)
+                Log.d(
+                    "CriarNota",
+                    "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
+                )
+
+
             scope.launch {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                    Intent(this@CriarNota, MainActivity::class.java).apply {
+                    Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                    Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
                 }
             }
         } else if (descricao.isEmpty()) {
-            descricao = titulo
-            criarNota(notaId, titulo, descricao, hora)
-            Log.d(
-                "CriarNota",
-                "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
-            )
+                criarNota(notaId, titulo, descricao, hora)
+                Log.d(
+                    "CriarNota",
+                    "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
+                )
+
+
             scope.launch {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                    Intent(this@CriarNota, MainActivity::class.java).apply {
+                    Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                    Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
                 }
@@ -173,8 +164,8 @@ class CriarNota : AppCompatActivity() {
             )
             scope.launch {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
-                    Intent(this@CriarNota, MainActivity::class.java).apply {
+                    Toast.makeText(this@AbrirNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                    Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
                 }
@@ -185,6 +176,28 @@ class CriarNota : AppCompatActivity() {
     private suspend fun deletar() {
         bancoDeDados.remover(notaId)
         finish()
+    }
+
+
+    private fun abrirNotas() {
+        val uri: Uri? = intent.data
+
+        if (uri != null) {
+            try {
+                val inputStream = contentResolver.openInputStream(uri)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val content = reader.readText()
+                inputStream!!.close()
+                reader.close()
+
+
+                binding.descricao.setText(content)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, getString(R.string.erro_abrir_arquivo), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun compartilharNota() {
@@ -199,7 +212,7 @@ class CriarNota : AppCompatActivity() {
         arquivo.writeText(txtDados)
 
         val uri = FileProvider.getUriForFile(
-            this@CriarNota,
+            this@AbrirNota,
             "com.olamundo.blocodenotas.fileprovider",
             arquivo
         )
@@ -214,7 +227,6 @@ class CriarNota : AppCompatActivity() {
         startActivity(Intent.createChooser(intent, "Compartilhar nota via"))
     }
 
-
     override fun onBackPressed() {
         titulo = binding.titulo.text.toString()
         descricao = binding.descricao.text.toString()
@@ -223,8 +235,8 @@ class CriarNota : AppCompatActivity() {
             titulo.isEmpty() && descricao.isEmpty() -> {
                 scope.launch {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
-                        Intent(this@CriarNota, MainActivity::class.java).apply {
+                        Toast.makeText(this@AbrirNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                        Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }
                     }
@@ -232,33 +244,27 @@ class CriarNota : AppCompatActivity() {
 
             }
             titulo.isEmpty() -> {
-                if (descricao.length > MAX_TITULO_LENGTH) {
-                    val tituloFormatado = descricao.substring(0, MAX_TITULO_LENGTH)
-                    titulo = tituloFormatado
+                scope.launch {
+                    criarNota(notaId, titulo, descricao, hora)
+                    Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
 
-                    scope.launch {
-                        criarNota(notaId, titulo, descricao, hora)
-                        Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
-
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                            Intent(this@CriarNota, MainActivity::class.java).apply {
-                                startActivity(this)
-                            }
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                        Intent(this@AbrirNota, MainActivity::class.java).apply {
+                            startActivity(this)
                         }
                     }
                 }
 
             }
             descricao.isEmpty() -> {
-                descricao = titulo
                 scope.launch {
                     criarNota(notaId, titulo, descricao, hora)
                     Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
 
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                        Intent(this@CriarNota, MainActivity::class.java).apply {
+                        Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                        Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }
                     }
@@ -268,8 +274,8 @@ class CriarNota : AppCompatActivity() {
                 scope.launch {
                     criarNota(notaId, titulo, descricao, hora)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                        Intent(this@CriarNota, MainActivity::class.java).apply {
+                        Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                        Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }
                     }

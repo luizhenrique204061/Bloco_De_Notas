@@ -164,7 +164,7 @@ class AbrirNota : AppCompatActivity() {
             )
             scope.launch {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@AbrirNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                     Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
@@ -235,7 +235,7 @@ class AbrirNota : AppCompatActivity() {
             titulo.isEmpty() && descricao.isEmpty() -> {
                 scope.launch {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AbrirNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
+              //          Toast.makeText(this@AbrirNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
                         Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }
@@ -249,7 +249,7 @@ class AbrirNota : AppCompatActivity() {
                     Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
 
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                      //  Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                         Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }
@@ -263,7 +263,7 @@ class AbrirNota : AppCompatActivity() {
                     Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
 
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                     //   Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                         Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }
@@ -274,7 +274,7 @@ class AbrirNota : AppCompatActivity() {
                 scope.launch {
                     criarNota(notaId, titulo, descricao, hora)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+                       // Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                         Intent(this@AbrirNota, MainActivity::class.java).apply {
                             startActivity(this)
                         }

@@ -134,6 +134,11 @@ class ListaNotasAdapter(
 
     // Método para desativar o modo de seleção
     fun desativarModoSelecao() {
+        // Desmarcar todos os checkboxes
+        for (nota in listaNotas) {
+            nota.isChecked = false
+        }
+        // Desativar o modo de seleção
         selecaoAtiva = false
         notifyDataSetChanged()
     }

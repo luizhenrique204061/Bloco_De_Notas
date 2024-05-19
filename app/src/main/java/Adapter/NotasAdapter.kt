@@ -44,7 +44,6 @@ class ListaNotasAdapter(
             }
         }
 
-
         fun vincula(notas: Notas, position: Int) {
             val titulo = binding.titulo
             titulo.text = notas.titulo
@@ -61,10 +60,8 @@ class ListaNotasAdapter(
             // Definindo visibilidade do Checkbox baseado no modo de seleção
             if (selecaoAtiva) {
                 binding.checkbox.visibility = View.VISIBLE
-                // Marcar o checkbox apenas no item clicado longamente
                 binding.checkbox.isChecked = notas.isChecked
             } else {
-                // Exibir checkbox sem marcação
                 binding.checkbox.visibility = View.GONE
             }
 
@@ -73,7 +70,6 @@ class ListaNotasAdapter(
                 if (selecaoAtiva) {
                     toggleItemSelection(adapterPosition) // Se o modo de seleção estiver ativado, alternar seleção
                 } else {
-                    // Se não estiver em modo de seleção, lidar com o clique normal
                     onItemClicked(notas)
                 }
             }
@@ -92,15 +88,15 @@ class ListaNotasAdapter(
             }
         }
 
-
         private fun toggleSelectionMode(position: Int) {
             selecaoAtiva = true
-            // Marcar o item clicado longamente
-            listaNotas[position].isChecked = true
+            // Alternar o estado do item clicado longamente
+            listaNotas[position].isChecked = !listaNotas[position].isChecked
             listener.onItemLongClicked()
             // Notificar o listener sobre a mudança no número de itens selecionados
-            listener.onItemSelected(1) // Inicia a contagem com o item atual
-            listener.updateSelectedItemCount(1) // Inicia a contagem com o item atual
+            val selectedCount = listaNotas.count { it.isChecked }
+            listener.onItemSelected(selectedCount)
+            listener.updateSelectedItemCount(selectedCount)
             notifyDataSetChanged()
         }
 

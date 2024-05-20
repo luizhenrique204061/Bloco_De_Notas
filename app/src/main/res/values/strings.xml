@@ -5,7 +5,7 @@
     <string name="descricao">Escreva algo...</string>
     <string name="edicao_em">Edição em: %s</string>
     <string name="formato_data_hora">dd/MM/yyyy \'às\' HH:mm</string>
-    <string name="criar_nota">Criar Nota</string>
+    <string name="criar_nota">Criar Anotação</string>
     <string name="salvar">Salvar</string>
     <string name="compartilhar">Compartilhar</string>
     <string name="remover">Remover</string>

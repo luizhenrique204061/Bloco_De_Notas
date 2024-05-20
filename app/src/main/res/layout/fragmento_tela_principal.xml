@@ -70,4 +70,36 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_criar_anotacao"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/black"
+        android:scaleType="center"
+        android:src="@drawable/ic_editar"
+        android:visibility="gone"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/fab_principal"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/texto_criar_anotacao"
+        style="@style/TEXTO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_texto_light"
+        android:padding="15dp"
+        android:text="@string/criar_nota"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/fab_principal"
+        app:layout_constraintEnd_toStartOf="@id/fab_criar_anotacao"
+        app:layout_constraintTop_toTopOf="@id/fab_criar_anotacao" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

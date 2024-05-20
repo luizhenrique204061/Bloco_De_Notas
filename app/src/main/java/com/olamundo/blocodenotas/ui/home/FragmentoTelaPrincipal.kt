@@ -5,14 +5,13 @@ import Modelo.Notas
 import Room.AppDataBase
 import Room.NotaDao
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -61,6 +60,8 @@ class FragmentoTelaPrincipal : Fragment() {
 
         val recyclerView = binding.recyclerview
        // mainActivity.setSupportActionBar(binding.toolbar)
+        loadTheme()
+
 
         adapter = ListaNotasAdapter(requireContext(), listaNotas, object : ListaNotasAdapter.OnItemSelectedListener {
             override fun onItemSelected(selectedItemCount: Int) {
@@ -98,11 +99,28 @@ class FragmentoTelaPrincipal : Fragment() {
         bancoDeDados = AppDataBase.getInstance(requireContext()).NotaDao()
 
         floatingActionButton.setOnClickListener {
-            Intent(requireContext(), CriarNota::class.java).apply {
-                startActivity(this)
+            val slideAnimation = if (binding.fabCriarAnotacao.visibility == View.VISIBLE) {
+                // Se o fabCriarAnotacao está visível, esconda-o com animação de slide down
+                AnimationUtils.loadAnimation(context, R.anim.slide_down)
+            } else {
+                // Se o fabCriarAnotacao está invisível, torne-o visível com animação de slide up
+                AnimationUtils.loadAnimation(context, R.anim.slide_up)
             }
+            // Aplica a animação ao FloatingActionButton
+            binding.fabCriarAnotacao.startAnimation(slideAnimation)
+            // Alterna a visibilidade do FloatingActionButton
+            binding.fabCriarAnotacao.visibility = if (binding.fabCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            // Aplica a mesma animação ao TextView
+            binding.textoCriarAnotacao.startAnimation(slideAnimation)
+            // Alterna a visibilidade do TextView
+            binding.textoCriarAnotacao.visibility = if (binding.textoCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
+        // Adicione um OnClickListener ao FloatingActionButton para iniciar a atividade CriarNota
+        binding.fabCriarAnotacao.setOnClickListener {
+            startActivity(Intent(requireContext(), CriarNota::class.java))
+        }
         onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (adapter.isSelecaoAtiva()) {
@@ -136,6 +154,22 @@ class FragmentoTelaPrincipal : Fragment() {
             }
         }
         super.onResume()
+    }
+
+    private fun loadTheme() {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_YES -> applyDarkTheme()
+            Configuration.UI_MODE_NIGHT_NO -> applyLightTheme()
+        }
+    }
+
+    private fun applyDarkTheme() {
+        binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
+    }
+
+    private fun applyLightTheme() {
+        binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
     }
 
     private suspend fun deletarNotasSelecionadas() {

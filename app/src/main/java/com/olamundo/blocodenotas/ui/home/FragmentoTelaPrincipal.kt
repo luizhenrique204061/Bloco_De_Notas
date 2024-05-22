@@ -115,12 +115,14 @@ class FragmentoTelaPrincipal : Fragment() {
             binding.textoCriarAnotacao.startAnimation(slideAnimation)
             // Alterna a visibilidade do TextView
             binding.textoCriarAnotacao.visibility = if (binding.textoCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
         }
 
         // Adicione um OnClickListener ao FloatingActionButton para iniciar a atividade CriarNota
         binding.fabCriarAnotacao.setOnClickListener {
             startActivity(Intent(requireContext(), CriarNota::class.java))
         }
+
         onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (adapter.isSelecaoAtiva()) {

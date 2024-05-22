@@ -15,9 +15,11 @@
         android:theme="@style/Theme.BlocoDeNotas"
         tools:targetApi="31">
         <activity
+            android:name=".CriarTarefas"
+            android:exported="false" />
+        <activity
             android:name=".AbrirNota"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -43,7 +45,7 @@
         <activity
             android:name=".CriarNota"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"

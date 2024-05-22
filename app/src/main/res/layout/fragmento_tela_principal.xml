@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/verde"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,14 +76,14 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/verde"
         android:scaleType="center"
         android:src="@drawable/ic_editar"
         android:visibility="gone"
-        app:tint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/fab_principal"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:tint="@color/white" />
+
 
     <TextView
         android:id="@+id/texto_criar_anotacao"

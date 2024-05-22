@@ -16,6 +16,8 @@
     <string name="itens_selecionados">Itens selecionados: %s</string>
     <string name="erro_abrir_arquivo">Erro ao abrir o arquivo</string>
     <string name="limite_de_caracteres_do_titulo">Limite de caracteres atingido</string>
+    <string name="criar_tarefa">Criar Tarefa</string>
+    <string name="adicionar_titulo_lista">Adicionar título a lista</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

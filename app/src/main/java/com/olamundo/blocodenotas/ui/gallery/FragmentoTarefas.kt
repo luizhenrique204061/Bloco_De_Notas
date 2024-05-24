@@ -1,11 +1,8 @@
-package com.olamundo.blocodenotas.ui.home
+package com.olamundo.blocodenotas.ui.gallery
 
-import Adapter.ListaNotasAdapter
 import Adapter.TarefasAdapterTelaPrincipal
-import Modelo.Notas
 import Modelo.Tarefa
 import Room.AppDataBase
-import Room.NotaDao
 import Room.TarefaDao
 import android.content.Intent
 import android.content.res.Configuration
@@ -15,14 +12,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.olamundo.blocodenotas.CriarNota
 import com.olamundo.blocodenotas.CriarTarefa
 import com.olamundo.blocodenotas.MainActivity
 import com.olamundo.blocodenotas.R
-import com.olamundo.blocodenotas.databinding.FragmentoTelaPrincipalBinding
+import com.olamundo.blocodenotas.databinding.FragmentoTarefasBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,17 +32,18 @@ import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
-class FragmentoTelaPrincipal : Fragment() {
+class FragmentoTarefas : Fragment() {
 
-    private var _binding: FragmentoTelaPrincipalBinding? = null
-    private lateinit var bancoDeDados: NotaDao
+    private var _binding: FragmentoTarefasBinding? = null
+    private lateinit var bancoDeDadosTarefa: TarefaDao
     private val scope = CoroutineScope(Dispatchers.IO)
-    private lateinit var adapterNotacoes: ListaNotasAdapter
-    private val listaNotas: MutableList<Notas> = mutableListOf()
+    private lateinit var adapterTarefas: TarefasAdapterTelaPrincipal
+    private val listaTarefas: MutableList<Tarefa> = mutableListOf()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var mainActivity: MainActivity
 
-    // This property is only valid between onCreateView and onDestroyView.
+    // This property is only valid between onCreateView and
+    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -51,7 +51,9 @@ class FragmentoTelaPrincipal : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentoTelaPrincipalBinding.inflate(inflater, container, false)
+
+
+        _binding = FragmentoTarefasBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
         return binding.root
     }
@@ -59,53 +61,46 @@ class FragmentoTelaPrincipal : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = binding.recyclerview
+        val recyclerViewTarefas = binding.recyclerviewTarefas
         // mainActivity.setSupportActionBar(binding.toolbar)
         loadTheme()
 
-
-
-        adapterNotacoes = ListaNotasAdapter(
-            requireContext(),
-            listaNotas,
-            object : ListaNotasAdapter.OnItemSelectedListener {
-                override fun onItemSelected(selectedItemCount: Int) {
-                    // Verifica se foi um clique longo e oculta a toolbar
-                    if (selectedItemCount == 0) {
-                        mainActivity.toggleToolbarVisibility(!adapterNotacoes.isLongClick()) // Mostra a toolbar se não for um clique longo
-                    }
+        adapterTarefas = TarefasAdapterTelaPrincipal(requireContext(), listaTarefas, object : TarefasAdapterTelaPrincipal.OnItemSelectedListener {
+            override fun onItemSelected(selectedItemCount: Int) {
+                // Verifica se foi um clique longo e oculta a toolbar
+                if (selectedItemCount == 0) {
+                    mainActivity.toggleToolbarVisibility(!adapterTarefas.isLongClick()) // Mostra a toolbar se não for um clique longo
                 }
+            }
 
-                override fun onItemLongClicked() {
-                    // Oculta a toolbar ao iniciar o clique longo
-                    mainActivity.toggleToolbarVisibility(false)
-                    binding.toolbar.visibility = View.VISIBLE
-                    binding.compartilhar.setOnClickListener {
-                        scope.launch {
-                            compartilharNotasSelecionadas()
-                        }
-
-                    }
-                    binding.deletar.setOnClickListener {
-                        scope.launch {
-                            deletarNotasSelecionadas()
-                        }
+            override fun onItemLongClicked() {
+                // Oculta a toolbar ao iniciar o clique longo
+                mainActivity.toggleToolbarVisibility(false)
+                binding.toolbar.visibility = View.VISIBLE
+                binding.compartilhar.setOnClickListener {
+                    scope.launch {
+                        compartilharTarefasSelecionadas()
                     }
 
                 }
-
-                override fun updateSelectedItemCount(selectedItemCount: Int) {
-                    Log.i("Contando", "$selectedItemCount")
-                    binding.toolbar.title =
-                        getString(R.string.itens_selecionados, selectedItemCount.toString())
+                binding.deletar.setOnClickListener {
+                    scope.launch {
+                        deletarTarefasSelecionadas()
+                    }
                 }
-            })
+            }
 
+            override fun updateSelectedItemCount(selectedItemCount: Int) {
+                Log.i("Contando", "$selectedItemCount")
+                binding.toolbar.title =
+                    getString(R.string.itens_selecionados, selectedItemCount.toString())
+            }
 
+        })
 
-        recyclerView.adapter = adapterNotacoes
+        recyclerViewTarefas.adapter = adapterTarefas
 
-        bancoDeDados = AppDataBase.getInstance(requireContext()).NotaDao()
+        bancoDeDadosTarefa = AppDataBase.getInstance(requireContext()).TarefaDao()
 
         binding.fabPrincipal.setOnClickListener {
             val slideAnimation = if (binding.fabCriarAnotacao.visibility == View.VISIBLE) {
@@ -152,8 +147,8 @@ class FragmentoTelaPrincipal : Fragment() {
 
         onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (adapterNotacoes.isSelecaoAtiva()) {
-                    adapterNotacoes.desativarModoSelecao()
+                if (adapterTarefas.isSelecaoAtiva()) {
+                    adapterTarefas.desativarModoSelecao()
                     // Mostra a toolbar ao pressionar o botão de voltar
                     mainActivity.toggleToolbarVisibility(true)
                     binding.toolbar.visibility = View.GONE
@@ -175,17 +170,17 @@ class FragmentoTelaPrincipal : Fragment() {
 
         scope.launch {
             // Buscar anotações e tarefas do banco de dados
-            val buscarNotacoes = bancoDeDados.buscarTodas()
+            val buscarTarefas = bancoDeDadosTarefa.buscarTodas()
 
 
             // Limpar e atualizar a lista no adapter
             withContext(Dispatchers.Main) {
-                adapterNotacoes.listaNotas.clear()
-                adapterNotacoes.listaNotas.addAll(buscarNotacoes)
-                adapterNotacoes.notifyDataSetChanged()
+                adapterTarefas.listaTarefasTelaPrincipal.clear()
+                adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefas)
+                adapterTarefas.notifyDataSetChanged()
 
                 // Atualizar a visibilidade do "semAnotacoes"
-                if (adapterNotacoes.listaNotas.isEmpty()) {
+                if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
                     binding.semAnotacoes.visibility = View.VISIBLE
                 } else {
                     binding.semAnotacoes.visibility = View.GONE
@@ -193,6 +188,7 @@ class FragmentoTelaPrincipal : Fragment() {
             }
         }
     }
+
 
     private fun loadTheme() {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
@@ -212,20 +208,56 @@ class FragmentoTelaPrincipal : Fragment() {
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_light)
     }
 
+    private suspend fun deletarTarefasSelecionadas() {
+        withContext(Dispatchers.IO) {
+            val tarefasSelecionadas =
+                adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
+            if (tarefasSelecionadas.isEmpty()) {
+                return@withContext
+            } else {
+                // Deleta cada nota selecionada individualmente
+                tarefasSelecionadas.forEach { tarefa ->
+                    bancoDeDadosTarefa.remover(tarefa.id)
+                    withContext(Dispatchers.Main) {
+                        mainActivity.toggleToolbarVisibility(true)
+                        binding.toolbar.visibility = View.GONE
+                        adapterTarefas.desativarModoSelecao()
+                    }
+                }
+            }
 
-    private suspend fun compartilharNotasSelecionadas() {
+            // Atualiza a lista de notas exibida após a exclusão
+            val buscarTarefa = bancoDeDadosTarefa.buscarTodas()
+            adapterTarefas.listaTarefasTelaPrincipal.clear()
+            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefa)
+
+            // Notifica o adapter sobre as mudanças
+            withContext(Dispatchers.Main) {
+                adapterTarefas.notifyDataSetChanged()
+                if (buscarTarefa.isEmpty()) {
+                    binding.semAnotacoes.visibility = View.VISIBLE
+                } else {
+                    binding.semAnotacoes.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+
+    private suspend fun compartilharTarefasSelecionadas() {
         Log.i("Clicando", "Compartilhar")
         withContext(Dispatchers.IO) {
-            val notasSelecionadas = adapterNotacoes.listaNotas.filter { it.isChecked }
-            if (notasSelecionadas.isEmpty()) return@withContext
+            val tarefasSelecionadas =
+                adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
+            if (tarefasSelecionadas.isEmpty()) return@withContext
 
             val zipFile = File(requireContext().filesDir, "notas_selecionadas.zip")
             val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
-            notasSelecionadas.forEach { nota ->
-                val nomeArquivo = "${nota.titulo}.txt"
+            tarefasSelecionadas.forEach { tarefa ->
+                val nomeArquivo = "${tarefa.titulo}.txt"
                 val arquivo = File(requireContext().filesDir, nomeArquivo)
-                arquivo.writeText("${nota.titulo}\n${nota.descricao}")
+                arquivo.writeText("${tarefa.titulo}\n${tarefa.descricao}")
 
                 val zipEntry = ZipEntry(nomeArquivo)
                 zipOutputStream.putNextEntry(zipEntry)
@@ -255,37 +287,8 @@ class FragmentoTelaPrincipal : Fragment() {
         }
     }
 
-    private suspend fun deletarNotasSelecionadas() {
-        withContext(Dispatchers.IO) {
-            val notasSelecionadas = adapterNotacoes.listaNotas.filter { it.isChecked }
-            if (notasSelecionadas.isEmpty()) {
-                return@withContext
-            } else {
-                // Deleta cada nota selecionada individualmente
-                notasSelecionadas.forEach { nota ->
-                    bancoDeDados.remover(nota.id)
-                    withContext(Dispatchers.Main) {
-                        mainActivity.toggleToolbarVisibility(true)
-                        binding.toolbar.visibility = View.GONE
-                        adapterNotacoes.desativarModoSelecao()
-                    }
-                }
-            }
-
-            // Atualiza a lista de notas exibida após a exclusão
-            val buscarNotacoes = bancoDeDados.buscarTodas()
-            adapterNotacoes.listaNotas.clear()
-            adapterNotacoes.listaNotas.addAll(buscarNotacoes)
-
-            // Notifica o adapter sobre as mudanças
-            withContext(Dispatchers.Main) {
-                adapterNotacoes.notifyDataSetChanged()
-                if (buscarNotacoes.isEmpty()) {
-                    binding.semAnotacoes.visibility = View.VISIBLE
-                } else {
-                    binding.semAnotacoes.visibility = View.GONE
-                }
-            }
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

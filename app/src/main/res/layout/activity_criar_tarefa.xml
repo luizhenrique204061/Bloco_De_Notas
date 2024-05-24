@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CriarTarefa">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu_salvar_compartilhar_remover"
+        app:title="@string/criar_tarefa"
+        app:titleTextColor="@color/white" />
+
+    <EditText
+        android:id="@+id/titulo_tarefa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/adicionar_titulo_lista"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <EditText
+        android:id="@+id/descricao_tarefa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bordas_lista_tarefas"
+        android:hint="@string/adicionar_uma_tarefa_pendente"
+        app:layout_constraintEnd_toStartOf="@id/adiconar"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titulo_tarefa" />
+
+
+
+    <ImageView
+        android:id="@+id/adiconar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:tint="@color/cinza_claro"
+        android:layout_marginEnd="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_salvar"
+        android:layout_marginStart="15dp"
+
+        app:layout_constraintBottom_toBottomOf="@id/descricao_tarefa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/descricao_tarefa"
+        app:layout_constraintTop_toTopOf="@id/descricao_tarefa" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTarefas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descricao_tarefa"
+        tools:listitem="@layout/tarefa_item" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

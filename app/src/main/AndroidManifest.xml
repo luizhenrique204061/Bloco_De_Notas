@@ -15,6 +15,9 @@
         android:theme="@style/Theme.BlocoDeNotas"
         tools:targetApi="31">
         <activity
+            android:name=".CriarTarefa"
+            android:exported="false" />
+        <activity
             android:name=".CriarTarefas"
             android:exported="false" />
         <activity

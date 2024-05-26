@@ -13,6 +13,7 @@
     <string name="nenhum_texto_digitado">Nenhum texto digitado</string>
     <string name="anotacao_salva_com_sucesso">Anotação salva com sucesso</string>
     <string name="sem_anotacoes">Você não tem anotações</string>
+    <string name="sem_tarefas">Você não tem tarefas</string>
     <string name="itens_selecionados">Itens selecionados: %s</string>
     <string name="erro_abrir_arquivo">Erro ao abrir o arquivo</string>
     <string name="limite_de_caracteres_do_titulo">Limite de caracteres atingido</string>

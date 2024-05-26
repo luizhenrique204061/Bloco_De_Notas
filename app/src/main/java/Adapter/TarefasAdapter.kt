@@ -17,7 +17,12 @@ class TarefasAdapter(
             val descricao = binding.descricaoLista
             descricao.text = tarefa.descricao
 
-
+            binding.removerTarefa.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    removerTarefa(position)
+                }
+            }
         }
     }
 
@@ -36,4 +41,9 @@ class TarefasAdapter(
     }
 
 
+    private fun removerTarefa(position: Int) {
+        listaTarefas.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
+    }
 }

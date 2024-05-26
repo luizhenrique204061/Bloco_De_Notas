@@ -8,14 +8,23 @@
         android:id="@+id/descricao_lista"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bordas_lista_tarefas"
-        android:text="Teste"
         android:gravity="center_vertical"
-        android:drawableRight="@drawable/ic_fechar"
+        android:padding="16dp"
+        android:text="Teste"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/remover_tarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_fechar"
+        app:layout_constraintBottom_toBottomOf="@id/descricao_lista"
+        app:layout_constraintEnd_toEndOf="@id/descricao_lista"
+        app:layout_constraintTop_toTopOf="@id/descricao_lista" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

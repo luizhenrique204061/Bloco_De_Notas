@@ -22,6 +22,12 @@
 
     </style>
 
+    <style name="TEXTO_LOGIN">
+
+        <item name="android:textColor">@color/black</item>
+
+    </style>
+
     <style name="TelaPrincipal" parent="Theme.AppCompat.DayNight.NoActionBar">
 
         <item name="colorPrimary">@color/white</item>

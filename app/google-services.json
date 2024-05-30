@@ -12,7 +12,20 @@
           "package_name": "com.olamundo.blocodenotas"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "203030070680-2pnhjkleeme33256ljo5r7319gdbp838.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.olamundo.blocodenotas",
+            "certificate_hash": "75cb3250d78d980e469616166efcdbc1f79ea827"
+          }
+        },
+        {
+          "client_id": "203030070680-r3mqq8hbcv3i2k2aj8cl1lio1a7ek8f8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBIRjN8LmD3Ak79hPRDc4uYevNVtnv1BGg"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203030070680-r3mqq8hbcv3i2k2aj8cl1lio1a7ek8f8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

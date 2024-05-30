@@ -7,16 +7,87 @@
     tools:context=".ui.slideshow.SlideshowFragment">
 
     <TextView
-        android:id="@+id/text_slideshow"
+        android:id="@+id/texto_login"
+        style="@style/TEXTO_LOGIN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/texto_login"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/container_background_preto"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/texto_login" />
+
+    <EditText
+        android:id="@+id/email"
+        style="@style/TEXTO_LOGIN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_edit_text_branco"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view" />
+
+
+    <EditText
+        android:id="@+id/senha"
+        style="@style/TEXTO_LOGIN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_edit_text_branco"
+        android:hint="@string/senha"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/botao_entrar"
+        style="@style/TEXTO_LOGIN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_botao_branco"
+        android:padding="15dp"
+        android:text="@string/entrar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/senha" />
+
+    <TextView
+        android:id="@+id/botao_cadastrar"
+        style="@style/TEXTO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/cadastrar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/botao_entrar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

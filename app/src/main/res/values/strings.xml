@@ -22,6 +22,11 @@
     <string name="adicionar_uma_tarefa_pendente">Adicionar uma tarefa pendente</string>
     <string name="minhas_anotacoes">Minhas Anotações</string>
     <string name="minhas_tarefas">Minhas Tarefas</string>
+    <string name="texto_login">Realize o login para realizar o backup de seus arquivos</string>
+    <string name="email">Email</string>
+    <string name="senha">Senha</string>
+    <string name="entrar">Entrar</string>
+    <string name="cadastrar">Cadastrar</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

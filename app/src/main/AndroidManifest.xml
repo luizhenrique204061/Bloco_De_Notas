@@ -18,9 +18,6 @@
             android:name=".CriarTarefa"
             android:exported="false" />
         <activity
-            android:name=".CriarTarefas"
-            android:exported="false" />
-        <activity
             android:name=".AbrirNota"
             android:exported="true">
             <intent-filter>

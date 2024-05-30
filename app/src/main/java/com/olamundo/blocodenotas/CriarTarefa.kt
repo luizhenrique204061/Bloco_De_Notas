@@ -103,12 +103,21 @@ class CriarTarefa : AppCompatActivity() {
         titulo = binding.tituloTarefa.text.toString()
         atualizarTextoDoEditText() // Atualiza o texto antes de salvar
         criarTarefas(tarefaId, titulo, textoDoEditText, hora)
-        finish()
+        retornar()
     }
 
     private suspend fun deletar() {
         bancoDeDados.remover(tarefaId)
         finish()
+    }
+
+    private fun retornar() {
+        Intent(this, MainActivity::class.java).apply {
+            putExtra("navigate_to_fragment", "FragmentoTarefas")
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(this)
+            finish()
+        }
     }
 
     private suspend fun criarTarefas(id: Long, titulo: String, descricao: String, hora: Long) {

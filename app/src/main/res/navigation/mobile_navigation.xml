@@ -18,8 +18,8 @@
         tools:layout="@layout/fragmento_tarefas" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.olamundo.blocodenotas.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_tela_login"
+        android:name="com.olamundo.blocodenotas.ui.slideshow.FragmentoLogin"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragmento_login" />
 </navigation>

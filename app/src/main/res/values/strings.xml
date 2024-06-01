@@ -27,6 +27,7 @@
     <string name="senha">Senha</string>
     <string name="entrar">Entrar</string>
     <string name="cadastrar">Cadastrar</string>
+    <string name="login">Login</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -38,7 +39,7 @@
 
     <string name="menu_tela_principal">Tela Principal</string>
     <string name="menu_tarefas">Tarefas</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_login">Login</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

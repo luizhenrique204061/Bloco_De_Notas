@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_tela_principal, R.id.nav_tarefas, R.id.nav_slideshow
+                R.id.nav_tela_principal, R.id.nav_tarefas, R.id.nav_tela_login
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_tela_principal -> navController.navigate(R.id.nav_tela_principal)
                 R.id.nav_tarefas -> navController.navigate(R.id.nav_tarefas)
-                R.id.nav_slideshow -> navController.navigate(R.id.nav_slideshow)
+                R.id.nav_tela_login -> navController.navigate(R.id.nav_tela_login)
                 else -> false
             }
             true

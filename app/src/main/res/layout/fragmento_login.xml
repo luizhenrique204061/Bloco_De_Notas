@@ -27,8 +27,8 @@
 
         <View
             android:id="@+id/view"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:layout_width="match_parent"
+            android:layout_height="440dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="20dp"
@@ -84,6 +84,21 @@
             app:layout_constraintStart_toStartOf="@id/view"
             app:layout_constraintTop_toBottomOf="@id/senha" />
 
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/botao_entrar_com_google"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/shape_botao_branco"
+            android:padding="15dp"
+            android:text="@string/entrar_com_google"
+            app:layout_constraintEnd_toEndOf="@id/view"
+            app:layout_constraintStart_toStartOf="@id/view"
+            app:layout_constraintTop_toBottomOf="@id/botao_entrar" />
+
         <TextView
             android:id="@+id/botao_cadastrar"
             style="@style/TEXTO"
@@ -93,7 +108,7 @@
             android:text="@string/cadastrar"
             app:layout_constraintEnd_toEndOf="@id/view"
             app:layout_constraintStart_toStartOf="@id/view"
-            app:layout_constraintTop_toBottomOf="@id/botao_entrar" />
+            app:layout_constraintTop_toBottomOf="@id/botao_entrar_com_google" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

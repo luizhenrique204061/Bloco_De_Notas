@@ -28,6 +28,8 @@
     <string name="entrar">Entrar</string>
     <string name="cadastrar">Cadastrar</string>
     <string name="login">Login</string>
+    <string name="entrar_com_google">Entrar com o Google</string>
+    <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

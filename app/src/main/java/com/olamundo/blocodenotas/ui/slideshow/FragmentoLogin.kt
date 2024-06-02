@@ -1,6 +1,7 @@
 package com.olamundo.blocodenotas.ui.slideshow
 
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.olamundo.blocodenotas.R
@@ -64,7 +66,7 @@ class FragmentoLogin : Fragment() {
         }
 
         binding.botaoCadastrar.setOnClickListener {
-            signOut()
+
         }
 
         loadTheme()
@@ -73,16 +75,6 @@ class FragmentoLogin : Fragment() {
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         startForResult.launch(signInIntent)
-    }
-
-    private fun signOut() {
-        // Deslogar do Firebase
-        auth.signOut()
-
-        // Deslogar do Google
-        googleSignInClient.signOut().addOnCompleteListener(requireActivity()) {
-            // Atualize a UI após o logout, se necessário
-        }
     }
 
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -102,6 +94,12 @@ class FragmentoLogin : Fragment() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
 
+                    Snackbar.make(binding.root, getString(R.string.usuario_logado_google_sucesso), Snackbar.LENGTH_SHORT).apply {
+                        this.setBackgroundTint(Color.parseColor("#214C06"))
+                        this.setTextColor(Color.WHITE)
+                        this.show()
+                    }
+
                     user?.let {
                         val userId = it.uid
                         Log.d("FragmentoLogin", "User ID: $userId")
@@ -109,6 +107,12 @@ class FragmentoLogin : Fragment() {
                     // Login bem-sucedido, navegue para a próxima tela ou faça o que for necessário
                 } else {
                     Log.w("FragmentoLogin", "signInWithCredential:failure", task.exception)
+
+                    Snackbar.make(binding.root, getString(R.string.falha_login_google), Snackbar.LENGTH_SHORT).apply {
+                        this.setBackgroundTint(Color.RED)
+                        this.setTextColor(Color.WHITE)
+                        this.show()
+                    }
                 }
             }
     }

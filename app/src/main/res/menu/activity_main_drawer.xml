@@ -16,5 +16,12 @@
             android:id="@+id/nav_tela_login"
             android:icon="@drawable/ic_login"
             android:title="@string/login" />
+
+
+        <item android:id="@+id/deslogar"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout"
+
+            />
     </group>
 </menu>

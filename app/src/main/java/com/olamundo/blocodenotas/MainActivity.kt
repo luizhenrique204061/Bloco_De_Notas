@@ -1,6 +1,7 @@
 package com.olamundo.blocodenotas
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -10,12 +11,19 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +32,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
+
+
+        // Configure Google Sign-In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        auth = FirebaseAuth.getInstance()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -46,6 +65,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_tela_principal -> navController.navigate(R.id.nav_tela_principal)
                 R.id.nav_tarefas -> navController.navigate(R.id.nav_tarefas)
                 R.id.nav_tela_login -> navController.navigate(R.id.nav_tela_login)
+                R.id.deslogar -> {
+                    signOut()
+                }
                 else -> false
             }
             true
@@ -79,5 +101,37 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun signOut() {
+        // Deslogar do Firebase
+        auth.signOut()
+
+        // Deslogar do Google
+        googleSignInClient.signOut().addOnCompleteListener(this) { tarefa ->
+            // Atualize a UI após o logout, se necessário
+
+            if (tarefa.isSuccessful) {
+                Snackbar.make(binding.root, getString(R.string.usuario_deslogado_google_sucesso), Snackbar.LENGTH_SHORT).apply {
+                    this.setTextColor(Color.WHITE)
+                    this.setBackgroundTint(Color.RED)
+                    this.show()
+                }
+            } else {
+                Snackbar.make(binding.root, getString(R.string.falha_deslogar_usuario_google), Snackbar.LENGTH_SHORT).apply {
+                    this.setTextColor(Color.WHITE)
+                    this.setBackgroundTint(Color.RED)
+                    this.show()
+                }
+            }
+
+            // Navegar para a tela principal
+            val navController = findNavController(R.id.nav_host_fragment_content_main)
+            navController.navigate(R.id.nav_tela_principal)
+
+            // Atualizar o estado do item selecionado no NavigationView
+            val navView: NavigationView = binding.navView
+            navView.setCheckedItem(R.id.nav_tela_principal)
+        }
     }
 }

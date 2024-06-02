@@ -251,11 +251,11 @@ class FragmentoTarefas : Fragment() {
                 adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
             if (tarefasSelecionadas.isEmpty()) return@withContext
 
-            val zipFile = File(requireContext().filesDir, "notas_selecionadas.zip")
+            val zipFile = File(requireContext().filesDir, "${getString(R.string.nome_tarefas_selecioandas)}.zip")
             val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
             tarefasSelecionadas.forEach { tarefa ->
-                val nomeArquivo = "${tarefa.titulo}.txt"
+                val nomeArquivo = "${tarefa.id}_${tarefa.titulo}.txt"
                 val arquivo = File(requireContext().filesDir, nomeArquivo)
                 arquivo.writeText("${tarefa.titulo}\n${tarefa.descricao}")
 

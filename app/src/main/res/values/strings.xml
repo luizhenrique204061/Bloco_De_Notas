@@ -34,6 +34,8 @@
     <string name="usuario_deslogado_google_sucesso">O usuário foi deslogado</string>
     <string name="falha_login_google">Falha ao logar com a conta Google</string>
     <string name="falha_deslogar_usuario_google">Falha ao delogar a conta Google</string>
+    <string name="nome_anotacoes_selecionadas">Anotações selecionadas</string>
+    <string name="nome_tarefas_selecioandas">Tarefas selecionadas</string>
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 
 

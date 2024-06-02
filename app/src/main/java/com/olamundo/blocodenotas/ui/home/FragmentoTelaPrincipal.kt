@@ -43,7 +43,7 @@ class FragmentoTelaPrincipal : Fragment() {
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var mainActivity: MainActivity
 
-    // This property is only valid between onCreateView and onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -219,11 +219,11 @@ class FragmentoTelaPrincipal : Fragment() {
             val notasSelecionadas = adapterNotacoes.listaNotas.filter { it.isChecked }
             if (notasSelecionadas.isEmpty()) return@withContext
 
-            val zipFile = File(requireContext().filesDir, "notas_selecionadas.zip")
+            val zipFile = File(requireContext().filesDir, "${getString(R.string.nome_anotacoes_selecionadas)}.zip")
             val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
             notasSelecionadas.forEach { nota ->
-                val nomeArquivo = "${nota.titulo}.txt"
+                val nomeArquivo = "${nota.id}_${nota.titulo}.txt"
                 val arquivo = File(requireContext().filesDir, nomeArquivo)
                 arquivo.writeText("${nota.titulo}\n${nota.descricao}")
 

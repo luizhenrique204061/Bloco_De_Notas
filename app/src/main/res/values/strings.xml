@@ -23,19 +23,83 @@
     <string name="minhas_anotacoes">Minhas Anotações</string>
     <string name="minhas_tarefas">Minhas Tarefas</string>
     <string name="texto_login">Realize o login para realizar o backup de seus arquivos</string>
+    <string name="texto_login_nota_segura">Faça o login, para ter acesso as anotações protegidas</string>
+    <string name="texto_cadastro">Realize o seu cadastro para realizar o backup de seus arquivos</string>
+    <string name="texto_cadastro_anotacoes_protegidas">Realize o seu cadastro para criar anotações totalmente privadas e realizar o backup de suas anotações públicas</string>
+    <string name="anotacoes_protegidas">Anotações Protegidas</string>
     <string name="email">Email</string>
     <string name="senha">Senha</string>
+    <string name="nao_excluir_conta">Não</string>
+    <string name="prosseguir_excluir_conta">Sim</string>
+    <string name="senha_atual">Senha atual</string>
+    <string name="exclusao_de_conta">Exclusão de conta</string>
+    <string name="faca_login_para_realizar_backup">Faça o login, para realizar o backup de suas anotações</string>
+    <string name="aviso_exclusao_de_conta">Ao excluir sua conta todas as informações salvas na nuvem serão perdidas, incluindo suas anotações protegidas, e esse processo não pode ser desfeito. No entanto os dados salvos localmente em seu dispositivo serão mantidos. Tem certeza que deseja prosseguir?</string>
+    <string name="nova_senha">Nova senha</string>
+    <string name="para_continuar_com_a_exclusao_reautenticacao">Para continuar com a exclusão de sua conta, digite suas credenciais de acesso</string>
+    <string name="confirmar_nova_senha">Confirme a nova senha</string>
+    <string name="redefinir_senha">Redefinir senha</string>
+    <string name="senha_alterada_com_sucesso">Senha alterada com sucesso</string>
+    <string name="falha_ao_alterar_senha">Falha ao alterar senha</string>
+    <string name="conta_excluida_com_sucesso">Conta excluida com sucesso</string>
+    <string name="autenticar">Autenticar</string>
     <string name="entrar">Entrar</string>
     <string name="cadastrar">Cadastrar</string>
+    <string name="esqueci_minha_senha">Esqueci minha senha</string>
+    <string name="digite_email_para_recuperar">Digite o seu email para recuperar sua senha</string>
     <string name="login">Entrar</string>
+    <string name="falha_na_autenticacao">Falha na antenticação</string>
+    <string name="preencha_todos_os_campos">Preencha todos os campos</string>
+    <string name="erro_ao_verificar_email">Erro desconhecido ao verificar o email</string>
+    <string name="email_nao_encontrado">O email digitado não foi identificado na base de dados</string>
+    <string name="erro_ao_enviar_email_de_recuperacao">Erro ao enviar email de recuperação</string>
+    <string name="email_de_recuperacao_enviado_com_sucesso">Email de recuperação enviado com sucesso</string>
     <string name="logout">Sair</string>
+    <string name="nome_usuario">Nome</string>
+    <string name="novo_nome_usuario">Digite o novo nome</string>
+    <string name="confirme_o_novo_nome">Confirme o novo nome</string>
+    <string name="arquivo_seguro">Arquivo seguro</string>
+    <string name="ola_nome_do_usuario">Olá, %s</string>
+    <string name="definicoes_da_conta">Definições da conta</string>
+    <string name="idiomas">Idiomas</string>
+    <string name="idioma">Idioma</string>
+    <string name="botao_redefinir_senha">Redefinir senha</string>
+    <string name="texto_selecione_o_idioma_abaixo">Selecione o idioma de sua preferência</string>
+    <string name="botao_alterar_nome_do_usuario">Alterar nome do usuário</string>
+    <string name="texto_alterar_nome_do_usuario">Para alterar o nome do usuário, digite seu novo nome de usuário e confime logo abaixo</string>
+    <string name="excluir_conta">Excluir conta</string>
+    <string name="botao_confirmar_alteracao">Confirmar a alteração</string>
+    <string name="nome_do_usuario_alterado_com_secesso">Nome de usuário alterado com sucesso</string>
+    <string name="falha_ao_alterar_o_nome_do_usuario_alterado_com_secesso">Falha ao alterar o nome do usuário</string>
+    <string name="falha_os_nomes_de_usuario_sao_diferentes">Falha na alteração, os nomes de usuários que você digitou são divergentes</string>
+    <string name="voce_nao_esta_logado_no_momento">Nenhum usuário logado no momento</string>
+    <string name="nehum_email_em_uso_no_momento">Nenhum email em uso no momento</string>
+    <string name="redefinicao_de_senha">Redefinição de senha</string>
     <string name="entrar_com_google">Entrar com o Google</string>
     <string name="usuario_logado_google_sucesso">Login com a conta Google executado com sucesso</string>
     <string name="usuario_deslogado_google_sucesso">O usuário foi deslogado</string>
     <string name="falha_login_google">Falha ao logar com a conta Google</string>
+    <string name="usuario_deslogado_com_sucesso_email">O usuário foi deslogado</string>
+    <string name="falha_ao_deslogar_usuario_email">Falha ao deslogar o usuário</string>
     <string name="falha_deslogar_usuario_google">Falha ao delogar a conta Google</string>
     <string name="nome_anotacoes_selecionadas">Anotações selecionadas</string>
     <string name="nome_tarefas_selecioandas">Tarefas selecionadas</string>
+    <string name="login_com_email_e_senha">Login realizado com sucesso</string>
+    <string name="falha_login_email_senha">Falha ao realizar o login</string>
+    <string name="erro_desconhcido_login_email_e_senha">Erro desconhecido</string>
+    <string name="cadastro_email_e_senha_com_sucesso">Cadastro realizado com sucesso</string>
+    <string name="falha_cadastro_email_e_senha">Falha ao realizar o cadastro</string>
+    <string name="usuario_nao_encontrado">O usuário não foi encontrado</string>
+    <string name="senha_ou_usuario_incorretos">Usuário ou senha incorretos</string>
+    <string name="as_senhas_sao_divergentes">As novas credenciais que você digitou são divergentes</string>
+    <string name="falha_conta_cadastrada">Essa conta já foi cadastrada</string>
+    <string name="falha_caracteres">Use uma senha com no mínimo 6 caracteres</string>
+    <string name="sincronizar">Sincronizar</string>
+    <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">Não foi possível redefinir a senha, pois não existe nenhum usuário logado no momento</string>
+    <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">Não foi possivel excluir a sua conta, pois não existe nenhum usuário logado no momento</string>
+    <string name="falha_alteracao_nome_usuario">Não foi possivel alterar o nome do usuário, pois não existe nenhum usuário logado no momento</string>
+
+
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 
 
@@ -49,6 +113,21 @@
     <string name="menu_tela_principal">Tela Principal</string>
     <string name="menu_tarefas">Tarefas</string>
     <string name="menu_login">Login</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_tela_principal_protegida">TelaPrincipalProtegida</string>
+    <string name="padrao">Padrão</string>
+    <string name="portugues">Português</string>
+    <string name="ingles">Inglês</string>
+    <string name="espanhol">Espanhol</string>
+    <string name="russo">Russo</string>
+
+
+    <string-array name="lista_idiomas">
+        <item>Idiomas</item>
+        <item>Português</item>
+        <item>Inglês</item>
+        <item>Espanhol</item>
+        <item>Russo</item>
+        <item>Padrão</item>
+
+    </string-array>
 </resources>

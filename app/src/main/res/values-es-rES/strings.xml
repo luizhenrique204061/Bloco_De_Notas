@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bloc de Notas</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="titulo">Título</string>
+    <string name="descricao">Escribe algo...</string>
+    <string name="edicao_em">Editado en: %s</string>
+    <string name="formato_data_hora">dd/MM/yyyy \'a las\' HH:mm</string>
+    <string name="criar_nota">Crear Nota</string>
+    <string name="salvar">Guardar</string>
+    <string name="compartilhar">Compartir</string>
+    <string name="remover">Eliminar</string>
+    <string name="snackbar_criar_nota">Completa al menos uno de los campos</string>
+    <string name="nenhum_texto_digitado">Ningún texto ingresado</string>
+    <string name="anotacao_salva_com_sucesso">Nota guardada correctamente</string>
+    <string name="sem_anotacoes">No tienes notas</string>
+    <string name="sem_tarefas">No tienes tareas</string>
+    <string name="itens_selecionados">Elementos seleccionados: %s</string>
+    <string name="erro_abrir_arquivo">Error al abrir el archivo</string>
+    <string name="limite_de_caracteres_do_titulo">Límite de caracteres alcanzado</string>
+    <string name="criar_tarefa">Crear Tarea</string>
+    <string name="adicionar_titulo_lista">Agregar título a la lista</string>
+    <string name="adicionar_uma_tarefa_pendente">Agregar una tarea pendiente</string>
+    <string name="minhas_anotacoes">Mis Notas</string>
+    <string name="minhas_tarefas">Mis Tareas</string>
+    <string name="texto_login">Inicia sesión para respaldar tus archivos</string>
+    <string name="texto_login_nota_segura">Inicia sesión para acceder a notas seguras</string>
+    <string name="texto_cadastro">Regístrate para respaldar tus archivos</string>
+    <string name="texto_cadastro_anotacoes_protegidas">Regístrate para crear notas completamente privadas y respaldar tus notas públicas</string>
+    <string name="anotacoes_protegidas">Notas Seguras</string>
+    <string name="email">Correo electrónico</string>
+    <string name="senha">Contraseña</string>
+    <string name="nao_excluir_conta">No</string>
+    <string name="prosseguir_excluir_conta">Sí</string>
+    <string name="senha_atual">Contraseña actual</string>
+    <string name="exclusao_de_conta">Eliminar cuenta</string>
+    <string name="faca_login_para_realizar_backup">Inicia sesión para respaldar tus notas</string>
+    <string name="aviso_exclusao_de_conta">Al eliminar tu cuenta, se perderá toda la información almacenada en la nube, incluidas las notas seguras. Los datos locales en tu dispositivo permanecerán. ¿Estás seguro de que quieres continuar?</string>
+    <string name="nova_senha">Nueva contraseña</string>
+    <string name="para_continuar_com_a_exclusao_reautenticacao">Para continuar con la eliminación de tu cuenta, introduce tus credenciales de acceso</string>
+    <string name="confirmar_nova_senha">Confirmar nueva contraseña</string>
+    <string name="redefinir_senha">Restablecer contraseña</string>
+    <string name="senha_alterada_com_sucesso">Contraseña cambiada correctamente</string>
+    <string name="falha_ao_alterar_senha">Error al cambiar la contraseña</string>
+    <string name="conta_excluida_com_sucesso">Cuenta eliminada correctamente</string>
+    <string name="autenticar">Autenticar</string>
+    <string name="entrar">Iniciar sesión</string>
+    <string name="cadastrar">Registrarse</string>
+    <string name="esqueci_minha_senha">Olvidé mi contraseña</string>
+    <string name="digite_email_para_recuperar">Ingresa tu correo electrónico para recuperar tu contraseña</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="falha_na_autenticacao">Error de autenticación</string>
+    <string name="preencha_todos_os_campos">Completa todos los campos</string>
+    <string name="erro_ao_verificar_email">Error desconocido al verificar el correo electrónico</string>
+    <string name="email_nao_encontrado">El correo electrónico ingresado no se encontró en la base de datos</string>
+    <string name="erro_ao_enviar_email_de_recuperacao">Error al enviar el correo de recuperación</string>
+    <string name="email_de_recuperacao_enviado_com_sucesso">Correo de recuperación enviado correctamente</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="nome_usuario">Nombre</string>
+    <string name="novo_nome_usuario">Ingresa el nuevo nombre</string>
+    <string name="confirme_o_novo_nome">Confirma el nuevo nombre</string>
+    <string name="arquivo_seguro">Archivo seguro</string>
+    <string name="ola_nome_do_usuario">Hola, %s</string>
+    <string name="definicoes_da_conta">Configuraciones de cuenta</string>
+    <string name="idiomas">Idiomas</string>
+    <string name="idioma">Idioma</string>
+    <string name="botao_redefinir_senha">Restablecer contraseña</string>
+    <string name="texto_selecione_o_idioma_abaixo">Selecciona tu idioma preferido</string>
+    <string name="botao_alterar_nome_do_usuario">Cambiar nombre de usuario</string>
+    <string name="texto_alterar_nome_do_usuario">Para cambiar tu nombre de usuario, ingresa tu nuevo nombre de usuario y confirma abajo</string>
+    <string name="excluir_conta">Eliminar cuenta</string>
+    <string name="botao_confirmar_alteracao">Confirmar cambio</string>
+    <string name="nome_do_usuario_alterado_com_secesso">Nombre de usuario cambiado correctamente</string>
+    <string name="falha_ao_alterar_o_nome_do_usuario_alterado_com_secesso">Error al cambiar el nombre de usuario</string>
+    <string name="falha_os_nomes_de_usuario_sao_diferentes">Error al cambiar el nombre de usuario, los nombres que ingresaste son diferentes</string>
+    <string name="voce_nao_esta_logado_no_momento">Ningún usuario ha iniciado sesión en este momento</string>
+    <string name="nehum_email_em_uso_no_momento">Ningún correo electrónico en uso en este momento</string>
+    <string name="redefinicao_de_senha">Restablecimiento de contraseña</string>
+    <string name="entrar_com_google">Iniciar sesión con Google</string>
+    <string name="usuario_logado_google_sucesso">Inicio de sesión con la cuenta de Google realizado correctamente</string>
+    <string name="usuario_deslogado_google_sucesso">Usuario desconectado</string>
+    <string name="falha_login_google">Error al iniciar sesión con la cuenta de Google</string>
+    <string name="usuario_deslogado_com_sucesso_email">Usuario desconectado</string>
+    <string name="falha_ao_deslogar_usuario_email">Error al desconectar el usuario</string>
+    <string name="falha_deslogar_usuario_google">Error al desconectar la cuenta de Google</string>
+    <string name="nome_anotacoes_selecionadas">Notas seleccionadas</string>
+    <string name="nome_tarefas_selecioandas">Tareas seleccionadas</string>
+    <string name="login_com_email_e_senha">Inicio de sesión realizado correctamente</string>
+    <string name="falha_login_email_senha">Error al iniciar sesión</string>
+    <string name="erro_desconhcido_login_email_e_senha">Error desconocido</string>
+    <string name="cadastro_email_e_senha_com_sucesso">Registro realizado correctamente</string>
+    <string name="falha_cadastro_email_e_senha">Error al realizar el registro</string>
+    <string name="usuario_nao_encontrado">Usuario no encontrado</string>
+    <string name="senha_ou_usuario_incorretos">Usuario o contraseña incorrectos</string>
+    <string name="as_senhas_sao_divergentes">Las nuevas credenciales que ingresaste son diferentes</string>
+    <string name="falha_conta_cadastrada">Esta cuenta ya ha sido registrada</string>
+    <string name="falha_caracteres">Utiliza una contraseña con al menos 6 caracteres</string>
+    <string name="sincronizar">Sincronizar</string>
+    <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">No se pudo restablecer la contraseña porque no hay ningún usuario conectado en este momento</string>
+    <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">No se puede eliminar tu cuenta porque no hay ningún usuario conectado en este momento</string>
+    <string name="falha_alteracao_nome_usuario">No se pudo cambiar el nombre de usuario porque no hay ningún usuario conectado en este momento</string>
+
+    <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
+
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Encabezado de navegación</string>
+    <string name="action_settings">Configuración</string>
+
+    <string name="menu_tela_principal">Pantalla Principal</string>
+    <string name="menu_tarefas">Tareas</string>
+    <string name="menu_login">Iniciar sesión</string>
+    <string name="title_activity_tela_principal_protegida">PantallaPrincipalProtegida</string>
+    <string name="padrao">Predeterminado</string>
+    <string name="portugues">Portugués</string>
+    <string name="ingles">Inglés</string>
+    <string name="espanhol">Español</string>
+    <string name="russo">Ruso</string>
+
+
+    <string-array name="lista_idiomas">
+        <item>Idiomas</item>
+        <item>Portugués</item>
+        <item>Inglés</item>
+        <item>Español</item>
+        <item>Ruso</item>
+        <item>Por defecto</item>
+    </string-array>
+
+</resources>

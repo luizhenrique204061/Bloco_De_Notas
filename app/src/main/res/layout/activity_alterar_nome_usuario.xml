@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AlterarNomeUsuario">
+
+        <TextView
+            android:id="@+id/texto_alterar_nome_usuario"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/texto_alterar_nome_do_usuario"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imagem_usuario"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_usuario"
+            app:layout_constraintBottom_toBottomOf="@id/mostrar_usuario"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/mostrar_usuario" />
+
+        <TextView
+            android:id="@+id/mostrar_usuario"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"
+            android:text="@string/voce_nao_esta_logado_no_momento"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagem_usuario"
+            app:layout_constraintTop_toBottomOf="@id/texto_alterar_nome_usuario" />
+
+        <EditText
+            android:id="@+id/novo_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/shape_edit_text_preto"
+            android:hint="@string/novo_nome_usuario"
+            android:inputType="textEmailAddress"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mostrar_usuario" />
+
+        <EditText
+            android:id="@+id/confirme_o_novo_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/shape_edit_text_preto"
+            android:hint="@string/confirme_o_novo_nome"
+            android:inputType="textEmailAddress"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/novo_nome" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/botao_confirmar_alteracao"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/botao_confirmar_alteracao"
+            android:text="@string/botao_confirmar_alteracao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/confirme_o_novo_nome" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

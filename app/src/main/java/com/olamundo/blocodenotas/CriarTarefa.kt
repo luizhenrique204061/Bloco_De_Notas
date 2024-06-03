@@ -1,21 +1,26 @@
 package com.olamundo.blocodenotas
 
 import Adapter.TarefasAdapter
+import DB.DB
 import Modelo.Tarefa
 import Room.AppDataBase
 import Room.TarefaDao
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityCriarTarefaBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Locale
 
 class CriarTarefa : AppCompatActivity() {
     private lateinit var binding: ActivityCriarTarefaBinding
@@ -27,8 +32,10 @@ class CriarTarefa : AppCompatActivity() {
     val hora = System.currentTimeMillis()
     var tarefaId: Long = 0
     val scope = CoroutineScope(Dispatchers.IO)
+    val db = DB()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        carregarLocalidade()
         binding = ActivityCriarTarefaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -102,12 +109,31 @@ class CriarTarefa : AppCompatActivity() {
     private suspend fun salvar() {
         titulo = binding.tituloTarefa.text.toString()
         atualizarTextoDoEditText() // Atualiza o texto antes de salvar
-        criarTarefas(tarefaId, titulo, textoDoEditText, hora)
-        retornar()
+        if (titulo.isNotEmpty() && textoDoEditText.isNotEmpty()) {
+            criarTarefas(tarefaId, titulo, textoDoEditText, hora)
+            retornar()
+        } else {
+            Snackbar.make(binding.root, getString(R.string.preencha_todos_os_campos), Snackbar.LENGTH_SHORT).apply {
+                this.setBackgroundTint(Color.RED)
+                this.setTextColor(Color.WHITE)
+                this.show()
+            }
+        }
     }
 
     private suspend fun deletar() {
-        bancoDeDados.remover(tarefaId)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        currentUser?.let {
+            val excluirTarefaFirebase = db.excluirTarefasUsuario(tarefaId)
+            if (excluirTarefaFirebase) {
+                // Se excluiu com sucesso do Firebase, exclui do Room
+                bancoDeDados.remover(tarefaId)
+            }
+        } ?: run {
+            bancoDeDados.remover(tarefaId)
+        }
+
         finish()
     }
 
@@ -166,5 +192,28 @@ class CriarTarefa : AppCompatActivity() {
         val tarefasText = listaTarefas.joinToString(", ") { it.descricao }
         textoDoEditText = tarefasText
         Log.i("CriarTarefaCapturado", "Texto no EditText: $textoDoEditText")
+    }
+
+    private fun selecionarIdioma(linguagem: String) {
+        val localidade = Locale(linguagem)
+        Locale.setDefault(localidade)
+
+        // Obter o objeto Configuration da atividade atual
+        val configuration = resources.configuration
+
+        // Configurar a localidade para a Configuration
+        configuration.setLocale(localidade)
+
+        // Atualizar a Configuration na atividade atual
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+
+    }
+
+    private fun carregarLocalidade() {
+        val preferences = getSharedPreferences("config_linguagens", MODE_PRIVATE)
+        val linguagem = preferences.getString("minha_linguagem", "")
+        if (linguagem != null) {
+            selecionarIdioma(linguagem)
+        }
     }
 }

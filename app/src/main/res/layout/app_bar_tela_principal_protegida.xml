@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TelaPrincipalProtegida">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.BlocoDeNotas.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/black"
+            app:popupTheme="@style/Theme.BlocoDeNotas.PopupOverlay">
+
+            <ImageView
+                android:id="@+id/imagem_cadeado"
+                android:layout_width="40dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_cadeado"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_height="30dp"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_tela_principal_protegida" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

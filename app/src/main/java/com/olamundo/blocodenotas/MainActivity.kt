@@ -1,38 +1,43 @@
 package com.olamundo.blocodenotas
 
+import DB.DB
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
+import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityMainBinding
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var googleSignInClient: GoogleSignInClient
+    var isAnimating: Boolean = false
+    val db = DB()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        carregarLocalidade()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-
 
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -42,13 +47,10 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_tela_principal, R.id.nav_tarefas, R.id.nav_tela_login
@@ -56,6 +58,21 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val headerView = navView.getHeaderView(0)
+        val textView: TextView = headerView.findViewById(R.id.nome)
+        val nomeUsuario = getString(R.string.nome_usuario)
+
+        val headerViewDeslogado = binding.navView.getHeaderView(0)
+        val textoBackup: TextView = headerViewDeslogado.findViewById(R.id.aviso_backup)
+
+        if (auth.currentUser != null) {
+            textoBackup.visibility = View.GONE
+        } else {
+            textoBackup.visibility = View.VISIBLE
+        }
+
+        db.recuperarNomeUsuario(nomeUsuario, textView)
 
         // Adicionar um listener para resgatar a navegação sempre que a NavigationView for usada
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -68,12 +85,37 @@ class MainActivity : AppCompatActivity() {
                 R.id.deslogar -> {
                     signOut()
                 }
+                R.id.nav_dados_do_usuario -> navController.navigate(R.id.nav_dados_do_usuario)
+                R.id.activity_login -> {
+                    irParaTelaDeLogin()
+                }
+                R.id.activity_idiomas -> {
+                    irParaTelaDeIdiomas()
+                }
                 else -> false
             }
             true
         }
 
         handleNavigation(intent)
+    }
+
+    private fun irParaTelaDeIdiomas() {
+        Intent(this, TelaIdiomas::class.java).apply {
+            startActivity(this)
+            binding.navView.post {
+                binding.navView.setCheckedItem(R.id.nav_tela_principal)
+            }
+        }
+    }
+
+    private fun irParaTelaDeLogin() {
+        Intent(this, TelaLogin::class.java).apply {
+            startActivity(this)
+            binding.navView.post {
+                binding.navView.setCheckedItem(R.id.nav_tela_principal)
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -86,6 +128,8 @@ class MainActivity : AppCompatActivity() {
             val navController = findNavController(R.id.nav_host_fragment_content_main)
             if (fragment == "FragmentoTarefas") {
                 navController.navigate(R.id.nav_tarefas)
+            } else if (fragment == "FragmentoLogin"){
+                navController.navigate(R.id.nav_tela_login)
             }
         }
     }
@@ -107,31 +151,77 @@ class MainActivity : AppCompatActivity() {
         // Deslogar do Firebase
         auth.signOut()
 
-        // Deslogar do Google
-        googleSignInClient.signOut().addOnCompleteListener(this) { tarefa ->
-            // Atualize a UI após o logout, se necessário
+        val headerViewDeslogado = binding.navView.getHeaderView(0)
+        val textoBackup: TextView = headerViewDeslogado.findViewById(R.id.aviso_backup)
 
-            if (tarefa.isSuccessful) {
-                Snackbar.make(binding.root, getString(R.string.usuario_deslogado_google_sucesso), Snackbar.LENGTH_SHORT).apply {
-                    this.setTextColor(Color.WHITE)
-                    this.setBackgroundTint(Color.RED)
-                    this.show()
-                }
-            } else {
-                Snackbar.make(binding.root, getString(R.string.falha_deslogar_usuario_google), Snackbar.LENGTH_SHORT).apply {
-                    this.setTextColor(Color.WHITE)
-                    this.setBackgroundTint(Color.RED)
-                    this.show()
-                }
-            }
+        if (auth.currentUser != null) {
+            textoBackup.visibility = View.GONE
+        } else {
+            textoBackup.visibility = View.VISIBLE
+        }
 
-            // Navegar para a tela principal
-            val navController = findNavController(R.id.nav_host_fragment_content_main)
-            navController.navigate(R.id.nav_tela_principal)
+        // Navegar para a tela principal
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController.navigate(R.id.nav_tela_principal)
 
-            // Atualizar o estado do item selecionado no NavigationView
-            val navView: NavigationView = binding.navView
-            navView.setCheckedItem(R.id.nav_tela_principal)
+        // Definir o item nav_tela_principal como selecionado após a navegação
+        binding.navView.post {
+            binding.navView.setCheckedItem(R.id.nav_tela_principal)
+        }
+
+        // Mostrar Snackbar de confirmação de logout
+        Snackbar.make(
+            binding.root,
+            getString(R.string.usuario_deslogado_com_sucesso_email),
+            Snackbar.LENGTH_SHORT
+        ).apply {
+            this.setBackgroundTint(Color.RED)
+            this.setTextColor(Color.WHITE)
+            this.show()
+        }
+
+        // Limpar o nome do usuário do header da NavigationView
+        val headerView = binding.navView.getHeaderView(0)
+        val textView: TextView = headerView.findViewById(R.id.nome)
+        textView.visibility = View.GONE
+    }
+
+    fun iniciarAnimacaoSincronizacao() {
+        isAnimating = true
+        if (isAnimating) {
+            val sincronizarButton = binding.appBarMain.sincronizar
+            sincronizarButton.visibility = View.VISIBLE
+            val animation = AnimationUtils.loadAnimation(this, R.anim.rotacao)
+            sincronizarButton.startAnimation(animation)
+        }
+    }
+
+    fun pararAnimacao() {
+        isAnimating = false
+        val sincronizarButton = binding.appBarMain.sincronizar
+        sincronizarButton.clearAnimation()
+        sincronizarButton.visibility = View.GONE
+    }
+    private fun selecionarIdioma(linguagem: String) {
+        val localidade = Locale(linguagem)
+        Locale.setDefault(localidade)
+
+        // Obter o objeto Configuration da atividade atual
+        val configuration = resources.configuration
+
+        // Configurar a localidade para a Configuration
+        configuration.setLocale(localidade)
+
+        // Atualizar a Configuration na atividade atual
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+
+    }
+
+    private fun carregarLocalidade() {
+        val preferences = getSharedPreferences("config_linguagens", MODE_PRIVATE)
+        val linguagem = preferences.getString("minha_linguagem", "")
+        if (linguagem != null) {
+            selecionarIdioma(linguagem)
         }
     }
 }

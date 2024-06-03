@@ -15,10 +15,53 @@
         android:theme="@style/Theme.BlocoDeNotas"
         tools:targetApi="31">
         <activity
+            android:name=".TelaIdiomas"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+
+            android:exported="false" />
+        <activity
+            android:name=".CriarAnotacaoProtegida"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+
+            android:exported="false" />
+        <activity
+            android:name=".TelaPrincipalProtegida"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false"
+            android:label="@string/title_activity_tela_principal_protegida"
+            android:theme="@style/Theme.BlocoDeNotas.NoActionBar" />
+        <activity
+            android:name=".TelaCadastroNotasProtegidas"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+
+            android:exported="false" />
+        <activity
+            android:name=".TelaLogin"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false" />
+        <activity
+            android:name=".AlterarNomeUsuario"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false" />
+        <activity
+            android:name=".TelaCadastro"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false" />
+        <activity
+            android:name=".ExcluirConta"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false" />
+        <activity
+            android:name=".RedefinirSenha"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false" />
+        <activity
             android:name=".CriarTarefa"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
             android:exported="false" />
         <activity
             android:name=".AbrirNota"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

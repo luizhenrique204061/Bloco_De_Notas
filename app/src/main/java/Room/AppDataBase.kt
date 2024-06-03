@@ -1,5 +1,7 @@
 package Room
 
+import MIGRATION.MIGRATION_8_9
+import MIGRATION.MIGRATION_9_10
 import Modelo.Notas
 import Modelo.Tarefa
 import android.content.Context
@@ -7,8 +9,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Notas::class, Tarefa::class], version = 4, exportSchema = true)
-abstract class AppDataBase: RoomDatabase() {
+@Database(entities = [Notas::class, Tarefa::class], version = 10, exportSchema = true)
+abstract class AppDataBase : RoomDatabase() {
 
     abstract fun NotaDao(): NotaDao
     abstract fun TarefaDao(): TarefaDao
@@ -19,7 +21,7 @@ abstract class AppDataBase: RoomDatabase() {
                 context,
                 AppDataBase::class.java,
                 "db.notas"
-            ).fallbackToDestructiveMigration().build()
+            ).addMigrations(MIGRATION_8_9, MIGRATION_9_10).build()
         }
     }
 }

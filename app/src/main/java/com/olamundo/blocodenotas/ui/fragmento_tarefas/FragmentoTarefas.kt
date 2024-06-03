@@ -1,12 +1,14 @@
-package com.olamundo.blocodenotas.ui.gallery
+package com.olamundo.blocodenotas.ui.fragmento_tarefas
 
 import Adapter.TarefasAdapterTelaPrincipal
+import DB.DB
 import Modelo.Tarefa
 import Room.AppDataBase
 import Room.TarefaDao
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +16,10 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.CriarNota
 import com.olamundo.blocodenotas.CriarTarefa
 import com.olamundo.blocodenotas.MainActivity
@@ -29,6 +32,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -41,6 +45,8 @@ class FragmentoTarefas : Fragment() {
     private val listaTarefas: MutableList<Tarefa> = mutableListOf()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var mainActivity: MainActivity
+    val db = DB()
+    private lateinit var textViewSemTarefas: TextView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -55,6 +61,7 @@ class FragmentoTarefas : Fragment() {
 
         _binding = FragmentoTarefasBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
+        carregarLocalidade()
         return binding.root
     }
 
@@ -64,6 +71,7 @@ class FragmentoTarefas : Fragment() {
         val recyclerViewTarefas = binding.recyclerviewTarefas
         // mainActivity.setSupportActionBar(binding.toolbar)
         loadTheme()
+        textViewSemTarefas = binding.semTarefas
 
         adapterTarefas = TarefasAdapterTelaPrincipal(requireContext(), listaTarefas, object : TarefasAdapterTelaPrincipal.OnItemSelectedListener {
             override fun onItemSelected(selectedItemCount: Int) {
@@ -170,22 +178,63 @@ class FragmentoTarefas : Fragment() {
 
         scope.launch {
             // Buscar anotações e tarefas do banco de dados
-            val buscarTarefas = bancoDeDadosTarefa.buscarTodas()
+            val buscarTarefasRoom = bancoDeDadosTarefa.buscarTodas()
+            Log.i("BuscandoRoom", buscarTarefasRoom.toString())
+
+            db.obterTarefasDoUsuario(requireContext(), listaTarefas, adapterTarefas, textViewSemTarefas)
 
 
             // Limpar e atualizar a lista no adapter
             withContext(Dispatchers.Main) {
                 adapterTarefas.listaTarefasTelaPrincipal.clear()
-                adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefas)
+                adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefasRoom)
                 adapterTarefas.notifyDataSetChanged()
 
                 // Atualizar a visibilidade do "semAnotacoes"
                 if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
-                    binding.semAnotacoes.visibility = View.VISIBLE
+                    binding.semTarefas.visibility = View.VISIBLE
                 } else {
-                    binding.semAnotacoes.visibility = View.GONE
+                    binding.semTarefas.visibility = View.GONE
                 }
             }
+
+            salvarTarefasNoFirebase(buscarTarefasRoom)
+        }
+    }
+
+    private fun salvarTarefasNoFirebase(tarefas: MutableList<Tarefa>) {
+
+        val usuarioAtual = FirebaseAuth.getInstance().currentUser
+
+        usuarioAtual?.let {
+            for (tarefa in tarefas) {
+                db.salvarTarefasNaNuvem(tarefa.id, tarefa.titulo, tarefa.descricao, tarefa.data)
+            }
+            scope.launch {
+                withContext(Dispatchers.Main) {
+                    mainActivity.iniciarAnimacaoSincronizacao()
+                    Handler().postDelayed({
+                        mainActivity.pararAnimacao()
+                    },3000)
+                    /*
+                    Snackbar.make(binding.root, "Backup iniciado", Snackbar.LENGTH_SHORT).apply {
+                        this.setBackgroundTint(Color.parseColor("#214C06"))
+                        this.setTextColor(Color.WHITE)
+                        this.show()
+                    }
+
+                     */
+                }
+            }
+        } ?: run {
+            /*
+            Snackbar.make(binding.root, "Você não está logado", Snackbar.LENGTH_SHORT).apply {
+                this.setBackgroundTint(Color.RED)
+                this.setTextColor(Color.WHITE)
+                this.show()
+            }
+
+             */
         }
     }
 
@@ -210,35 +259,47 @@ class FragmentoTarefas : Fragment() {
 
     private suspend fun deletarTarefasSelecionadas() {
         withContext(Dispatchers.IO) {
-            val tarefasSelecionadas =
-                adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
-            if (tarefasSelecionadas.isEmpty()) {
+            val notasSelecionadas = adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
+            if (notasSelecionadas.isEmpty()) {
+                Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
                 return@withContext
-            } else {
-                // Deleta cada nota selecionada individualmente
-                tarefasSelecionadas.forEach { tarefa ->
-                    bancoDeDadosTarefa.remover(tarefa.id)
-                    withContext(Dispatchers.Main) {
-                        mainActivity.toggleToolbarVisibility(true)
-                        binding.toolbar.visibility = View.GONE
-                        adapterTarefas.desativarModoSelecao()
+            }
+
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            notasSelecionadas.forEach { tarefas ->
+                Log.i("DeletarNotas", "Excluindo nota com ID: ${tarefas.id}")
+
+                // Exclui do Firebase se o usuário estiver logado
+                if (currentUser != null) {
+                    val excluiuFirebase = db.excluirTarefasUsuario(tarefas.id)
+                    if (excluiuFirebase) {
+                        // Se excluiu com sucesso do Firebase, exclui do Room
+                        bancoDeDadosTarefa.remover(tarefas.id)
                     }
+                } else {
+                    // Se o usuário não estiver logado, apenas exclui do Room
+                    bancoDeDadosTarefa.remover(tarefas.id)
                 }
             }
 
             // Atualiza a lista de notas exibida após a exclusão
-            val buscarTarefa = bancoDeDadosTarefa.buscarTodas()
+            val buscarNotacoes = bancoDeDadosTarefa.buscarTodas()
             adapterTarefas.listaTarefasTelaPrincipal.clear()
-            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefa)
+            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarNotacoes)
 
             // Notifica o adapter sobre as mudanças
             withContext(Dispatchers.Main) {
                 adapterTarefas.notifyDataSetChanged()
-                if (buscarTarefa.isEmpty()) {
-                    binding.semAnotacoes.visibility = View.VISIBLE
+                db.obterTarefasDoUsuario(requireContext(), listaTarefas, adapterTarefas, textViewSemTarefas)
+                if (buscarNotacoes.isEmpty()) {
+                    binding.semTarefas.visibility = View.VISIBLE
                 } else {
-                    binding.semAnotacoes.visibility = View.GONE
+                    binding.semTarefas.visibility = View.GONE
                 }
+                mainActivity.toggleToolbarVisibility(true)
+                binding.toolbar.visibility = View.GONE
+                adapterTarefas.desativarModoSelecao()
             }
         }
     }
@@ -290,5 +351,22 @@ class FragmentoTarefas : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun selecionarIdioma(linguagem: String) {
+        val localidade = Locale(linguagem)
+        Locale.setDefault(localidade)
+
+        val configuration = resources.configuration
+        configuration.setLocale(localidade)
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
+
+    private fun carregarLocalidade() {
+        val preferences = requireContext().getSharedPreferences("config_linguagens", MODE_PRIVATE)
+        val linguagem = preferences.getString("minha_linguagem", "")
+        if (linguagem != null) {
+            selecionarIdioma(linguagem)
+        }
     }
 }

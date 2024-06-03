@@ -2,6 +2,7 @@ package Adapter
 
 import Modelo.Tarefa
 import android.content.Context
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

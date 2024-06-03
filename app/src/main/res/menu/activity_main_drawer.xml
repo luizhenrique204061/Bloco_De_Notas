@@ -12,6 +12,18 @@
             android:id="@+id/nav_tarefas"
             android:icon="@drawable/ic_list"
             android:title="@string/menu_tarefas" />
+
+        <item android:id="@+id/nav_dados_do_usuario"
+            android:icon="@drawable/ic_usuario"
+            android:title="@string/definicoes_da_conta"
+            />
+
+        <item
+            android:id="@+id/activity_idiomas"
+            android:icon="@drawable/ic_idiomas"
+            android:title="@string/idiomas"
+            />
+
         <item
             android:id="@+id/nav_tela_login"
             android:icon="@drawable/ic_login"
@@ -22,6 +34,11 @@
             android:icon="@drawable/ic_logout"
             android:title="@string/logout"
 
+            />
+
+        <item android:id="@+id/activity_login"
+            android:icon="@drawable/ic_cadeado"
+            android:title="@string/arquivo_seguro"
             />
     </group>
 </menu>

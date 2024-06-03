@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.DadosUsuario.FragmentoDadosDoUsuario">
+
+        <TextView
+            android:id="@+id/mensagem_dados_usario"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/definicoes_da_conta"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imagem_usuario"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_usuario"
+            app:layout_constraintBottom_toBottomOf="@id/mostrar_usuario"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/mostrar_usuario" />
+
+        <TextView
+            android:id="@+id/mostrar_usuario"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"
+            android:text="@string/voce_nao_esta_logado_no_momento"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagem_usuario"
+            app:layout_constraintTop_toBottomOf="@id/mensagem_dados_usario" />
+
+        <ImageView
+            android:id="@+id/imagem_email"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_email"
+            app:layout_constraintBottom_toBottomOf="@id/mostrar_email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/mostrar_email" />
+
+        <TextView
+            android:id="@+id/mostrar_email"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:text="@string/nehum_email_em_uso_no_momento"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagem_email"
+            app:layout_constraintTop_toBottomOf="@id/mostrar_usuario" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/botao_redefinir_senha"
+            style="@style/TEXTO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/shape_botao_redefinir_senha_preto"
+            android:text="@string/botao_redefinir_senha"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mostrar_email" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/botao_alterar_nome_do_usuario"
+            style="@style/TEXTO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/shape_botao_redefinir_senha_preto"
+            android:text="@string/botao_alterar_nome_do_usuario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/botao_redefinir_senha" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/botao_excluir_conta"
+            style="@style/TEXTO_LOGIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/botao_excluir_conta"
+            android:text="@string/excluir_conta"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/botao_alterar_nome_do_usuario" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

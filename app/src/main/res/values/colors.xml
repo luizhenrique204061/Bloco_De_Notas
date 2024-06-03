@@ -6,5 +6,10 @@
     <color name="verde_claro">#4CAF50</color>
     <color name="verde_escuro">#214C06</color>
     <color name="beje">#f5f5dc</color>
+    <color name="vermelho">#9F0606</color>
+    <color name="vermelho_claro">#FF0000</color>
     <color name="marrom_claro">#F4A460</color>
+    <color name="cinza">#424242</color>
+    <color name="azul">#0125AF</color>
+    <color name="dark_mode_android">#121212</color>
 </resources>

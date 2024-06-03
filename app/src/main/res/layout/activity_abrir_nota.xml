@@ -47,13 +47,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="30dp"
         android:background="@android:color/transparent"
+        android:layout_marginTop="7dp"
         android:gravity="start"
         android:hint="@string/descricao"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titulo" />
+        app:layout_constraintTop_toBottomOf="@id/contador_caracteres" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

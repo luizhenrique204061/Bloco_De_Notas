@@ -76,28 +76,25 @@ class TarefasAdapterTelaPrincipal(
         }
 
         private fun toggleItemSelection(position: Int) {
-            if (position != RecyclerView.NO_POSITION) {
-                // Trocar o estado de marcação do item clicado
+            if (position != RecyclerView.NO_POSITION && position >= 0 && position < listaTarefasTelaPrincipal.size) {
                 listaTarefasTelaPrincipal[position].isChecked = !listaTarefasTelaPrincipal[position].isChecked
-                // Notificar o listener sobre a mudança no número de itens selecionados
                 val selectedCount = listaTarefasTelaPrincipal.count { it.isChecked }
                 listener.onItemSelected(selectedCount)
                 listener.updateSelectedItemCount(selectedCount)
-                // Atualizar a exibição do item clicado
                 notifyItemChanged(position)
             }
         }
 
         private fun toggleSelectionMode(position: Int) {
-            selecaoAtiva = true
-            // Alternar o estado do item clicado longamente
-            listaTarefasTelaPrincipal[position].isChecked = !listaTarefasTelaPrincipal[position].isChecked
-            listener.onItemLongClicked()
-            // Notificar o listener sobre a mudança no número de itens selecionados
-            val selectedCount = listaTarefasTelaPrincipal.count { it.isChecked }
-            listener.onItemSelected(selectedCount)
-            listener.updateSelectedItemCount(selectedCount)
-            notifyDataSetChanged()
+            if (position != RecyclerView.NO_POSITION && position >= 0 && position < listaTarefasTelaPrincipal.size) {
+                selecaoAtiva = true
+                listaTarefasTelaPrincipal[position].isChecked = !listaTarefasTelaPrincipal[position].isChecked
+                listener.onItemLongClicked()
+                val selectedCount = listaTarefasTelaPrincipal.count { it.isChecked }
+                listener.onItemSelected(selectedCount)
+                listener.updateSelectedItemCount(selectedCount)
+                notifyDataSetChanged()
+            }
         }
 
 

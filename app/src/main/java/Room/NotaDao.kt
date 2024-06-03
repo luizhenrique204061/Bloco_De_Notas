@@ -12,6 +12,9 @@ interface NotaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun salva(notas: Notas)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun inserirTodas(notas: MutableList<Notas>)
+
     @Query("SELECT * FROM tabela_notas")
     suspend fun buscarTodas(): MutableList<Notas>
 

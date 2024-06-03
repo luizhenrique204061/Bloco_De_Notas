@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Заметки</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="titulo">Заголовок</string>
+    <string name="descricao">Напишите что-нибудь...</string>
+    <string name="edicao_em">Изменено: %s</string>
+    <string name="formato_data_hora">dd/MM/yyyy \'в\' HH:mm</string>
+    <string name="criar_nota">Создать заметку</string>
+    <string name="salvar">Сохранить</string>
+    <string name="compartilhar">Поделиться</string>
+    <string name="remover">Удалить</string>
+    <string name="snackbar_criar_nota">Заполните хотя бы одно поле</string>
+    <string name="nenhum_texto_digitado">Ничего не введено</string>
+    <string name="anotacao_salva_com_sucesso">Заметка успешно сохранена</string>
+    <string name="sem_anotacoes">У вас нет заметок</string>
+    <string name="sem_tarefas">У вас нет задач</string>
+    <string name="itens_selecionados">Выбрано элементов: %s</string>
+    <string name="erro_abrir_arquivo">Ошибка открытия файла</string>
+    <string name="limite_de_caracteres_do_titulo">Достигнут лимит символов</string>
+    <string name="criar_tarefa">Создать задачу</string>
+    <string name="adicionar_titulo_lista">Добавить заголовок в список</string>
+    <string name="adicionar_uma_tarefa_pendente">Добавить задачу</string>
+    <string name="minhas_anotacoes">Мои заметки</string>
+    <string name="minhas_tarefas">Мои задачи</string>
+    <string name="texto_login">Войдите, чтобы создать резервную копию ваших файлов</string>
+    <string name="texto_login_nota_segura">Войдите, чтобы получить доступ к защищенным заметкам</string>
+    <string name="texto_cadastro">Зарегистрируйтесь, чтобы создать резервную копию ваших файлов</string>
+    <string name="texto_cadastro_anotacoes_protegidas">Зарегистрируйтесь, чтобы создавать полностью приватные заметки и создавать резервные копии ваших публичных заметок</string>
+    <string name="anotacoes_protegidas">Защищенные заметки</string>
+    <string name="email">Электронная почта</string>
+    <string name="senha">Пароль</string>
+    <string name="nao_excluir_conta">Нет</string>
+    <string name="prosseguir_excluir_conta">Да</string>
+    <string name="senha_atual">Текущий пароль</string>
+    <string name="exclusao_de_conta">Удаление аккаунта</string>
+    <string name="faca_login_para_realizar_backup">Войдите, чтобы создать резервную копию ваших заметок</string>
+    <string name="aviso_exclusao_de_conta">При удалении вашего аккаунта все данные, сохраненные в облаке, будут потеряны, включая защищенные заметки, и этот процесс нельзя отменить. Однако локальные данные на вашем устройстве будут сохранены. Вы уверены, что хотите продолжить?</string>
+    <string name="nova_senha">Новый пароль</string>
+    <string name="para_continuar_com_a_exclusao_reautenticacao">Для продолжения удаления вашего аккаунта введите ваши учетные данные</string>
+    <string name="confirmar_nova_senha">Подтвердите новый пароль</string>
+    <string name="redefinir_senha">Сбросить пароль</string>
+    <string name="senha_alterada_com_sucesso">Пароль успешно изменен</string>
+    <string name="falha_ao_alterar_senha">Ошибка при изменении пароля</string>
+    <string name="conta_excluida_com_sucesso">Аккаунт успешно удален</string>
+    <string name="autenticar">Аутентифицировать</string>
+    <string name="entrar">Войти</string>
+    <string name="cadastrar">Зарегистрироваться</string>
+    <string name="esqueci_minha_senha">Я забыл пароль</string>
+    <string name="digite_email_para_recuperar">Введите ваш адрес электронной почты, чтобы восстановить пароль</string>
+    <string name="login">Войти</string>
+    <string name="falha_na_autenticacao">Ошибка аутентификации</string>
+    <string name="preencha_todos_os_campos">Заполните все поля</string>
+    <string name="erro_ao_verificar_email">Неизвестная ошибка при проверке адреса электронной почты</string>
+    <string name="email_nao_encontrado">Введенный адрес электронной почты не найден в базе данных</string>
+    <string name="erro_ao_enviar_email_de_recuperacao">Ошибка при отправке письма восстановления</string>
+    <string name="email_de_recuperacao_enviado_com_sucesso">Письмо восстановления отправлено успешно</string>
+    <string name="logout">Выйти</string>
+    <string name="nome_usuario">Имя</string>
+    <string name="novo_nome_usuario">Введите новое имя</string>
+    <string name="confirme_o_novo_nome">Подтвердите новое имя</string>
+    <string name="arquivo_seguro">Безопасный файл</string>
+    <string name="ola_nome_do_usuario">Привет, %s</string>
+    <string name="definicoes_da_conta">Настройки аккаунта</string>
+    <string name="idiomas">Языки</string>
+    <string name="idioma">Язык</string>
+    <string name="botao_redefinir_senha">Сбросить пароль</string>
+    <string name="texto_selecione_o_idioma_abaixo">Выберите предпочитаемый язык</string>
+    <string name="botao_alterar_nome_do_usuario">Изменить имя пользователя</string>
+    <string name="texto_alterar_nome_do_usuario">Чтобы изменить имя пользователя, введите новое имя и подтвердите ниже</string>
+    <string name="excluir_conta">Удалить аккаунт</string>
+    <string name="botao_confirmar_alteracao">Подтвердить изменение</string>
+    <string name="nome_do_usuario_alterado_com_secesso">Имя пользователя успешно изменено</string>
+    <string name="falha_ao_alterar_o_nome_do_usuario_alterado_com_secesso">Ошибка при изменении имени пользователя</string>
+    <string name="falha_os_nomes_de_usuario_sao_diferentes">Ошибка при изменении имени пользователя, введенные вами имена отличаются</string>
+    <string name="voce_nao_esta_logado_no_momento">В данный момент нет зарегистрированных пользователей</string>
+    <string name="nehum_email_em_uso_no_momento">В данный момент нет используемых адресов электронной почты</string>
+    <string name="redefinicao_de_senha">Сброс пароля</string>
+    <string name="entrar_com_google">Войти с помощью Google</string>
+    <string name="usuario_logado_google_sucesso">Вход в аккаунт Google выполнен успешно</string>
+    <string name="usuario_deslogado_google_sucesso">Пользователь вышел из системы</string>
+    <string name="falha_login_google">Ошибка входа с помощью аккаунта Google</string>
+    <string name="usuario_deslogado_com_sucesso_email">Пользователь вышел из системы</string>
+    <string name="falha_ao_deslogar_usuario_email">Ошибка выхода из системы</string>
+    <string name="falha_deslogar_usuario_google">Ошибка выхода из системы Google</string>
+    <string name="nome_anotacoes_selecionadas">Выбранные заметки</string>
+    <string name="nome_tarefas_selecioandas">Выбранные задачи</string>
+    <string name="login_com_email_e_senha">Вход выполнен успешно</string>
+    <string name="falha_login_email_senha">Ошибка входа</string>
+    <string name="erro_desconhcido_login_email_e_senha">Неизвестная ошибка</string>
+    <string name="cadastro_email_e_senha_com_sucesso">Регистрация выполнена успешно</string>
+    <string name="falha_cadastro_email_e_senha">Ошибка регистрации</string>
+    <string name="usuario_nao_encontrado">Пользователь не найден</string>
+    <string name="senha_ou_usuario_incorretos">Неверное имя пользователя или пароль</string>
+    <string name="as_senhas_sao_divergentes">Введенные вами новые учетные данные отличаются</string>
+    <string name="falha_conta_cadastrada">Этот аккаунт уже зарегистрирован</string>
+    <string name="falha_caracteres">Используйте пароль длиной не менее 6 символов</string>
+    <string name="sincronizar">Синхронизировать</string>
+    <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">Невозможно сбросить пароль, потому что в данный момент нет зарегистрированных пользователей</string>
+    <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">Невозможно удалить ваш аккаунт, потому что в данный момент нет зарегистрированных пользователей</string>
+    <string name="falha_alteracao_nome_usuario">Невозможно изменить имя пользователя, потому что в данный момент нет зарегистрированных пользователей</string>
+
+    <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
+
+    <string name="navigation_drawer_open">Открыть меню навигации</string>
+    <string name="navigation_drawer_close">Закрыть меню навигации</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Заголовок навигации</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="menu_tela_principal">Главный экран</string>
+    <string name="menu_tarefas">Задачи</string>
+    <string name="menu_login">Войти</string>
+    <string name="title_activity_tela_principal_protegida">ЗащищенныйГлавныйЭкран</string>
+
+    <string name="padrao">По умолчанию</string>
+    <string name="portugues">Португальский</string>
+    <string name="ingles">Английский</string>
+    <string name="espanhol">Испанский</string>
+    <string name="russo">Русский</string>
+
+
+    <string-array name="lista_idiomas">
+        <item>Языки</item>
+        <item>Португальский</item>
+        <item>Английский</item>
+        <item>Испанский</item>
+        <item>Русский</item>
+        <item>По умолчанию</item>
+    </string-array>
+</resources>

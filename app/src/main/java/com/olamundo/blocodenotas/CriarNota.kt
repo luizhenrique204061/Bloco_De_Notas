@@ -1,5 +1,6 @@
 package com.olamundo.blocodenotas
 
+import DB.DB
 import Modelo.Notas
 import Room.AppDataBase
 import Room.NotaDao
@@ -17,6 +18,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityCriarNotaBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,7 @@ import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import java.util.Locale
 
 
 class CriarNota : AppCompatActivity() {
@@ -34,8 +37,10 @@ class CriarNota : AppCompatActivity() {
     val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var binding: ActivityCriarNotaBinding
     private lateinit var titulo: String
+    val db = DB()
     private lateinit var descricao: String
     override fun onCreate(savedInstanceState: Bundle?) {
+        carregarLocalidade()
         binding = ActivityCriarNotaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -189,6 +194,8 @@ class CriarNota : AppCompatActivity() {
                 }
             }
 
+            finish()
+
         } else if (descricao.isEmpty()) {
             descricao = titulo
             criarNota(notaId, titulo, descricao, hora)
@@ -208,6 +215,8 @@ class CriarNota : AppCompatActivity() {
                     }
                 }
             }
+            finish()
+
         } else {
             criarNota(notaId, titulo, descricao, hora)
             Log.d(
@@ -226,11 +235,23 @@ class CriarNota : AppCompatActivity() {
                     }
                 }
             }
+            finish()
         }
     }
 
     private suspend fun deletar() {
-        bancoDeDados.remover(notaId)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser != null) {
+            val excluirFirebase = db.excluirAnotacoesUsuario(notaId)
+            if (excluirFirebase) {
+                // Se excluiu com sucesso do Firebase, exclui do Room
+                bancoDeDados.remover(notaId)
+            }
+
+        } else {
+            bancoDeDados.remover(notaId)
+        }
         finish()
     }
 
@@ -349,6 +370,29 @@ class CriarNota : AppCompatActivity() {
             }
         }
         super.onBackPressed()
+    }
+
+    private fun selecionarIdioma(linguagem: String) {
+        val localidade = Locale(linguagem)
+        Locale.setDefault(localidade)
+
+        // Obter o objeto Configuration da atividade atual
+        val configuration = resources.configuration
+
+        // Configurar a localidade para a Configuration
+        configuration.setLocale(localidade)
+
+        // Atualizar a Configuration na atividade atual
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+
+    }
+
+    private fun carregarLocalidade() {
+        val preferences = getSharedPreferences("config_linguagens", MODE_PRIVATE)
+        val linguagem = preferences.getString("minha_linguagem", "")
+        if (linguagem != null) {
+            selecionarIdioma(linguagem)
+        }
     }
 
     companion object {

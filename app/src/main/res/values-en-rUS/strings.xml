@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Note Pad</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="titulo">Title</string>
+    <string name="descricao">Write something...</string>
+    <string name="edicao_em">Edited on: %s</string>
+    <string name="formato_data_hora">MM/dd/yyyy \'at\' HH:mm</string>
+    <string name="criar_nota">Create Note</string>
+    <string name="salvar">Save</string>
+    <string name="compartilhar">Share</string>
+    <string name="remover">Remove</string>
+    <string name="snackbar_criar_nota">Fill in at least one of the fields</string>
+    <string name="nenhum_texto_digitado">No text entered</string>
+    <string name="anotacao_salva_com_sucesso">Note saved successfully</string>
+    <string name="sem_anotacoes">You have no notes</string>
+    <string name="sem_tarefas">You have no tasks</string>
+    <string name="itens_selecionados">Selected items: %s</string>
+    <string name="erro_abrir_arquivo">Error opening file</string>
+    <string name="limite_de_caracteres_do_titulo">Character limit reached</string>
+    <string name="criar_tarefa">Create Task</string>
+    <string name="adicionar_titulo_lista">Add title to list</string>
+    <string name="adicionar_uma_tarefa_pendente">Add a pending task</string>
+    <string name="minhas_anotacoes">My Notes</string>
+    <string name="minhas_tarefas">My Tasks</string>
+    <string name="texto_login">Log in to back up your files</string>
+    <string name="texto_login_nota_segura">Log in to access secure notes</string>
+    <string name="texto_cadastro">Sign up to back up your files</string>
+    <string name="texto_cadastro_anotacoes_protegidas">Sign up to create completely private notes and back up your public notes</string>
+    <string name="anotacoes_protegidas">Secure Notes</string>
+    <string name="email">Email</string>
+    <string name="senha">Password</string>
+    <string name="nao_excluir_conta">No</string>
+    <string name="prosseguir_excluir_conta">Yes</string>
+    <string name="senha_atual">Current Password</string>
+    <string name="exclusao_de_conta">Account Deletion</string>
+    <string name="faca_login_para_realizar_backup">Log in to back up your notes</string>
+    <string name="aviso_exclusao_de_conta">By deleting your account, all cloud-stored information will be lost, including secure notes. Local data on your device will remain. Are you sure you want to proceed?</string>
+    <string name="nova_senha">New Password</string>
+    <string name="para_continuar_com_a_exclusao_reautenticacao">To continue with account deletion, enter your access credentials</string>
+    <string name="confirmar_nova_senha">Confirm New Password</string>
+    <string name="redefinir_senha">Reset Password</string>
+    <string name="senha_alterada_com_sucesso">Password changed successfully</string>
+    <string name="falha_ao_alterar_senha">Failed to change password</string>
+    <string name="conta_excluida_com_sucesso">Account deleted successfully</string>
+    <string name="autenticar">Authenticate</string>
+    <string name="entrar">Log In</string>
+    <string name="cadastrar">Sign Up</string>
+    <string name="esqueci_minha_senha">Forgot Password</string>
+    <string name="digite_email_para_recuperar">Enter your email to recover your password</string>
+    <string name="login">Log In</string>
+    <string name="falha_na_autenticacao">Authentication failed</string>
+    <string name="preencha_todos_os_campos">Fill in all fields</string>
+    <string name="erro_ao_verificar_email">Unknown error verifying email</string>
+    <string name="email_nao_encontrado">The entered email was not found in the database</string>
+    <string name="erro_ao_enviar_email_de_recuperacao">Error sending recovery email</string>
+    <string name="email_de_recuperacao_enviado_com_sucesso">Recovery email sent successfully</string>
+    <string name="logout">Logout</string>
+    <string name="nome_usuario">Name</string>
+    <string name="novo_nome_usuario">Enter new name</string>
+    <string name="confirme_o_novo_nome">Confirm new name</string>
+    <string name="arquivo_seguro">Secure File</string>
+    <string name="ola_nome_do_usuario">Hello, %s</string>
+    <string name="definicoes_da_conta">Account Settings</string>
+    <string name="idiomas">Languages</string>
+    <string name="idioma">Language</string>
+    <string name="botao_redefinir_senha">Reset Password</string>
+    <string name="texto_selecione_o_idioma_abaixo">Select your preferred language</string>
+    <string name="botao_alterar_nome_do_usuario">Change user name</string>
+    <string name="texto_alterar_nome_do_usuario">To change your user name, enter your new user name and confirm below</string>
+    <string name="excluir_conta">Delete Account</string>
+    <string name="botao_confirmar_alteracao">Confirm change</string>
+    <string name="nome_do_usuario_alterado_com_secesso">User name changed successfully</string>
+    <string name="falha_ao_alterar_o_nome_do_usuario_alterado_com_secesso">Failed to change user name</string>
+    <string name="falha_os_nomes_de_usuario_sao_diferentes">Failed to change user name, the names you entered are different</string>
+    <string name="voce_nao_esta_logado_no_momento">No user logged in at the moment</string>
+    <string name="nehum_email_em_uso_no_momento">No email in use at the moment</string>
+    <string name="redefinicao_de_senha">Password reset</string>
+    <string name="entrar_com_google">Sign in with Google</string>
+    <string name="usuario_logado_google_sucesso">Successfully logged in with Google account</string>
+    <string name="usuario_deslogado_google_sucesso">User logged out</string>
+    <string name="falha_login_google">Failed to log in with Google account</string>
+    <string name="usuario_deslogado_com_sucesso_email">User logged out</string>
+    <string name="falha_ao_deslogar_usuario_email">Failed to log out user</string>
+    <string name="falha_deslogar_usuario_google">Failed to log out Google account</string>
+    <string name="nome_anotacoes_selecionadas">Selected Notes</string>
+    <string name="nome_tarefas_selecioandas">Selected Tasks</string>
+    <string name="login_com_email_e_senha">Logged in successfully</string>
+    <string name="falha_login_email_senha">Failed to log in</string>
+    <string name="erro_desconhcido_login_email_e_senha">Unknown error</string>
+    <string name="cadastro_email_e_senha_com_sucesso">Successfully registered</string>
+    <string name="falha_cadastro_email_e_senha">Failed to register</string>
+    <string name="usuario_nao_encontrado">User not found</string>
+    <string name="senha_ou_usuario_incorretos">Incorrect username or password</string>
+    <string name="as_senhas_sao_divergentes">The new credentials you entered are different</string>
+    <string name="falha_conta_cadastrada">This account has already been registered</string>
+    <string name="falha_caracteres">Use a password with at least 6 characters</string>
+    <string name="sincronizar">Sync</string>
+    <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">Unable to reset password, no user logged in at the moment</string>
+    <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">Unable to delete your account, no user logged in at the moment</string>
+    <string name="falha_alteracao_nome_usuario">Unable to change user name, no user logged in at the moment</string>
+
+    <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_tela_principal">Main Screen</string>
+    <string name="menu_tarefas">Tasks</string>
+    <string name="menu_login">Login</string>
+    <string name="title_activity_tela_principal_protegida">ProtectedMainScreen</string>
+
+    <string name="padrao">Default</string>
+    <string name="portugues">Portuguese</string>
+    <string name="ingles">English</string>
+    <string name="espanhol">Spanish</string>
+    <string name="russo">Russian</string>
+
+
+    <string-array name="lista_idiomas">
+        <item>Languages</item>
+        <item>Portuguese</item>
+        <item>English</item>
+        <item>Spanish</item>
+        <item>Russian</item>
+        <item>Default</item>
+
+    </string-array>
+
+</resources>

@@ -44,7 +44,7 @@ class ListaNotasAdapter(
             }
         }
 
-        fun vincula(notas: Notas, position: Int) {
+        fun vincula(notas: Notas) {
             val titulo = binding.titulo
             titulo.text = notas.titulo
 
@@ -76,28 +76,25 @@ class ListaNotasAdapter(
         }
 
         private fun toggleItemSelection(position: Int) {
-            if (position != RecyclerView.NO_POSITION) {
-                // Trocar o estado de marcação do item clicado
+            if (position != RecyclerView.NO_POSITION && position >= 0 && position < listaNotas.size) {
                 listaNotas[position].isChecked = !listaNotas[position].isChecked
-                // Notificar o listener sobre a mudança no número de itens selecionados
                 val selectedCount = listaNotas.count { it.isChecked }
                 listener.onItemSelected(selectedCount)
                 listener.updateSelectedItemCount(selectedCount)
-                // Atualizar a exibição do item clicado
                 notifyItemChanged(position)
             }
         }
 
         private fun toggleSelectionMode(position: Int) {
-            selecaoAtiva = true
-            // Alternar o estado do item clicado longamente
-            listaNotas[position].isChecked = !listaNotas[position].isChecked
-            listener.onItemLongClicked()
-            // Notificar o listener sobre a mudança no número de itens selecionados
-            val selectedCount = listaNotas.count { it.isChecked }
-            listener.onItemSelected(selectedCount)
-            listener.updateSelectedItemCount(selectedCount)
-            notifyDataSetChanged()
+            if (position != RecyclerView.NO_POSITION && position >= 0 && position < listaNotas.size) {
+                selecaoAtiva = true
+                listaNotas[position].isChecked = !listaNotas[position].isChecked
+                listener.onItemLongClicked()
+                val selectedCount = listaNotas.count { it.isChecked }
+                listener.onItemSelected(selectedCount)
+                listener.updateSelectedItemCount(selectedCount)
+                notifyDataSetChanged()
+            }
         }
 
         private fun onItemClicked(notas: Notas) {
@@ -125,7 +122,7 @@ class ListaNotasAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = listaNotas[position]
-        holder.vincula(item, position)
+        holder.vincula(item)
     }
 
     // Método para desativar o modo de seleção

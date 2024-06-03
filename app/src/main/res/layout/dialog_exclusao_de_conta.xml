@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/exclusao_de_conta"
+        style="@style/TEXTO_LOGIN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="@string/exclusao_de_conta"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<ImageView
+    android:src="@drawable/ic_alerta"
+    app:layout_constraintEnd_toStartOf="@id/exclusao_de_conta"
+    app:layout_constraintTop_toTopOf="@id/exclusao_de_conta"
+    app:layout_constraintBottom_toBottomOf="@id/exclusao_de_conta"
+    android:layout_width="30dp"
+    android:layout_height="30dp"/>
+
+    <TextView
+        android:id="@+id/alerta_exclusao_de_conta"
+        style="@style/TEXTO_LOGIN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/aviso_exclusao_de_conta"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exclusao_de_conta" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/botao_cancelar_exclusao_de_conta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/dialog_botao_excluir_conta"
+        android:backgroundTint="@color/verde_escuro"
+        android:text="@string/nao_excluir_conta"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/alerta_exclusao_de_conta" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/botao_prosseguir_exclusao_de_conta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/dialog_botao_excluir_conta"
+        android:backgroundTint="@color/vermelho_claro"
+        android:text="@string/prosseguir_excluir_conta"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/alerta_exclusao_de_conta" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

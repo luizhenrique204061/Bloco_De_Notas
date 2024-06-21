@@ -144,13 +144,37 @@ class FragmentoTarefas : Fragment() {
 
         }
 
-        // Adicione um OnClickListener ao FloatingActionButton para iniciar a atividade CriarNota
+        // Adicione um OnClickListener ao FloatingActionButton para iniciar a atividade CriarTarefa
         binding.fabCriarAnotacao.setOnClickListener {
             startActivity(Intent(requireContext(), CriarNota::class.java))
+
+            binding.fabCriarAnotacao.visibility =
+                if (binding.fabCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.textoCriarAnotacao.visibility =
+                if (binding.textoCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.fabCriarTarefa.visibility =
+                if (binding.fabCriarTarefa.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.textoCriarListaTarefas.visibility =
+                if (binding.textoCriarListaTarefas.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
         binding.fabCriarTarefa.setOnClickListener {
             startActivity(Intent(requireContext(), CriarTarefa::class.java))
+
+            binding.fabCriarAnotacao.visibility =
+                if (binding.fabCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.textoCriarAnotacao.visibility =
+                if (binding.textoCriarAnotacao.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.fabCriarTarefa.visibility =
+                if (binding.fabCriarTarefa.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.textoCriarListaTarefas.visibility =
+                if (binding.textoCriarListaTarefas.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -357,14 +381,21 @@ class FragmentoTarefas : Fragment() {
         val localidade = Locale(linguagem)
         Locale.setDefault(localidade)
 
+        // Obter o objeto Configuration da atividade atual
         val configuration = resources.configuration
+
+        // Configurar a localidade para a Configuration
         configuration.setLocale(localidade)
+
+        // Atualizar a Configuration na atividade atual
         resources.updateConfiguration(configuration, resources.displayMetrics)
+
     }
 
     private fun carregarLocalidade() {
         val preferences = requireContext().getSharedPreferences("config_linguagens", MODE_PRIVATE)
-        val linguagem = preferences.getString("minha_linguagem", "")
+        val localidadeDoDispositivo = Locale.getDefault().language
+        val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         }

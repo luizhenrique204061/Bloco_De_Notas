@@ -109,7 +109,7 @@ class CriarTarefa : AppCompatActivity() {
     private suspend fun salvar() {
         titulo = binding.tituloTarefa.text.toString()
         atualizarTextoDoEditText() // Atualiza o texto antes de salvar
-        if (titulo.isNotEmpty() && textoDoEditText.isNotEmpty()) {
+        if (titulo.isNotEmpty()) {
             criarTarefas(tarefaId, titulo, textoDoEditText, hora)
             retornar()
         } else {
@@ -211,9 +211,22 @@ class CriarTarefa : AppCompatActivity() {
 
     private fun carregarLocalidade() {
         val preferences = getSharedPreferences("config_linguagens", MODE_PRIVATE)
-        val linguagem = preferences.getString("minha_linguagem", "")
+        val localidadeDoDispositivo = Locale.getDefault().language
+        val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
         if (linguagem != null) {
             selecionarIdioma(linguagem)
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        titulo = binding.tituloTarefa.text.toString()
+        atualizarTextoDoEditText() // Atualiza o texto antes de salvar
+        if (titulo.isNotEmpty()) {
+            scope.launch {
+                criarTarefas(tarefaId, titulo, textoDoEditText, hora)
+                finish()
+            }
         }
     }
 }

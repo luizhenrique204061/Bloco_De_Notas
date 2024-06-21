@@ -389,7 +389,8 @@ class CriarNota : AppCompatActivity() {
 
     private fun carregarLocalidade() {
         val preferences = getSharedPreferences("config_linguagens", MODE_PRIVATE)
-        val linguagem = preferences.getString("minha_linguagem", "")
+        val localidadeDoDispositivo = Locale.getDefault().language
+        val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         }

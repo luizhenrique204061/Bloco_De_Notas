@@ -246,16 +246,20 @@ class DB {
         currentUser?.let {
             val usuarioId = currentUser.uid
 
-            val documentoReferencia = db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId)
-                .collection("Anotacoes_Protegidas").document(anotacaoId)
+            if (anotacaoId.isNotEmpty()) {
+                val documentoReferencia = db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId)
+                    .collection("Anotacoes_Protegidas").document(anotacaoId)
 
-            documentoReferencia.delete()
-                .addOnCompleteListener {
-                    Log.i("db_anotacao", "Sucesso ao excluir Anotação Protegida com ID: $anotacaoId")
-                }
-                .addOnFailureListener { e ->
-                    Log.i("db_anotacao", "Falha ao excluir Anotação Protegida com ID: $anotacaoId", e)
-                }
+                documentoReferencia.delete()
+                    .addOnCompleteListener {
+                        Log.i("db_anotacao", "Sucesso ao excluir Anotação Protegida com ID: $anotacaoId")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.i("db_anotacao", "Falha ao excluir Anotação Protegida com ID: $anotacaoId", e)
+                    }
+            }
+
+
         }
     }
 

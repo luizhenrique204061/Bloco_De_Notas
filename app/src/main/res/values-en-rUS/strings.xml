@@ -99,6 +99,11 @@
     <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">Unable to reset password, no user logged in at the moment</string>
     <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">Unable to delete your account, no user logged in at the moment</string>
     <string name="falha_alteracao_nome_usuario">Unable to change user name, no user logged in at the moment</string>
+    <string name="pesquisa_pelo_titulo_anotacoes">Search</string>
+    <string name="botao_pesquisar_anotacoes">Search</string>
+    <string name="pesquisa_pelo_titulo_tarefas">Search</string>
+    <string name="botao_pesquisar_tarefas">Search</string>
+    <string name="sem_correspondencia">No matches found</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

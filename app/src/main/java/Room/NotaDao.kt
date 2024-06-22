@@ -21,4 +21,7 @@ interface NotaDao {
     @Query("DELETE FROM tabela_notas WHERE id = :id")
     suspend fun remover(id: Long)
 
+    @Query("SELECT * FROM tabela_notas WHERE titulo LIKE '%' || :palavraChave || '%'")
+    suspend fun buscarPorPalavraChave(palavraChave: String): MutableList<Notas>
+
 }

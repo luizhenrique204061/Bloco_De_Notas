@@ -4,10 +4,12 @@ import DB.DB
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -57,6 +59,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        // Defina a cor do seletor do NavigationView
+        //navView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.vermelho)
+
         val headerView = navView.getHeaderView(0)
         val textView: TextView = headerView.findViewById(R.id.nome)
         val nomeUsuario = getString(R.string.nome_usuario)
@@ -99,12 +104,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun irParaTelaDeIdiomas() {
+        Log.d("MainActivity", "Iniciando TelaIdiomas")
         Intent(this, TelaIdiomas::class.java).apply {
             startActivity(this)
             binding.navView.post {
                 binding.navView.setCheckedItem(R.id.nav_tela_principal)
+                val navController = findNavController(R.id.nav_host_fragment_content_main)
+                navController.navigate(R.id.nav_tela_principal)
             }
         }
+        Log.d("MainActivity", "TelaIdiomas iniciada")
     }
 
     private fun irParaTelaDeLogin() {
@@ -112,6 +121,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(this)
             binding.navView.post {
                 binding.navView.setCheckedItem(R.id.nav_tela_principal)
+                val navController = findNavController(R.id.nav_host_fragment_content_main)
+                navController.navigate(R.id.nav_tela_principal)
             }
         }
     }
@@ -198,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         isAnimating = false
         val sincronizarButton = binding.appBarMain.sincronizar
         sincronizarButton.clearAnimation()
-        sincronizarButton.visibility = View.GONE
+        sincronizarButton.visibility = View.INVISIBLE
     }
     private fun selecionarIdioma(linguagem: String) {
         val localidade = Locale(linguagem)

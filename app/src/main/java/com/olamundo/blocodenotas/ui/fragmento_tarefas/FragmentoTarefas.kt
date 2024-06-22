@@ -5,15 +5,22 @@ import DB.DB
 import Modelo.Tarefa
 import Room.AppDataBase
 import Room.TarefaDao
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
@@ -47,6 +54,7 @@ class FragmentoTarefas : Fragment() {
     private lateinit var mainActivity: MainActivity
     val db = DB()
     private lateinit var textViewSemTarefas: TextView
+    private lateinit var textViewSemCorrespondencia: TextView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -65,6 +73,7 @@ class FragmentoTarefas : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -72,6 +81,108 @@ class FragmentoTarefas : Fragment() {
         // mainActivity.setSupportActionBar(binding.toolbar)
         loadTheme()
         textViewSemTarefas = binding.semTarefas
+
+        textViewSemCorrespondencia = binding.nenhumaCorrespondencia
+
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.digiteParaBuscar.highlightColor = greenColor
+
+        // Adicionando TextWatcher para monitorar mudanças no campo de busca
+        binding.digiteParaBuscar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val buscar = s.toString()
+                scope.launch {
+                    val buscarNotacoesRoom = if (buscar.isNotEmpty()) {
+                        bancoDeDadosTarefa.buscarPorPalavraChave(buscar)
+                    } else {
+                        bancoDeDadosTarefa.buscarTodas()
+                    }
+
+                    Log.i("BuscarNotacoesRoom", buscarNotacoesRoom.toString())
+
+                    // Limpar e atualizar a lista no adapter
+                    withContext(Dispatchers.Main) {
+                        adapterTarefas.listaTarefasTelaPrincipal.clear()
+                        adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarNotacoesRoom)
+                        adapterTarefas.notifyDataSetChanged()
+
+                        // Atualizar a visibilidade do "semAnotacoes"
+                        if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
+                            binding.nenhumaCorrespondencia.visibility = View.VISIBLE
+                            binding.semTarefas.visibility = View.GONE
+                        } else {
+                            binding.nenhumaCorrespondencia.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+        })
+
+        val editTextBuscar = binding.digiteParaBuscar
+
+        // Configurando o OnTouchListener
+        editTextBuscar.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
+                    // Limpar o texto do EditText
+                    binding.digiteParaBuscar.setText("")
+                    recolherTeclado()
+
+                    // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+                    scope.launch {
+                        val buscarTarefaRoom = bancoDeDadosTarefa.buscarTodas()
+
+                        withContext(Dispatchers.Main) {
+                            adapterTarefas.listaTarefasTelaPrincipal.clear()
+                            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefaRoom)
+                            adapterTarefas.notifyDataSetChanged()
+
+                            // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+                            if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
+                                binding.semTarefas.visibility = View.VISIBLE
+                                binding.nenhumaCorrespondencia.visibility = View.GONE
+                            } else {
+                                binding.semTarefas.visibility = View.GONE
+                                binding.nenhumaCorrespondencia.visibility = View.GONE
+                            }
+                        }
+                    }
+                    return@setOnTouchListener true
+                }
+            }
+            false
+        }
+
+//        binding.apagarPesquisa.setOnClickListener {
+//            binding.digiteParaBuscar.setText("")
+//            recolherTeclado()
+//
+//            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+//            scope.launch {
+//                val buscarTarefaRoom = bancoDeDadosTarefa.buscarTodas()
+//
+//                withContext(Dispatchers.Main) {
+//                    adapterTarefas.listaTarefasTelaPrincipal.clear()
+//                    adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefaRoom)
+//                    adapterTarefas.notifyDataSetChanged()
+//
+//                    // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+//                    if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
+//                        binding.semTarefas.visibility = View.VISIBLE
+//                        binding.nenhumaCorrespondencia.visibility = View.GONE
+//                    } else {
+//                        binding.semTarefas.visibility = View.GONE
+//                        binding.nenhumaCorrespondencia.visibility = View.GONE
+//                    }
+//                }
+//            }
+//        }
 
         adapterTarefas = TarefasAdapterTelaPrincipal(requireContext(), listaTarefas, object : TarefasAdapterTelaPrincipal.OnItemSelectedListener {
             override fun onItemSelected(selectedItemCount: Int) {
@@ -217,8 +328,10 @@ class FragmentoTarefas : Fragment() {
                 // Atualizar a visibilidade do "semAnotacoes"
                 if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
                     binding.semTarefas.visibility = View.VISIBLE
+                    binding.nenhumaCorrespondencia.visibility = View.GONE
                 } else {
                     binding.semTarefas.visibility = View.GONE
+                    binding.nenhumaCorrespondencia.visibility = View.GONE
                 }
             }
 
@@ -274,11 +387,23 @@ class FragmentoTarefas : Fragment() {
     private fun applyDarkTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_dark)
+        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_branco)
+        binding.digiteParaBuscar.setTextColor(Color.BLACK)
+        binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
 
     private fun applyLightTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_light)
+        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_cinza)
+        binding.digiteParaBuscar.setTextColor(Color.BLACK)
+        binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
+    }
+
+    private fun recolherTeclado() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
     private suspend fun deletarTarefasSelecionadas() {

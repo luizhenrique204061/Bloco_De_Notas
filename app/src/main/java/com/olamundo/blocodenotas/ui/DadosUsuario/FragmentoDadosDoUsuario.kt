@@ -4,21 +4,31 @@ import DB.DB
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.olamundo.blocodenotas.AlterarNomeUsuario
 import com.olamundo.blocodenotas.ExcluirConta
 import com.olamundo.blocodenotas.R
 import com.olamundo.blocodenotas.RedefinirSenha
 import com.olamundo.blocodenotas.databinding.FragmentFragmentoDadosDoUsuarioBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class FragmentoDadosDoUsuario : Fragment() {
     private lateinit var binding: FragmentFragmentoDadosDoUsuarioBinding
     val db = DB()
+    lateinit var mAdview: AdView
+    val scope = CoroutineScope(Dispatchers.IO)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +43,7 @@ class FragmentoDadosDoUsuario : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loadTheme()
-
+        carregarAnuncioBanner()
         val exibirNomeUsuario = binding.mostrarUsuario
         val exibirEmail = binding.mostrarEmail
 
@@ -100,4 +110,16 @@ class FragmentoDadosDoUsuario : Fragment() {
         }
     }
 
+    private fun carregarAnuncioBanner() {
+        scope.launch {
+            //Anúncio do Tipo Banner
+            MobileAds.initialize(requireContext())
+            val adRequest = AdRequest.Builder().build()
+            withContext(Dispatchers.Main) {
+                mAdview = binding.adview
+                Log.i("Meu App", "Antes de carregar o anúncio")
+                mAdview.loadAd(adRequest)
+            }
+        }
+    }
 }

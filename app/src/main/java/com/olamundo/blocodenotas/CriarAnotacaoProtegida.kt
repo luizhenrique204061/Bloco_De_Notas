@@ -12,6 +12,9 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.olamundo.blocodenotas.databinding.ActivityCriarAnotacaoProtegidaBinding
 import java.io.File
@@ -27,6 +30,7 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
     private var anotacaoId: String? = null
     private var recuperarTitulo: String? = null
     private var recuperarDescricao: String? = null
+    lateinit var mAdview: AdView
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityCriarAnotacaoProtegidaBinding.inflate(layoutInflater)
@@ -51,6 +55,11 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
             descricao = binding.descricao.setText(recuperarDescricao).toString()
             updateQuantidadeCaracteres(recuperarTitulo!!.length)
         }
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.titulo.highlightColor = greenColor
+        binding.descricao.highlightColor = greenColor
 
 
         //Adicionando TextWatcher para monitorar o título
@@ -342,6 +351,16 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         }
+    }
+
+    private fun carregarAnuncioBanner() {
+        //Anúncio do Tipo Banner
+
+        MobileAds.initialize(this)
+        mAdview = binding.adview
+        val adRequest = AdRequest.Builder().build()
+        Log.i("Meu App", "Antes de carregar o anúncio")
+        mAdview.loadAd(adRequest)
     }
 
     companion object {

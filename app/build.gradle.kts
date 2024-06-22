@@ -14,9 +14,8 @@ android {
         applicationId = "com.olamundo.blocodenotas"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = 17
+        versionName = "2.7"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -73,10 +72,17 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
     //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.gms:play-services-auth:19.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+
+    //Admob
+    implementation("com.google.android.gms:play-services-ads:23.1.0")
+
+    //Atualizações
+    implementation("com.google.android.play:app-update:2.1.0")
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 
 }

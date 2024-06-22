@@ -7,7 +7,9 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,15 +24,25 @@ import java.util.Locale
 class TelaCadastro : AppCompatActivity() {
     private lateinit var binding: ActivityTelaCadastroBinding
     val db = DB()
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityTelaCadastroBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        progressBar = binding.progressbar
+
         loadTheme()
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.nomeUsuario.highlightColor = greenColor
+        binding.email.highlightColor = greenColor
+        binding.senha.highlightColor = greenColor
 
         binding.botaoCadastrar.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            binding.botaoCadastrar.setText("")
             val nomeUsuario = binding.nomeUsuario.text.toString()
             val editEmail = binding.email.text.toString()
             val editSenha = binding.senha.text.toString()
@@ -53,6 +65,8 @@ class TelaCadastro : AppCompatActivity() {
                                 this.show()
                             }
                             Handler().postDelayed({
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                                 retornar()
                             }, 3000)
 
@@ -66,6 +80,10 @@ class TelaCadastro : AppCompatActivity() {
                                 this.setTextColor(Color.WHITE)
                                 this.show()
                             }
+
+                            progressBar.visibility = View.GONE
+                            binding.botaoCadastrar.setText(getString(R.string.cadastrar))
+
                         }
 
                     }.addOnFailureListener { exception ->
@@ -80,6 +98,9 @@ class TelaCadastro : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                             }
 
                             is FirebaseAuthWeakPasswordException -> {
@@ -92,6 +113,9 @@ class TelaCadastro : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                             }
 
                             else -> {
@@ -104,6 +128,9 @@ class TelaCadastro : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                             }
                         }
                     }
@@ -113,6 +140,9 @@ class TelaCadastro : AppCompatActivity() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+
+                progressBar.visibility = View.GONE
+                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
             }
         }
     }

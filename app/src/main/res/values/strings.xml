@@ -98,6 +98,11 @@
     <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">Não foi possível redefinir a senha, pois não existe nenhum usuário logado no momento</string>
     <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">Não foi possivel excluir a sua conta, pois não existe nenhum usuário logado no momento</string>
     <string name="falha_alteracao_nome_usuario">Não foi possivel alterar o nome do usuário, pois não existe nenhum usuário logado no momento</string>
+    <string name="pesquisa_pelo_titulo_anotacoes">Pesquisar</string>
+    <string name="botao_pesquisar_anotacoes">Buscar</string>
+    <string name="pesquisa_pelo_titulo_tarefas">Pesquisar</string>
+    <string name="botao_pesquisar_tarefas">Buscar</string>
+    <string name="sem_correspondencia">Nenhuma correspondência encontrada</string>
 
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>

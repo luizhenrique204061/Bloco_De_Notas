@@ -18,6 +18,22 @@ class TarefasAdapter(
             val descricao = binding.descricaoLista
             descricao.text = tarefa.descricao
 
+            // Aplicar o estilo riscado se a tarefa estiver riscada
+            if (tarefa.isRiscado) {
+                descricao.paintFlags = descricao.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                descricao.paintFlags = descricao.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+
+            descricao.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    // Alternar o estado riscado
+                    tarefa.isRiscado = !tarefa.isRiscado
+                    notifyItemChanged(position)
+                }
+            }
+
             binding.removerTarefa.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {

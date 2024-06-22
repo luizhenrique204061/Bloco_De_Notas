@@ -4,18 +4,28 @@ import Adapter.CustomSpinnerAdapter
 import Modelo.SpinnerItem
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.olamundo.blocodenotas.databinding.ActivityTelaIdiomasBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class TelaIdiomas : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaIdiomasBinding
     private lateinit var spinnerIdiomas: Spinner
+    lateinit var mAdview: AdView
+    val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +33,7 @@ class TelaIdiomas : AppCompatActivity() {
         binding = ActivityTelaIdiomasBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        carregarAnuncioBanner()
         spinnerIdiomas = binding.seletorIdiomas
         val items = listOf(
             SpinnerItem(0, getString(R.string.idiomas)), // Primeiro item como "Idiomas"
@@ -89,6 +100,20 @@ class TelaIdiomas : AppCompatActivity() {
         val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
         if (linguagem != null) {
             selecionarIdioma(linguagem)
+        }
+    }
+
+    private fun carregarAnuncioBanner() {
+        scope.launch {
+            //Anúncio do Tipo Banner
+            MobileAds.initialize(this@TelaIdiomas)
+            val adRequest = AdRequest.Builder().build()
+            withContext(Dispatchers.Main) {
+                mAdview = binding.adview
+                Log.i("Meu App", "Antes de carregar o anúncio")
+                mAdview.loadAd(adRequest)
+            }
+
         }
     }
 }

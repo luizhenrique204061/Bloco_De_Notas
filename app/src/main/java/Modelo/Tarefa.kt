@@ -12,6 +12,7 @@ class Tarefa(
     val descricao: String = "",
     val data: Long = 0,
     var isChecked: Boolean = false,
+    var isRiscado: Boolean = false
 ): Serializable {
-    constructor() : this(0, "", "", 0, false)
+    constructor() : this(0, "", "", 0, false, false)
 }

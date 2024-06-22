@@ -4,25 +4,32 @@ import DB.DB
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.olamundo.blocodenotas.AlterarNomeUsuario
 import com.olamundo.blocodenotas.ExcluirConta
 import com.olamundo.blocodenotas.R
 import com.olamundo.blocodenotas.RedefinirSenha
 import com.olamundo.blocodenotas.databinding.FragmentoDefinicoesDaContaProtegidaBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class FragmentoDefinicoesDaContaProtegida : Fragment() {
 
     private var _binding: FragmentoDefinicoesDaContaProtegidaBinding? = null
     val db = DB()
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    lateinit var mAdview: AdView
+    val scope = CoroutineScope(Dispatchers.IO)
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -39,6 +46,7 @@ class FragmentoDefinicoesDaContaProtegida : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loadTheme()
+        carregarAnuncioBanner()
 
 
         val exibirNomeUsuario = binding.mostrarUsuario
@@ -111,6 +119,19 @@ class FragmentoDefinicoesDaContaProtegida : Fragment() {
         val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
         if (linguagem != null) {
             selecionarIdioma(linguagem)
+        }
+    }
+
+    private fun carregarAnuncioBanner() {
+        scope.launch {
+            //Anúncio do Tipo Banner
+            MobileAds.initialize(requireContext())
+            val adRequest = AdRequest.Builder().build()
+            withContext(Dispatchers.Main) {
+                mAdview = binding.adview
+                Log.i("Meu App", "Antes de carregar o anúncio")
+                mAdview.loadAd(adRequest)
+            }
         }
     }
 }

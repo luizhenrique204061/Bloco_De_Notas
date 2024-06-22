@@ -6,17 +6,20 @@ import Room.AppDataBase
 import Room.NotaDao
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityCriarNotaBinding
@@ -24,9 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 import java.util.Locale
 
 
@@ -39,6 +40,7 @@ class CriarNota : AppCompatActivity() {
     private lateinit var titulo: String
     val db = DB()
     private lateinit var descricao: String
+    lateinit var mAdview: AdView
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityCriarNotaBinding.inflate(layoutInflater)
@@ -47,6 +49,9 @@ class CriarNota : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         bancoDeDados = AppDataBase.getInstance(this).NotaDao()
+
+
+        carregarAnuncioBanner()
 
         val id = intent.getLongExtra("id", 0L)
         val recuperarTitulo = intent.getStringExtra("titulo")
@@ -58,6 +63,11 @@ class CriarNota : AppCompatActivity() {
             descricao = binding.descricao.setText(recuperarDescricao).toString()
             updateQuantidadeCaracteres(recuperarTitulo.length)
         }
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.titulo.highlightColor = greenColor
+        binding.descricao.highlightColor = greenColor
 
 
         //Adicionando TextWatcher para monitorar o título
@@ -95,6 +105,48 @@ class CriarNota : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun carregarAnuncioBanner() {
+        //Anúncio do Tipo Banner
+
+        MobileAds.initialize(this)
+        mAdview = binding.adview
+        val adRequest = AdRequest.Builder().build()
+        Log.i("Meu App", "Antes de carregar o anúncio")
+        mAdview.loadAd(adRequest)
+
+        mAdview.adListener = object : AdListener() {
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Code to be executed when an ad request fails.
+                Log.i("Meu App", "Falha ao carregar o anúncio: ${adError.message}")
+            }
+
+            override fun onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+            }
+
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.d("Meu App", "Anúncio carregado com sucesso")
+
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+        }
     }
 
     private fun updateQuantidadeCaracteres(length: Int) {

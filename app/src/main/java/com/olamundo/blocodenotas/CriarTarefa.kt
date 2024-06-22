@@ -6,6 +6,7 @@ import Modelo.Tarefa
 import Room.AppDataBase
 import Room.TarefaDao
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityCriarTarefaBinding
@@ -33,6 +37,7 @@ class CriarTarefa : AppCompatActivity() {
     var tarefaId: Long = 0
     val scope = CoroutineScope(Dispatchers.IO)
     val db = DB()
+    lateinit var mAdview: AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
@@ -42,11 +47,15 @@ class CriarTarefa : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
+        loadTheme()
+
         bancoDeDados = AppDataBase.getInstance(this).TarefaDao()
 
         adapterTarefas = TarefasAdapter(this, listaTarefas)
         val recyclerView = binding.recyclerViewTarefas
         recyclerView.adapter = adapterTarefas
+
+        carregarAnuncioBanner()
 
         val id = intent.getLongExtra("id", 0L)
         val recuperarTitulo = intent.getStringExtra("titulo")
@@ -57,7 +66,7 @@ class CriarTarefa : AppCompatActivity() {
             Log.i("RecuperarTarefa", "Título: $recuperarTitulo")
             Log.i("RecuperarTarefa", "Descriçao: $recuperarDescricao")
 
-           // titulo = recuperarTitulo // Inicializa a variável título
+            // titulo = recuperarTitulo // Inicializa a variável título
 
             tarefaId = id
 
@@ -66,9 +75,16 @@ class CriarTarefa : AppCompatActivity() {
             // Dividir a descrição em itens e adicioná-los à lista de tarefas
             val itensDescricao = recuperarDescricao.split(",").map { it.trim() }
             itensDescricao.forEach { descricao ->
-                adicionarTarefa(descricao)
+                val riscado = descricao.startsWith("~~") && descricao.endsWith("~~")
+                val descricaoLimpa = if (riscado) descricao.removeSurrounding("~~") else descricao
+                adicionarTarefa(descricaoLimpa, riscado)
             }
         }
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.tituloTarefa.highlightColor = greenColor
+        binding.descricaoTarefa.highlightColor = greenColor
 
         binding.adiconar.setOnClickListener {
             val descricao = binding.descricaoTarefa.text.toString()
@@ -104,6 +120,16 @@ class CriarTarefa : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun carregarAnuncioBanner() {
+        //Anúncio do Tipo Banner
+
+        MobileAds.initialize(this)
+        mAdview = binding.adview
+        val adRequest = AdRequest.Builder().build()
+        Log.i("Meu App", "Antes de carregar o anúncio")
+        mAdview.loadAd(adRequest)
     }
 
     private suspend fun salvar() {
@@ -178,10 +204,10 @@ class CriarTarefa : AppCompatActivity() {
         startActivity(Intent.createChooser(intent, "Compartilhar nota via"))
     }
 
-    private fun adicionarTarefa(descricao: String) {
+    private fun adicionarTarefa(descricao: String, riscado: Boolean = false) {
         titulo = binding.tituloTarefa.text.toString()
         // Adicionar nova tarefa à lista
-        val novaTarefa = Tarefa(tarefaId, titulo, descricao, hora)
+        val novaTarefa = Tarefa(tarefaId, titulo, descricao, hora, false, riscado)
         listaTarefas.add(novaTarefa)
         // Notificar o adapter da inserção de um novo item
         adapterTarefas.notifyItemInserted(listaTarefas.size - 1)
@@ -189,7 +215,9 @@ class CriarTarefa : AppCompatActivity() {
     }
 
     private fun atualizarTextoDoEditText() {
-        val tarefasText = listaTarefas.joinToString(", ") { it.descricao }
+        val tarefasText = listaTarefas.joinToString(", ") {
+            if (it.isRiscado) "~~${it.descricao}~~" else it.descricao
+        }
         textoDoEditText = tarefasText
         Log.i("CriarTarefaCapturado", "Texto no EditText: $textoDoEditText")
     }
@@ -228,5 +256,21 @@ class CriarTarefa : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    private fun loadTheme() {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_YES -> applyDarkTheme()
+            Configuration.UI_MODE_NIGHT_NO -> applyLightTheme()
+        }
+    }
+
+    private fun applyDarkTheme() {
+        binding.adiconar.setBackgroundResource(R.drawable.ic_add_branco)
+    }
+
+    private fun applyLightTheme() {
+        binding.adiconar.setBackgroundResource(R.drawable.ic_add_preto)
     }
 }

@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemBackground="@drawable/nav_item_background"
         app:headerLayout="@layout/nav_header_tela_principal_protegida"
         app:menu="@menu/activity_main2_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

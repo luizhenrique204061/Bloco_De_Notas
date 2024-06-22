@@ -7,7 +7,9 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,16 +24,26 @@ import java.util.Locale
 class TelaCadastroNotasProtegidas : AppCompatActivity() {
     private lateinit var binding: ActivityTelaCadastroNotasProtegidasBinding
     val db = DB()
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityTelaCadastroNotasProtegidasBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        progressBar = binding.progressbar
 
         loadTheme()
 
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.nomeUsuario.highlightColor = greenColor
+        binding.email.highlightColor = greenColor
+        binding.senha.highlightColor = greenColor
+
         binding.botaoCadastrar.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            binding.botaoCadastrar.setText("")
             val nomeUsuario = binding.nomeUsuario.text.toString()
             val editEmail = binding.email.text.toString()
             val editSenha = binding.senha.text.toString()
@@ -54,6 +66,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
                                 this.show()
                             }
                             Handler().postDelayed({
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                                 Intent(this, TelaLogin::class.java).apply {
                                     startActivity(this)
                                     finish()
@@ -70,6 +84,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
                                 this.setTextColor(Color.WHITE)
                                 this.show()
                             }
+                            progressBar.visibility = View.GONE
+                            binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                         }
 
                     }.addOnFailureListener { exception ->
@@ -83,6 +99,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
                                     this.setBackgroundTint(Color.RED)
                                     this.setTextColor(Color.WHITE)
                                     this.show()
+                                    progressBar.visibility = View.GONE
+                                    binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                                 }
                             }
 
@@ -96,6 +114,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                             }
 
                             else -> {
@@ -108,6 +128,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+                                progressBar.visibility = View.GONE
+                                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
                             }
                         }
                     }
@@ -117,6 +139,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+                progressBar.visibility = View.GONE
+                binding.botaoCadastrar.setText(getString(R.string.cadastrar))
             }
         }
     }
@@ -170,7 +194,8 @@ class TelaCadastroNotasProtegidas : AppCompatActivity() {
 
     private fun carregarLocalidade() {
         val preferences = getSharedPreferences("config_linguagens", MODE_PRIVATE)
-        val linguagem = preferences.getString("minha_linguagem", "")
+        val localidadeDoDispositivo = Locale.getDefault().language
+        val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         }

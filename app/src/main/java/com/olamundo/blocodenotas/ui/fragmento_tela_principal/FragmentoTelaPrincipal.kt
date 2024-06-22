@@ -7,20 +7,35 @@ import Modelo.Tarefa
 import Room.AppDataBase
 import Room.NotaDao
 import Room.TarefaDao
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.CriarNota
 import com.olamundo.blocodenotas.CriarTarefa
@@ -50,6 +65,9 @@ class FragmentoTelaPrincipal : Fragment() {
     private lateinit var mainActivity: MainActivity
     val db = DB()
     private lateinit var textViewSemAnotacoes: TextView
+    private lateinit var textViewSemCorrespondencia: TextView
+    private lateinit var appUpdateManager: AppUpdateManager
+    private var mInterstitialAd: InterstitialAd? = null
 
     // This property is only valid between onCreateView and onDestroyView
     private val binding get() = _binding!!
@@ -65,15 +83,137 @@ class FragmentoTelaPrincipal : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Inicialização do AppUpdateManager
+        appUpdateManager = AppUpdateManagerFactory.create(requireContext())
+
+        // Verificação de atualização
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+            ) {
+                // Iniciar o processo de atualização
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    requireActivity(),
+                    REQUEST_CODE_UPDATE
+                )
+            }
+        }
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.digiteParaBuscar.highlightColor = greenColor
+
+       // carregarAnuncioTelaInteira()
 
         val recyclerView = binding.recyclerview
         // mainActivity.setSupportActionBar(binding.toolbar)
         loadTheme()
         textViewSemAnotacoes = binding.semAnotacoes
 
+        textViewSemCorrespondencia = binding.nenhumaCorrespondencia
 
+        // Adicionando TextWatcher para monitorar mudanças no campo de busca
+        binding.digiteParaBuscar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val buscar = s.toString()
+                scope.launch {
+                    val buscarNotacoesRoom = if (buscar.isNotEmpty()) {
+                        bancoDeDados.buscarPorPalavraChave(buscar)
+                    } else {
+                        bancoDeDados.buscarTodas()
+                    }
+
+                    Log.i("BuscarNotacoesRoom", buscarNotacoesRoom.toString())
+
+                    // Limpar e atualizar a lista no adapter
+                    withContext(Dispatchers.Main) {
+                        adapterNotacoes.listaNotas.clear()
+                        adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
+                        adapterNotacoes.notifyDataSetChanged()
+
+                        // Atualizar a visibilidade do "semAnotacoes"
+                        if (adapterNotacoes.listaNotas.isEmpty()) {
+                            binding.nenhumaCorrespondencia.visibility = View.VISIBLE
+                            binding.semAnotacoes.visibility = View.GONE
+                        } else {
+                            binding.nenhumaCorrespondencia.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+        })
+
+
+        val editTextBuscar = binding.digiteParaBuscar
+
+        // Configurando o OnTouchListener
+        editTextBuscar.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
+                    // Limpar o texto do EditText
+                    editTextBuscar.setText("")
+                    recolherTeclado()
+
+                    // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+                    scope.launch {
+                        val buscarNotacoesRoom = bancoDeDados.buscarTodas()
+
+                        withContext(Dispatchers.Main) {
+                            adapterNotacoes.listaNotas.clear()
+                            adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
+                            adapterNotacoes.notifyDataSetChanged()
+
+                            // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+                            if (adapterNotacoes.listaNotas.isEmpty()) {
+                                binding.semAnotacoes.visibility = View.VISIBLE
+                                binding.nenhumaCorrespondencia.visibility = View.GONE
+                            } else {
+                                binding.semAnotacoes.visibility = View.GONE
+                                binding.nenhumaCorrespondencia.visibility = View.GONE
+                            }
+                        }
+                    }
+                    return@setOnTouchListener true
+                }
+            }
+            false
+        }
+
+//        binding.apagarPesquisa.setOnClickListener {
+//            binding.digiteParaBuscar.setText("")
+//            recolherTeclado()
+//
+//            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+//            scope.launch {
+//                val buscarNotacoesRoom = bancoDeDados.buscarTodas()
+//
+//                withContext(Dispatchers.Main) {
+//                    adapterNotacoes.listaNotas.clear()
+//                    adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
+//                    adapterNotacoes.notifyDataSetChanged()
+//
+//                    // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+//                    if (adapterNotacoes.listaNotas.isEmpty()) {
+//                        binding.semAnotacoes.visibility = View.VISIBLE
+//                        binding.nenhumaCorrespondencia.visibility = View.GONE
+//                    } else {
+//                        binding.semAnotacoes.visibility = View.GONE
+//                        binding.nenhumaCorrespondencia.visibility = View.GONE
+//                    }
+//                }
+//            }
+//        }
 
         adapterNotacoes = ListaNotasAdapter(
             requireContext(),
@@ -205,6 +345,33 @@ class FragmentoTelaPrincipal : Fragment() {
         )
     }
 
+    private fun recolherTeclado() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    private fun carregarAnuncioTelaInteira() {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            requireContext(),
+            "ca-app-pub-2053981007263513/9501469318",
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d("MainActivity", adError?.toString()!!)
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d("MainActivity", "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                    mInterstitialAd?.show(requireActivity())
+                }
+            })
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -226,8 +393,10 @@ class FragmentoTelaPrincipal : Fragment() {
                 // Atualizar a visibilidade do "semAnotacoes"
                 if (adapterNotacoes.listaNotas.isEmpty()) {
                     binding.semAnotacoes.visibility = View.VISIBLE
+                    binding.nenhumaCorrespondencia.visibility = View.GONE
                 } else {
                     binding.semAnotacoes.visibility = View.GONE
+                    binding.nenhumaCorrespondencia.visibility = View.GONE
                 }
             }
 
@@ -322,11 +491,17 @@ class FragmentoTelaPrincipal : Fragment() {
     private fun applyDarkTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_dark)
+        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_branco)
+        binding.digiteParaBuscar.setTextColor(Color.BLACK)
+        binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
 
     private fun applyLightTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_light)
+        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_cinza)
+        binding.digiteParaBuscar.setTextColor(Color.BLACK)
+        binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
 
 
@@ -418,7 +593,10 @@ class FragmentoTelaPrincipal : Fragment() {
             }
         }
     }
+
     private fun selecionarIdioma(linguagem: String) {
+        Log.d("SelecionarIdioma", "Idioma selecionado: $linguagem")
+
         val localidade = Locale(linguagem)
         Locale.setDefault(localidade)
 
@@ -431,14 +609,27 @@ class FragmentoTelaPrincipal : Fragment() {
         // Atualizar a Configuration na atividade atual
         resources.updateConfiguration(configuration, resources.displayMetrics)
 
+        Log.d("SelecionarIdioma", "Configuração de localidade atualizada: $localidade")
     }
 
     private fun carregarLocalidade() {
+        Log.d("CarregarLocalidade", "Carregando localidade")
+
         val preferences = requireContext().getSharedPreferences("config_linguagens", MODE_PRIVATE)
         val localidadeDoDispositivo = Locale.getDefault().language
         val linguagem = preferences.getString("minha_linguagem", localidadeDoDispositivo)
+
+        Log.d("CarregarLocalidade", "Idioma do dispositivo: $localidadeDoDispositivo")
+        Log.d("CarregarLocalidade", "Idioma carregado das preferências: $linguagem")
+
         if (linguagem != null) {
             selecionarIdioma(linguagem)
+        } else {
+            Log.d("CarregarLocalidade", "Nenhuma linguagem encontrada nas preferências, usando idioma do dispositivo.")
         }
+    }
+
+    companion object {
+        private const val REQUEST_CODE_UPDATE = 100
     }
 }

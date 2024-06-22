@@ -6,7 +6,9 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,15 +22,25 @@ import java.util.Locale
 
 class TelaLogin : AppCompatActivity() {
     private lateinit var binding: ActivityTelaLoginBinding
+    private lateinit var progressbar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityTelaLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        progressbar = binding.progressbar
+
         loadTheme()
 
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.email.highlightColor = greenColor
+        binding.senha.highlightColor = greenColor
+
         binding.botaoEntrar.setOnClickListener {
+            progressbar.visibility = View.VISIBLE
+            binding.botaoEntrar.setText("")
             val email = binding.email.text.toString()
             val senha = binding.senha.text.toString()
 
@@ -51,6 +63,8 @@ class TelaLogin : AppCompatActivity() {
                                 this.show()
                             }
                             Handler().postDelayed({
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                                 Intent(this, TelaPrincipalProtegida::class.java).apply {
                                     startActivity(this)
                                     finish()
@@ -67,6 +81,8 @@ class TelaLogin : AppCompatActivity() {
                                 this.setTextColor(Color.WHITE)
                                 this.show()
                             }
+                            progressbar.visibility = View.GONE
+                            binding.botaoEntrar.setText(getString(R.string.entrar))
                         }
 
                     }.addOnFailureListener { exception ->
@@ -82,6 +98,8 @@ class TelaLogin : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                             }
 
                             is FirebaseAuthInvalidCredentialsException -> {
@@ -95,6 +113,8 @@ class TelaLogin : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                             }
 
                             else -> {
@@ -108,6 +128,8 @@ class TelaLogin : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                             }
                         }
                     }
@@ -117,6 +139,8 @@ class TelaLogin : AppCompatActivity() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+                progressbar.visibility = View.GONE
+                binding.botaoEntrar.setText(getString(R.string.entrar))
             }
         }
 
@@ -128,6 +152,8 @@ class TelaLogin : AppCompatActivity() {
 
         binding.botaoEsqueciMinhaSenha.setOnClickListener {
             val email = binding.email.text.toString()
+            progressbar.visibility = View.VISIBLE
+            binding.botaoEntrar.setText("")
 
             if (email.isEmpty()) {
                 recolherTeclado()
@@ -136,6 +162,8 @@ class TelaLogin : AppCompatActivity() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+                progressbar.visibility = View.GONE
+                binding.botaoEntrar.setText(getString(R.string.entrar))
             } else {
                 recolherTeclado()
                 FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
@@ -149,12 +177,16 @@ class TelaLogin : AppCompatActivity() {
                                             this.setBackgroundTint(Color.parseColor("#214C06"))
                                             this.show()
                                         }
+                                        progressbar.visibility = View.GONE
+                                        binding.botaoEntrar.setText(getString(R.string.entrar))
                                     } else {
                                         Snackbar.make(binding.root, getString(R.string.erro_ao_enviar_email_de_recuperacao), Snackbar.LENGTH_SHORT).apply {
                                             this.setTextColor(Color.WHITE)
                                             this.setBackgroundTint(Color.RED)
                                             this.show()
                                         }
+                                        progressbar.visibility = View.GONE
+                                        binding.botaoEntrar.setText(getString(R.string.entrar))
                                     }
                                 }
                         }

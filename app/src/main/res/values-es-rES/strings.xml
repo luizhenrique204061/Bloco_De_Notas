@@ -99,6 +99,11 @@
     <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">No se pudo restablecer la contraseña porque no hay ningún usuario conectado en este momento</string>
     <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">No se puede eliminar tu cuenta porque no hay ningún usuario conectado en este momento</string>
     <string name="falha_alteracao_nome_usuario">No se pudo cambiar el nombre de usuario porque no hay ningún usuario conectado en este momento</string>
+    <string name="pesquisa_pelo_titulo_anotacoes">Buscar</string>
+    <string name="botao_pesquisar_anotacoes">Buscar</string>
+    <string name="pesquisa_pelo_titulo_tarefas">Buscar</string>
+    <string name="botao_pesquisar_tarefas">Buscar</string>
+    <string name="sem_correspondencia">No se encontraron coincidencias</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

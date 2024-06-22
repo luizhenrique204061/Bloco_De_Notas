@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +28,7 @@ class FragmentoLogin : Fragment() {
 
     private var _binding: FragmentoLoginBinding? = null
     val db = DB()
+    private lateinit var progressbar: ProgressBar
     // private lateinit var googleSignInClient: GoogleSignInClient
     // private lateinit var auth: FirebaseAuth
 
@@ -48,7 +50,17 @@ class FragmentoLogin : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.email.highlightColor = greenColor
+        binding.senha.highlightColor = greenColor
+
+        progressbar = binding.progressbar
+
         binding.botaoEntrar.setOnClickListener {
+
+            progressbar.visibility = View.VISIBLE
+            binding.botaoEntrar.setText("")
             val email = binding.email.text.toString()
             val senha = binding.senha.text.toString()
 
@@ -71,6 +83,9 @@ class FragmentoLogin : Fragment() {
                                 this.show()
                             }
                             Handler().postDelayed({
+
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                                 retornar()
                             }, 3000)
 
@@ -84,6 +99,9 @@ class FragmentoLogin : Fragment() {
                                 this.setTextColor(Color.WHITE)
                                 this.show()
                             }
+
+                            progressbar.visibility = View.GONE
+                            binding.botaoEntrar.setText(getString(R.string.entrar))
                         }
 
                     }.addOnFailureListener { exception ->
@@ -99,6 +117,9 @@ class FragmentoLogin : Fragment() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                             }
 
                             is FirebaseAuthInvalidCredentialsException -> {
@@ -112,6 +133,9 @@ class FragmentoLogin : Fragment() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                             }
 
                             else -> {
@@ -125,6 +149,9 @@ class FragmentoLogin : Fragment() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+
+                                progressbar.visibility = View.GONE
+                                binding.botaoEntrar.setText(getString(R.string.entrar))
                             }
                         }
                     }
@@ -134,6 +161,9 @@ class FragmentoLogin : Fragment() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+
+                progressbar.visibility = View.GONE
+                binding.botaoEntrar.setText(getString(R.string.entrar))
             }
         }
 
@@ -145,6 +175,8 @@ class FragmentoLogin : Fragment() {
 
         binding.botaoEsqueciMinhaSenha.setOnClickListener {
             val email = binding.email.text.toString()
+            progressbar.visibility = View.VISIBLE
+            binding.botaoEntrar.setText("")
 
             if (email.isEmpty()) {
                 recolherTeclado()
@@ -153,6 +185,10 @@ class FragmentoLogin : Fragment() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+
+                progressbar.visibility = View.GONE
+                binding.botaoEntrar.setText(getString(R.string.entrar))
+
             } else {
                 recolherTeclado()
                 FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
@@ -166,12 +202,18 @@ class FragmentoLogin : Fragment() {
                                             this.setBackgroundTint(Color.parseColor("#214C06"))
                                             this.show()
                                         }
+                                        progressbar.visibility = View.GONE
+                                        binding.botaoEntrar.setText(getString(R.string.entrar))
+
                                     } else {
                                         Snackbar.make(binding.root, getString(R.string.erro_ao_enviar_email_de_recuperacao), Snackbar.LENGTH_SHORT).apply {
                                             this.setTextColor(Color.WHITE)
                                             this.setBackgroundTint(Color.RED)
                                             this.show()
                                         }
+
+                                        progressbar.visibility = View.GONE
+                                        binding.botaoEntrar.setText(getString(R.string.entrar))
                                     }
                                 }
                         }

@@ -15,14 +15,16 @@
         android:theme="@style/Theme.BlocoDeNotas"
         tools:targetApi="31">
         <activity
+            android:name=".TelaCadastro"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
+            android:exported="false" />
+        <activity
             android:name=".TelaIdiomas"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
-
             android:exported="false" />
         <activity
             android:name=".CriarAnotacaoProtegida"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
-
             android:exported="false" />
         <activity
             android:name=".TelaPrincipalProtegida"
@@ -33,7 +35,6 @@
         <activity
             android:name=".TelaCadastroNotasProtegidas"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
-
             android:exported="false" />
         <activity
             android:name=".TelaLogin"
@@ -41,10 +42,6 @@
             android:exported="false" />
         <activity
             android:name=".AlterarNomeUsuario"
-            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
-            android:exported="false" />
-        <activity
-            android:name=".TelaCadastro"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|layoutDirection"
             android:exported="false" />
         <activity
@@ -99,6 +96,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2053981007263513~1916048751" />
     </application>
 
 </manifest>

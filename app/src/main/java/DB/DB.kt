@@ -187,7 +187,8 @@ class DB {
     fun obterAnotacoesProtegidas(
         lista_anotacoes_protegidas: MutableList<NotasProtegidas>,
         adapter_Anotacoes_protegidas: NotasProtegidasAdapter,
-        textViewAnotacoes: TextView
+        textViewAnotacoes: TextView,
+        textViewNenhumaCorrespondencia: TextView
     ) {
         val db = FirebaseFirestore.getInstance()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -213,8 +214,10 @@ class DB {
 
                 if (lista_anotacoes_protegidas.isEmpty()) {
                     textViewAnotacoes.visibility = View.VISIBLE
+                    textViewNenhumaCorrespondencia.visibility = View.GONE
                 } else {
                     textViewAnotacoes.visibility = View.GONE
+                    textViewNenhumaCorrespondencia.visibility = View.GONE
                 }
             }
 
@@ -645,6 +648,54 @@ class DB {
         // Executa em uma corrotina para operações no banco de dados
         CoroutineScope(Dispatchers.IO).launch {
             dao.inserirTodas(novasTarefas)
+        }
+    }
+
+    fun buscarAnotacoesProtegidasPalavraChave(
+        palavrachave: String,
+        lista_anotacoes_tela_principal_protegida: MutableList<NotasProtegidas>,
+        notas_protegidas_adapter: NotasProtegidasAdapter,
+        textViewSemCorrespondencia: TextView
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        currentUser?.let {
+            val usuarioId = currentUser.uid
+            val palavrachaveLowerCase = palavrachave.toLowerCase()
+
+            db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId).collection("Anotacoes_Protegidas")
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        Log.e("Firestore", "Erro ao obter dados: $error")
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null && !snapshot.isEmpty) {
+                        lista_anotacoes_tela_principal_protegida.clear()
+                        for (documento in snapshot.documents) {
+                            val anotacoesProtegidas = documento.toObject(NotasProtegidas::class.java)
+                            anotacoesProtegidas?.let {
+                                val termoDescricao = anotacoesProtegidas.titulo?.toLowerCase()
+                                if (termoDescricao!!.contains(palavrachaveLowerCase)) {
+                                    lista_anotacoes_tela_principal_protegida.add(anotacoesProtegidas)
+                                }
+                            }
+                        }
+                        notas_protegidas_adapter.notifyDataSetChanged()
+
+                        if (lista_anotacoes_tela_principal_protegida.isNotEmpty()) {
+                            textViewSemCorrespondencia.visibility = View.GONE
+                            Log.d("FirestoreResponse", "Firestore encontrou resultados para a palavra-chave: $palavrachave")
+                        } else {
+                            textViewSemCorrespondencia.visibility = View.VISIBLE
+                            Log.d("FirestoreResponse", "Firestore não encontrou resultados para a palavra-chave: $palavrachave")
+                        }
+                    } else {
+                        textViewSemCorrespondencia.visibility = View.VISIBLE
+                        Log.d("FirestoreResponse", "Nenhum dado encontrado no snapshot")
+                    }
+                }
         }
     }
 }

@@ -46,6 +46,12 @@ class AbrirNota : AppCompatActivity() {
         bancoDeDados = AppDataBase.getInstance(this).NotaDao()
         abrirNotas()
 
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.titulo.highlightColor = greenColor
+        binding.descricao.highlightColor = greenColor
+
+
         //Adicionando TextWatcher para monitorar o título
         binding.titulo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

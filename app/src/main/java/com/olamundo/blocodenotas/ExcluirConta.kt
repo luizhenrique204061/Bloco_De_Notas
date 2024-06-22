@@ -6,7 +6,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -19,16 +21,25 @@ import java.util.Locale
 class ExcluirConta : AppCompatActivity() {
     private lateinit var binding: ActivityExcluirContaBinding
     val db = DB()
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityExcluirContaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        progressBar = binding.progressbar
         loadTheme()
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.email.highlightColor = greenColor
+        binding.senha.highlightColor = greenColor
 
         binding.botaoAutenticar.setOnClickListener {
             recolherTeclado()
+            progressBar.visibility = View.VISIBLE
+            binding.botaoAutenticar.setText("")
 
             val email = binding.email.text.toString()
             val senha = binding.senha.text.toString()
@@ -43,6 +54,8 @@ class ExcluirConta : AppCompatActivity() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+                progressBar.visibility = View.GONE
+                binding.botaoAutenticar.setText(getString(R.string.autenticar))
             } else {
                 val usuario = FirebaseAuth.getInstance().currentUser
 
@@ -57,6 +70,9 @@ class ExcluirConta : AppCompatActivity() {
                                 val exibirDialog = AlertDialog.Builder(this)
                                     .setView(dialog.root)
                                     .show()
+
+                                progressBar.visibility = View.GONE
+                                binding.botaoAutenticar.setText(getString(R.string.autenticar))
 
                                 dialog.botaoCancelarExclusaoDeConta.setOnClickListener {
                                     exibirDialog.dismiss()
@@ -80,6 +96,8 @@ class ExcluirConta : AppCompatActivity() {
                                     this.setTextColor(Color.WHITE)
                                     this.show()
                                 }
+                                progressBar.visibility = View.GONE
+                                binding.botaoAutenticar.setText(getString(R.string.autenticar))
                             }
                         }
                 } ?: run {
@@ -92,6 +110,8 @@ class ExcluirConta : AppCompatActivity() {
                         this.setTextColor(Color.WHITE)
                         this.show()
                     }
+                    progressBar.visibility = View.GONE
+                    binding.botaoAutenticar.setText(getString(R.string.autenticar))
                 }
 
             }

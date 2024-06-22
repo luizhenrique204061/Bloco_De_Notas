@@ -99,6 +99,18 @@
             app:layout_constraintStart_toStartOf="@id/view"
             app:layout_constraintTop_toBottomOf="@id/senha" />
 
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/verde_escuro"
+            android:translationZ="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/botao_cadastrar"
+            app:layout_constraintEnd_toEndOf="@id/botao_cadastrar"
+            app:layout_constraintStart_toStartOf="@id/botao_cadastrar"
+            app:layout_constraintTop_toTopOf="@id/botao_cadastrar" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

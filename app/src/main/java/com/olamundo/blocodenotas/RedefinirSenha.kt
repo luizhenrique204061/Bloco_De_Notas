@@ -23,6 +23,12 @@ class RedefinirSenha : AppCompatActivity() {
         setContentView(binding.root)
 
         loadTheme()
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.email.highlightColor = greenColor
+        binding.senhaAtual.highlightColor = greenColor
+        binding.novaSenha.highlightColor = greenColor
+        binding.confirmarNovaSenha.highlightColor = greenColor
 
 
         binding.botaoRedefinirSenha.setOnClickListener {

@@ -99,6 +99,11 @@
     <string name="nao_foi_possivel_redefinir_a_senha_sem_usuario_logado">Невозможно сбросить пароль, потому что в данный момент нет зарегистрированных пользователей</string>
     <string name="nao_foi_possivel_deletar_o_usuario_nao_logado">Невозможно удалить ваш аккаунт, потому что в данный момент нет зарегистрированных пользователей</string>
     <string name="falha_alteracao_nome_usuario">Невозможно изменить имя пользователя, потому что в данный момент нет зарегистрированных пользователей</string>
+    <string name="pesquisa_pelo_titulo_anotacoes">Поиск</string>
+    <string name="botao_pesquisar_anotacoes">Искать</string>
+    <string name="pesquisa_pelo_titulo_tarefas">Поиск</string>
+    <string name="botao_pesquisar_tarefas">Искать</string>
+    <string name="sem_correspondencia">Совпадений не найдено</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

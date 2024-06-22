@@ -3,14 +3,21 @@ package com.olamundo.blocodenotas.ui.fragmento_tela_principal_protegida
 import Adapter.NotasProtegidasAdapter
 import DB.DB
 import Modelo.NotasProtegidas
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
@@ -41,6 +48,7 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
     private lateinit var mainActivity: TelaPrincipalProtegida
     val db = DB()
     private lateinit var textViewSemAnotacoes: TextView
+    private lateinit var textViewSemCorrespondencia: TextView
     private lateinit var adapterNotacoesProtegidas: NotasProtegidasAdapter
     val scope = CoroutineScope(Dispatchers.IO)
 
@@ -57,12 +65,66 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.recyclerview
         loadTheme()
         textViewSemAnotacoes = binding.semAnotacoes
+
+
+        textViewSemCorrespondencia = binding.nenhumaCorrespondencia
+
+        // Definindo a cor de seleção do texto para verde
+        val greenColor = requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        binding.digiteParaBuscar.highlightColor = greenColor
+
+        // Adicionando TextWatcher para monitorar mudanças no campo de busca
+        binding.digiteParaBuscar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val buscar = s.toString()
+                scope.launch {
+                    db.buscarAnotacoesProtegidasPalavraChave(buscar, listaNotasProtegidas, adapterNotacoesProtegidas, textViewSemCorrespondencia)
+                }
+            }
+        })
+
+        val editTextBuscar = binding.digiteParaBuscar
+
+        // Configurando o OnTouchListener
+        editTextBuscar.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
+                    // Limpar o texto do EditText
+                    binding.digiteParaBuscar.setText("")
+            recolherTeclado()
+
+            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+            scope.launch {
+                db.obterAnotacoesProtegidas(listaNotasProtegidas, adapterNotacoesProtegidas, textViewSemAnotacoes, textViewSemCorrespondencia)
+
+            }
+                    return@setOnTouchListener true
+                }
+            }
+            false
+        }
+
+//        binding.apagarPesquisa.setOnClickListener {
+//            binding.digiteParaBuscar.setText("")
+//            recolherTeclado()
+//
+//            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+//            scope.launch {
+//                db.obterAnotacoesProtegidas(listaNotasProtegidas, adapterNotacoesProtegidas, textViewSemAnotacoes, textViewSemCorrespondencia)
+//
+//            }
+//        }
 
         adapterNotacoesProtegidas = NotasProtegidasAdapter(
             requireContext(),
@@ -138,11 +200,18 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
         )
     }
 
+    private fun recolherTeclado() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
     override fun onResume() {
         db.obterAnotacoesProtegidas(
             listaNotasProtegidas,
             adapterNotacoesProtegidas,
-            textViewSemAnotacoes
+            textViewSemAnotacoes,
+            textViewSemCorrespondencia
         )
         super.onResume()
     }
@@ -162,10 +231,16 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
 
     private fun applyDarkTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
+        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_branco)
+        binding.digiteParaBuscar.setTextColor(Color.BLACK)
+        binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
 
     private fun applyLightTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
+        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_cinza)
+        binding.digiteParaBuscar.setTextColor(Color.BLACK)
+        binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
 
     private suspend fun compartilharNotasSelecionadas() {
@@ -238,7 +313,8 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
                 db.obterAnotacoesProtegidas(
                     listaNotasProtegidas,
                     adapterNotacoesProtegidas,
-                    textViewSemAnotacoes
+                    textViewSemAnotacoes,
+                    textViewSemCorrespondencia
                 )
                 adapterNotacoesProtegidas.desativarModoSelecao()
                 mainActivity.toggleToolbarVisibility(true)

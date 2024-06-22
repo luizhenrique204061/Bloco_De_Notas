@@ -17,10 +17,12 @@ interface TarefaDao {
     @Query("SELECT * FROM tabela_tarefas")
     suspend fun buscarTodas(): MutableList<Tarefa>
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun inserirTodas(tarefa: MutableList<Tarefa>)
 
     @Query("DELETE FROM tabela_tarefas WHERE id = :id")
     suspend fun remover(id: Long)
+
+    @Query("SELECT * FROM tabela_tarefas WHERE titulo LIKE '%' || :palavraChave || '%'")
+    suspend fun buscarPorPalavraChave(palavraChave: String): MutableList<Tarefa>
 }

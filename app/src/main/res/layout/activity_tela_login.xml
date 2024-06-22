@@ -97,6 +97,18 @@
             app:layout_constraintStart_toStartOf="@id/view"
             app:layout_constraintTop_toBottomOf="@id/senha" />
 
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/botao_entrar"
+            android:indeterminateTint="@color/verde_escuro"
+            app:layout_constraintEnd_toEndOf="@id/botao_entrar"
+            app:layout_constraintTop_toTopOf="@id/botao_entrar"
+            app:layout_constraintBottom_toBottomOf="@id/botao_entrar"
+            android:translationZ="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <TextView
             android:id="@+id/botao_cadastrar"
             style="@style/TEXTO"

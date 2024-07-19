@@ -6,6 +6,8 @@
         <item name="colorPrimaryVariant">@color/black</item>
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
 
+        <item name="colorControlActivated">@color/verde_claro</item>
+
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
     </style>
@@ -18,6 +20,12 @@
     <style name="TEXTO_LOGIN">
 
         <item name="android:textColor">@color/white</item>
+
+    </style>
+
+    <style name="BACKGROUND_CARD_VIEW">
+
+        <item name="android:background">@color/white</item>
 
     </style>
 

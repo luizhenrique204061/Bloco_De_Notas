@@ -1,9 +1,11 @@
 package Adapter
 
 import Modelo.Tarefa
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.olamundo.blocodenotas.databinding.TarefaItemBinding
@@ -13,6 +15,7 @@ class TarefasAdapter(
     val listaTarefas: MutableList<Tarefa> = mutableListOf()
 ): RecyclerView.Adapter<TarefasAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: TarefaItemBinding): RecyclerView.ViewHolder(binding.root) {
+
 
         fun vincula(tarefa: Tarefa) {
             val descricao = binding.descricaoLista
@@ -33,6 +36,20 @@ class TarefasAdapter(
                     notifyItemChanged(position)
                 }
             }
+
+            //O código abaixo faz com que o android:dranwerRight seja clicável
+//            descricao.setOnTouchListener { view, event ->
+//                if (event.action == MotionEvent.ACTION_UP) {
+//                    if (event.rawX >= (descricao.right - descricao.compoundDrawables[2].bounds.width())) {
+//                        val position = adapterPosition
+//                        if (position != RecyclerView.NO_POSITION) {
+//                            removerTarefa(position)
+//                        }
+//                        return@setOnTouchListener true
+//                    }
+//                }
+//                false
+//            }
 
             binding.removerTarefa.setOnClickListener {
                 val position = adapterPosition

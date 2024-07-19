@@ -6,7 +6,9 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.EmailAuthProvider
@@ -16,11 +18,14 @@ import java.util.Locale
 
 class RedefinirSenha : AppCompatActivity() {
     private lateinit var binding: ActivityRedefinirSenhaBinding
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
         binding = ActivityRedefinirSenhaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        progressBar = binding.progressbar
 
         loadTheme()
         // Definindo a cor de seleção do texto para verde
@@ -32,6 +37,8 @@ class RedefinirSenha : AppCompatActivity() {
 
 
         binding.botaoRedefinirSenha.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            binding.botaoRedefinirSenha.setText("")
             val email = binding.email.text.toString()
             val senhaAtual = binding.senhaAtual.text.toString()
             val confirmarSenha1 = binding.novaSenha.text.toString()
@@ -49,6 +56,8 @@ class RedefinirSenha : AppCompatActivity() {
                     this.setTextColor(Color.WHITE)
                     this.show()
                 }
+                progressBar.visibility = View.GONE
+                binding.botaoRedefinirSenha.setText(getString(R.string.redefinir_senha))
             } else {
                 if (confirmarSenha1 == confirmarSenha2) {
                     val usuario = FirebaseAuth.getInstance().currentUser
@@ -72,6 +81,11 @@ class RedefinirSenha : AppCompatActivity() {
                                                     this.setBackgroundTint(Color.parseColor("#214C06"))
                                                     this.show()
                                                 }
+                                                progressBar.visibility = View.GONE
+                                                binding.botaoRedefinirSenha.setText(getString(R.string.redefinir_senha))
+                                                //Deslogar após alterar a senha
+                                                FirebaseAuth.getInstance().signOut()
+
                                                 Handler().postDelayed({
                                                     Intent(this, MainActivity::class.java).apply {
                                                         startActivity(this)
@@ -87,6 +101,8 @@ class RedefinirSenha : AppCompatActivity() {
                                                     this.setBackgroundTint(Color.RED)
                                                     this.show()
                                                 }
+                                                progressBar.visibility = View.GONE
+                                                binding.botaoRedefinirSenha.setText(getString(R.string.redefinir_senha))
                                             }
                                         }
                                 } else {
@@ -99,6 +115,8 @@ class RedefinirSenha : AppCompatActivity() {
                                         this.setTextColor(Color.WHITE)
                                         this.show()
                                     }
+                                    progressBar.visibility = View.GONE
+                                    binding.botaoRedefinirSenha.setText(getString(R.string.redefinir_senha))
                                 }
                             }
                     } ?: run {
@@ -107,6 +125,8 @@ class RedefinirSenha : AppCompatActivity() {
                             this.setTextColor(Color.WHITE)
                             this.show()
                         }
+                        progressBar.visibility = View.GONE
+                        binding.botaoRedefinirSenha.setText(getString(R.string.redefinir_senha))
                     }
 
                 } else {
@@ -119,6 +139,8 @@ class RedefinirSenha : AppCompatActivity() {
                         this.setTextColor(Color.WHITE)
                         this.show()
                     }
+                    progressBar.visibility = View.GONE
+                    binding.botaoRedefinirSenha.setText(getString(R.string.redefinir_senha))
                 }
             }
         }

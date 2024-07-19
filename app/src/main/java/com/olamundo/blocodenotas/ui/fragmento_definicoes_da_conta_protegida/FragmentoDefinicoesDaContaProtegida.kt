@@ -46,7 +46,7 @@ class FragmentoDefinicoesDaContaProtegida : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loadTheme()
-        carregarAnuncioBanner()
+        //carregarAnuncioBanner()
 
 
         val exibirNomeUsuario = binding.mostrarUsuario

@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
@@ -23,6 +24,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -31,6 +33,7 @@ import com.olamundo.blocodenotas.CriarNota
 import com.olamundo.blocodenotas.CriarTarefa
 import com.olamundo.blocodenotas.MainActivity
 import com.olamundo.blocodenotas.R
+import com.olamundo.blocodenotas.databinding.DialogExclusaoTarefasSelecionadasBinding
 import com.olamundo.blocodenotas.databinding.FragmentoTarefasBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +76,7 @@ class FragmentoTarefas : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -86,7 +89,8 @@ class FragmentoTarefas : Fragment() {
 
 
         // Definindo a cor de seleção do texto para verde
-        val greenColor = requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        val greenColor =
+            requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
         binding.digiteParaBuscar.highlightColor = greenColor
 
         // Adicionando TextWatcher para monitorar mudanças no campo de busca
@@ -124,98 +128,102 @@ class FragmentoTarefas : Fragment() {
             }
         })
 
-        val editTextBuscar = binding.digiteParaBuscar
-
-        // Configurando o OnTouchListener
-        editTextBuscar.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
-                    // Limpar o texto do EditText
-                    binding.digiteParaBuscar.setText("")
-                    recolherTeclado()
-
-                    // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
-                    scope.launch {
-                        val buscarTarefaRoom = bancoDeDadosTarefa.buscarTodas()
-
-                        withContext(Dispatchers.Main) {
-                            adapterTarefas.listaTarefasTelaPrincipal.clear()
-                            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefaRoom)
-                            adapterTarefas.notifyDataSetChanged()
-
-                            // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
-                            if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
-                                binding.semTarefas.visibility = View.VISIBLE
-                                binding.nenhumaCorrespondencia.visibility = View.GONE
-                            } else {
-                                binding.semTarefas.visibility = View.GONE
-                                binding.nenhumaCorrespondencia.visibility = View.GONE
-                            }
-                        }
-                    }
-                    return@setOnTouchListener true
-                }
-            }
-            false
-        }
-
-//        binding.apagarPesquisa.setOnClickListener {
-//            binding.digiteParaBuscar.setText("")
-//            recolherTeclado()
+        //O código abaixo faz com que o android:dranwerRight seja clicável
+//        val editTextBuscar = binding.digiteParaBuscar
 //
-//            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
-//            scope.launch {
-//                val buscarTarefaRoom = bancoDeDadosTarefa.buscarTodas()
+//        // Configurando o OnTouchListener
+//        editTextBuscar.setOnTouchListener { v, event ->
+//            if (event.action == MotionEvent.ACTION_UP) {
+//                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
+//                    // Limpar o texto do EditText
+//                    binding.digiteParaBuscar.setText("")
+//                    recolherTeclado()
 //
-//                withContext(Dispatchers.Main) {
-//                    adapterTarefas.listaTarefasTelaPrincipal.clear()
-//                    adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefaRoom)
-//                    adapterTarefas.notifyDataSetChanged()
+//                    // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+//                    scope.launch {
+//                        val buscarTarefaRoom = bancoDeDadosTarefa.buscarTodas()
 //
-//                    // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
-//                    if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
-//                        binding.semTarefas.visibility = View.VISIBLE
-//                        binding.nenhumaCorrespondencia.visibility = View.GONE
-//                    } else {
-//                        binding.semTarefas.visibility = View.GONE
-//                        binding.nenhumaCorrespondencia.visibility = View.GONE
+//                        withContext(Dispatchers.Main) {
+//                            adapterTarefas.listaTarefasTelaPrincipal.clear()
+//                            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefaRoom)
+//                            adapterTarefas.notifyDataSetChanged()
+//
+//                            // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+//                            if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
+//                                binding.semTarefas.visibility = View.VISIBLE
+//                                binding.nenhumaCorrespondencia.visibility = View.GONE
+//                            } else {
+//                                binding.semTarefas.visibility = View.GONE
+//                                binding.nenhumaCorrespondencia.visibility = View.GONE
+//                            }
+//                        }
 //                    }
+//                    return@setOnTouchListener true
 //                }
 //            }
+//            false
 //        }
 
-        adapterTarefas = TarefasAdapterTelaPrincipal(requireContext(), listaTarefas, object : TarefasAdapterTelaPrincipal.OnItemSelectedListener {
-            override fun onItemSelected(selectedItemCount: Int) {
-                // Verifica se foi um clique longo e oculta a toolbar
-                if (selectedItemCount == 0) {
-                    mainActivity.toggleToolbarVisibility(!adapterTarefas.isLongClick()) // Mostra a toolbar se não for um clique longo
-                }
-            }
+        binding.apagarPesquisa.setOnClickListener {
+            binding.digiteParaBuscar.setText("")
+            recolherTeclado()
 
-            override fun onItemLongClicked() {
-                // Oculta a toolbar ao iniciar o clique longo
-                mainActivity.toggleToolbarVisibility(false)
-                binding.toolbar.visibility = View.VISIBLE
-                binding.compartilhar.setOnClickListener {
-                    scope.launch {
-                        compartilharTarefasSelecionadas()
+            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+            scope.launch {
+                val buscarTarefaRoom = bancoDeDadosTarefa.buscarTodas()
+
+                withContext(Dispatchers.Main) {
+                    adapterTarefas.listaTarefasTelaPrincipal.clear()
+                    adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarTarefaRoom)
+                    adapterTarefas.notifyDataSetChanged()
+
+                    // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+                    if (adapterTarefas.listaTarefasTelaPrincipal.isEmpty()) {
+                        binding.semTarefas.visibility = View.VISIBLE
+                        binding.nenhumaCorrespondencia.visibility = View.GONE
+                    } else {
+                        binding.semTarefas.visibility = View.GONE
+                        binding.nenhumaCorrespondencia.visibility = View.GONE
                     }
-
                 }
-                binding.deletar.setOnClickListener {
-                    scope.launch {
-                        deletarTarefasSelecionadas()
+            }
+        }
+
+        adapterTarefas = TarefasAdapterTelaPrincipal(
+            requireContext(),
+            listaTarefas,
+            object : TarefasAdapterTelaPrincipal.OnItemSelectedListener {
+                override fun onItemSelected(selectedItemCount: Int) {
+                    // Verifica se foi um clique longo e oculta a toolbar
+                    if (selectedItemCount == 0) {
+                        mainActivity.toggleToolbarVisibility(!adapterTarefas.isLongClick()) // Mostra a toolbar se não for um clique longo
                     }
                 }
-            }
 
-            override fun updateSelectedItemCount(selectedItemCount: Int) {
-                Log.i("Contando", "$selectedItemCount")
-                binding.toolbar.title =
-                    getString(R.string.itens_selecionados, selectedItemCount.toString())
-            }
+                override fun onItemLongClicked() {
+                    // Oculta a toolbar ao iniciar o clique longo
+                    mainActivity.toggleToolbarVisibility(false)
+                    binding.toolbar.visibility = View.VISIBLE
+                    binding.compartilhar.setOnClickListener {
+                        scope.launch {
+                            compartilharTarefasSelecionadas()
+                        }
 
-        })
+                    }
+                    binding.deletar.setOnClickListener {
+                        scope.launch {
+                            deletarTarefasSelecionadas()
+                        }
+                    }
+                }
+
+                override fun updateSelectedItemCount(selectedItemCount: Int) {
+                    Log.i("Contando", "$selectedItemCount")
+                    binding.toolbar.title =
+                        getString(R.string.itens_selecionados, selectedItemCount.toString())
+                }
+
+            })
 
         recyclerViewTarefas.adapter = adapterTarefas
 
@@ -316,7 +324,12 @@ class FragmentoTarefas : Fragment() {
             val buscarTarefasRoom = bancoDeDadosTarefa.buscarTodas()
             Log.i("BuscandoRoom", buscarTarefasRoom.toString())
 
-            db.obterTarefasDoUsuario(requireContext(), listaTarefas, adapterTarefas, textViewSemTarefas)
+            db.obterTarefasDoUsuario(
+                requireContext(),
+                listaTarefas,
+                adapterTarefas,
+                textViewSemTarefas
+            )
 
 
             // Limpar e atualizar a lista no adapter
@@ -352,7 +365,7 @@ class FragmentoTarefas : Fragment() {
                     mainActivity.iniciarAnimacaoSincronizacao()
                     Handler().postDelayed({
                         mainActivity.pararAnimacao()
-                    },3000)
+                    }, 3000)
                     /*
                     Snackbar.make(binding.root, "Backup iniciado", Snackbar.LENGTH_SHORT).apply {
                         this.setBackgroundTint(Color.parseColor("#214C06"))
@@ -387,7 +400,7 @@ class FragmentoTarefas : Fragment() {
     private fun applyDarkTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_dark)
-        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_branco)
+        binding.layoutSecundario.setBackgroundResource(R.drawable.background_buscar_branco)
         binding.digiteParaBuscar.setTextColor(Color.BLACK)
         binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
@@ -395,7 +408,7 @@ class FragmentoTarefas : Fragment() {
     private fun applyLightTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_light)
-        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_cinza)
+        binding.layoutSecundario.setBackgroundResource(R.drawable.background_buscar_azul_claro)
         binding.digiteParaBuscar.setTextColor(Color.BLACK)
         binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
@@ -407,48 +420,82 @@ class FragmentoTarefas : Fragment() {
     }
 
     private suspend fun deletarTarefasSelecionadas() {
-        withContext(Dispatchers.IO) {
-            val notasSelecionadas = adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
-            if (notasSelecionadas.isEmpty()) {
-                Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
-                return@withContext
-            }
+        withContext(Dispatchers.Main) {
+            val dialogBinding = DialogExclusaoTarefasSelecionadasBinding.inflate(layoutInflater)
+            val exibirDialog = AlertDialog.Builder(requireContext())
+                .setView(dialogBinding.root)
+                .setCancelable(false)
+                .create() // Cria o AlertDialog, mas não o mostra ainda
 
-            val currentUser = FirebaseAuth.getInstance().currentUser
+            // Configura o fundo do diálogo como transparente
+            exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-            notasSelecionadas.forEach { tarefas ->
-                Log.i("DeletarNotas", "Excluindo nota com ID: ${tarefas.id}")
+            exibirDialog.show() // Mostra o AlertDialog
 
-                // Exclui do Firebase se o usuário estiver logado
-                if (currentUser != null) {
-                    val excluiuFirebase = db.excluirTarefasUsuario(tarefas.id)
-                    if (excluiuFirebase) {
-                        // Se excluiu com sucesso do Firebase, exclui do Room
-                        bancoDeDadosTarefa.remover(tarefas.id)
-                    }
-                } else {
-                    // Se o usuário não estiver logado, apenas exclui do Room
-                    bancoDeDadosTarefa.remover(tarefas.id)
-                }
-            }
-
-            // Atualiza a lista de notas exibida após a exclusão
-            val buscarNotacoes = bancoDeDadosTarefa.buscarTodas()
-            adapterTarefas.listaTarefasTelaPrincipal.clear()
-            adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarNotacoes)
-
-            // Notifica o adapter sobre as mudanças
-            withContext(Dispatchers.Main) {
-                adapterTarefas.notifyDataSetChanged()
-                db.obterTarefasDoUsuario(requireContext(), listaTarefas, adapterTarefas, textViewSemTarefas)
-                if (buscarNotacoes.isEmpty()) {
-                    binding.semTarefas.visibility = View.VISIBLE
-                } else {
-                    binding.semTarefas.visibility = View.GONE
-                }
+            dialogBinding.botaoCancelar.setOnClickListener {
+                exibirDialog.dismiss()
                 mainActivity.toggleToolbarVisibility(true)
                 binding.toolbar.visibility = View.GONE
                 adapterTarefas.desativarModoSelecao()
+            }
+
+            dialogBinding.botaoProsseguir.setOnClickListener {
+                scope.launch {
+                    withContext(Dispatchers.IO) {
+                        val notasSelecionadas =
+                            adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
+                        if (notasSelecionadas.isEmpty()) {
+                            Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
+                            return@withContext
+                        }
+
+                        val currentUser = FirebaseAuth.getInstance().currentUser
+
+                        notasSelecionadas.forEach { tarefas ->
+                            Log.i("DeletarNotas", "Excluindo nota com ID: ${tarefas.id}")
+
+                            // Exclui do Firebase se o usuário estiver logado
+                            if (currentUser != null) {
+                                val excluiuFirebase = db.excluirTarefasUsuario(tarefas.id)
+                                if (excluiuFirebase) {
+                                    // Se excluiu com sucesso do Firebase, exclui do Room
+                                    bancoDeDadosTarefa.remover(tarefas.id)
+                                }
+                            } else {
+                                // Se o usuário não estiver logado, apenas exclui do Room
+                                bancoDeDadosTarefa.remover(tarefas.id)
+                            }
+                        }
+
+                        // Atualiza a lista de notas exibida após a exclusão
+                        val buscarNotacoes = bancoDeDadosTarefa.buscarTodas()
+                        adapterTarefas.listaTarefasTelaPrincipal.clear()
+                        adapterTarefas.listaTarefasTelaPrincipal.addAll(buscarNotacoes)
+
+                        // Notifica o adapter sobre as mudanças
+                        withContext(Dispatchers.Main) {
+                            adapterTarefas.notifyDataSetChanged()
+                            db.obterTarefasDoUsuario(
+                                requireContext(),
+                                listaTarefas,
+                                adapterTarefas,
+                                textViewSemTarefas
+                            )
+                            if (buscarNotacoes.isEmpty()) {
+                                binding.semTarefas.visibility = View.VISIBLE
+                            } else {
+                                binding.semTarefas.visibility = View.GONE
+                            }
+                            mainActivity.toggleToolbarVisibility(true)
+                            binding.toolbar.visibility = View.GONE
+                            adapterTarefas.desativarModoSelecao()
+                        }
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        exibirDialog.dismiss()
+                    }
+                }
             }
         }
     }
@@ -461,7 +508,10 @@ class FragmentoTarefas : Fragment() {
                 adapterTarefas.listaTarefasTelaPrincipal.filter { it.isChecked }
             if (tarefasSelecionadas.isEmpty()) return@withContext
 
-            val zipFile = File(requireContext().filesDir, "${getString(R.string.nome_tarefas_selecioandas)}.zip")
+            val zipFile = File(
+                requireContext().filesDir,
+                "${getString(R.string.nome_tarefas_selecioandas)}.zip"
+            )
             val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
             tarefasSelecionadas.forEach { tarefa ->
@@ -492,8 +542,26 @@ class FragmentoTarefas : Fragment() {
             }
 
             withContext(Dispatchers.Main) {
-                startActivity(Intent.createChooser(intent, "Compartilhar notas via"))
+                //O código abaixo é o código original
+                //startActivity(Intent.createChooser(intent, "Compartilhar notas via"))
+                startActivityForResult(
+                    Intent.createChooser(intent, "compartilhar tarefas via"),
+                    COMPARTILHAR_TAREFAS_REQUEST_CODE
+                )
+                mainActivity.toggleToolbarVisibility(true)
+                binding.toolbar.visibility = View.GONE
             }
+        }
+    }
+
+    //Esse código aguarda o resultado do compartilhamento
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == COMPARTILHAR_TAREFAS_REQUEST_CODE) {
+            // Manter os itens selecionados marcados até que o usuário retorne ao app.
+            adapterTarefas.listaTarefasTelaPrincipal.forEach { it.isChecked = false }
+            adapterTarefas.notifyDataSetChanged()
+            adapterTarefas.desativarModoSelecao()
         }
     }
 
@@ -524,5 +592,9 @@ class FragmentoTarefas : Fragment() {
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         }
+    }
+
+    companion object {
+        private const val COMPARTILHAR_TAREFAS_REQUEST_CODE = 1001
     }
 }

@@ -43,7 +43,7 @@ class FragmentoDadosDoUsuario : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loadTheme()
-        carregarAnuncioBanner()
+       // carregarAnuncioBanner()
         val exibirNomeUsuario = binding.mostrarUsuario
         val exibirEmail = binding.mostrarEmail
 

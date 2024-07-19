@@ -3,13 +3,16 @@ package com.olamundo.blocodenotas
 import DB.DB
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.android.gms.ads.AdRequest
@@ -17,6 +20,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.olamundo.blocodenotas.databinding.ActivityCriarAnotacaoProtegidaBinding
+import com.olamundo.blocodenotas.databinding.DialogExclusaoActivityCriarNotaBinding
 import java.io.File
 import java.util.Locale
 
@@ -255,9 +259,38 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
     }
 
     fun deletar(idAnotacao: String) {
-        Log.i("Excluir", idAnotacao)
-        db.excluirAnotacoesProtegidas(idAnotacao)
-        finish()
+        titulo = binding.titulo.text.toString()
+        descricao = binding.descricao.text.toString()
+
+        if (titulo.isEmpty() && descricao.isEmpty()) {
+
+            finish()
+
+        } else  {
+
+            val dialogBinding = DialogExclusaoActivityCriarNotaBinding.inflate(layoutInflater)
+            val exibirDialog = AlertDialog.Builder(this@CriarAnotacaoProtegida)
+                .setView(dialogBinding.root)
+                .setCancelable(false)
+                .create() // Cria o AlertDialog, mas não o mostra ainda
+
+            // Configura o fundo do diálogo como transparente
+            exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            exibirDialog.show() // Mostra o AlertDialog
+
+            dialogBinding.botaoCancelar.setOnClickListener {
+                exibirDialog.dismiss()
+            }
+
+            dialogBinding.botaoProsseguir.setOnClickListener {
+                Log.i("Excluir", idAnotacao)
+                db.excluirAnotacoesProtegidas(idAnotacao)
+                finish()
+            }
+
+        }
+
     }
 
     override fun onBackPressed() {

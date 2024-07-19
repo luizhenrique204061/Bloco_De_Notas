@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,6 +21,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -27,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.CriarAnotacaoProtegida
 import com.olamundo.blocodenotas.R
 import com.olamundo.blocodenotas.TelaPrincipalProtegida
+import com.olamundo.blocodenotas.databinding.DialogExlcusaoAnotacoesSelecionadasBinding
 import com.olamundo.blocodenotas.databinding.FragmentoTelaPrincipalProtegidaBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -94,29 +97,15 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
             }
         })
 
-        val editTextBuscar = binding.digiteParaBuscar
-
-        // Configurando o OnTouchListener
-        editTextBuscar.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
-                    // Limpar o texto do EditText
-                    binding.digiteParaBuscar.setText("")
-            recolherTeclado()
-
-            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
-            scope.launch {
-                db.obterAnotacoesProtegidas(listaNotasProtegidas, adapterNotacoesProtegidas, textViewSemAnotacoes, textViewSemCorrespondencia)
-
-            }
-                    return@setOnTouchListener true
-                }
-            }
-            false
-        }
-
-//        binding.apagarPesquisa.setOnClickListener {
-//            binding.digiteParaBuscar.setText("")
+        //O código abaixo faz com que o android:dranwerRight seja clicável
+//        val editTextBuscar = binding.digiteParaBuscar
+//
+//        // Configurando o OnTouchListener
+//        editTextBuscar.setOnTouchListener { v, event ->
+//            if (event.action == MotionEvent.ACTION_UP) {
+//                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
+//                    // Limpar o texto do EditText
+//                    binding.digiteParaBuscar.setText("")
 //            recolherTeclado()
 //
 //            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
@@ -124,7 +113,22 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
 //                db.obterAnotacoesProtegidas(listaNotasProtegidas, adapterNotacoesProtegidas, textViewSemAnotacoes, textViewSemCorrespondencia)
 //
 //            }
+//                    return@setOnTouchListener true
+//                }
+//            }
+//            false
 //        }
+
+        binding.apagarPesquisa.setOnClickListener {
+            binding.digiteParaBuscar.setText("")
+            recolherTeclado()
+
+            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+            scope.launch {
+                db.obterAnotacoesProtegidas(listaNotasProtegidas, adapterNotacoesProtegidas, textViewSemAnotacoes, textViewSemCorrespondencia)
+
+            }
+        }
 
         adapterNotacoesProtegidas = NotasProtegidasAdapter(
             requireContext(),
@@ -231,14 +235,14 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
 
     private fun applyDarkTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
-        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_branco)
+        binding.layoutSecundario.setBackgroundResource(R.drawable.background_buscar_branco)
         binding.digiteParaBuscar.setTextColor(Color.BLACK)
         binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
 
     private fun applyLightTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
-        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_cinza)
+        binding.layoutSecundario.setBackgroundResource(R.drawable.background_buscar_azul_claro)
         binding.digiteParaBuscar.setTextColor(Color.BLACK)
         binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
@@ -285,40 +289,85 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
             }
 
             withContext(Dispatchers.Main) {
-                startActivity(Intent.createChooser(intent, "Compartilhar notas via"))
+                //O código abaixo é o código original
+                // startActivity(Intent.createChooser(intent, "Compartilhar notas via"))
+                startActivityForResult(Intent.createChooser(intent, "Compartilhar notas via"), COMPARTILHAR_NOTAS_REQUEST_CODE
+                )
+                //O código abaixo esconde a toolbar do fragmento e mostra a tooblar da main activtiy
+                mainActivity.toggleToolbarVisibility(true)
+                binding.toolbar.visibility = View.GONE
             }
         }
     }
 
+    //Esse código aguarda o resultado do compartilhamento
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == COMPARTILHAR_NOTAS_REQUEST_CODE) {
+            // Manter os itens selecionados marcados até que o usuário retorne ao app.
+            adapterNotacoesProtegidas.listaNotasAdapterProtegidas.forEach { it.isChecked = false }
+            adapterNotacoesProtegidas.notifyDataSetChanged()
+            adapterNotacoesProtegidas.desativarModoSelecao()
+        }
+    }
+
     private suspend fun deletarNotasSelecionadas() {
-        withContext(Dispatchers.IO) {
-            val notasSelecionadas =
-                adapterNotacoesProtegidas.listaNotasAdapterProtegidas.filter { it.isChecked }
-            if (notasSelecionadas.isEmpty()) {
-                Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
-                return@withContext
-            }
+        withContext(Dispatchers.Main) {
+            val dialogBinding = DialogExlcusaoAnotacoesSelecionadasBinding.inflate(layoutInflater)
+            val exibirDialog = AlertDialog.Builder(requireContext())
+                .setView(dialogBinding.root)
+                .setCancelable(false)
+                .create() // Cria o AlertDialog, mas não o mostra ainda
 
-            val currentUser = FirebaseAuth.getInstance().currentUser
+            // Configura o fundo do diálogo como transparente
+            exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-            currentUser?.let {
-                notasSelecionadas.forEach { nota ->
-                    Log.i("DeletarNotas", "Excluindo nota com ID: ${nota.anotacaoId}")
-                    db.excluirAnotacoesProtegidas(nota.anotacaoId)
-                }
-            } ?: run {
-                Log.i("DeletarNotas", "Usuário não está logado")
-            }
-            withContext(Dispatchers.Main) {
-                db.obterAnotacoesProtegidas(
-                    listaNotasProtegidas,
-                    adapterNotacoesProtegidas,
-                    textViewSemAnotacoes,
-                    textViewSemCorrespondencia
-                )
-                adapterNotacoesProtegidas.desativarModoSelecao()
+            exibirDialog.show() // Mostra o AlertDialog
+
+            dialogBinding.botaoCancelar.setOnClickListener {
+                exibirDialog.dismiss()
                 mainActivity.toggleToolbarVisibility(true)
                 binding.toolbar.visibility = View.GONE
+                adapterNotacoesProtegidas.desativarModoSelecao()
+            }
+
+            dialogBinding.botaoProsseguir.setOnClickListener {
+                scope.launch {
+                    withContext(Dispatchers.IO) {
+
+                        val notasSelecionadas = adapterNotacoesProtegidas.listaNotasAdapterProtegidas.filter { it.isChecked }
+                        if (notasSelecionadas.isEmpty()) {
+                            Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
+                            return@withContext
+                        }
+
+                        val currentUser = FirebaseAuth.getInstance().currentUser
+
+                        currentUser?.let {
+                            notasSelecionadas.forEach { nota ->
+                                Log.i("DeletarNotas", "Excluindo nota com ID: ${nota.anotacaoId}")
+                                db.excluirAnotacoesProtegidas(nota.anotacaoId)
+                            }
+                        } ?: run {
+                            Log.i("DeletarNotas", "Usuário não está logado")
+                        }
+                        withContext(Dispatchers.Main) {
+                            db.obterAnotacoesProtegidas(
+                                listaNotasProtegidas,
+                                adapterNotacoesProtegidas,
+                                textViewSemAnotacoes,
+                                textViewSemCorrespondencia
+                            )
+                            adapterNotacoesProtegidas.desativarModoSelecao()
+                            mainActivity.toggleToolbarVisibility(true)
+                            binding.toolbar.visibility = View.GONE
+                        }
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        exibirDialog.dismiss()
+                    }
+                }
             }
         }
     }
@@ -344,5 +393,9 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         }
+    }
+
+    companion object {
+        private const val COMPARTILHAR_NOTAS_REQUEST_CODE = 1001
     }
 }

@@ -89,7 +89,7 @@
             android:id="@+id/progressbar"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/botao_entrar"
-            android:indeterminateTint="@color/verde_escuro"
+            android:indeterminateTint="@color/verde_claro"
             app:layout_constraintEnd_toEndOf="@id/botao_entrar"
             app:layout_constraintTop_toTopOf="@id/botao_entrar"
             app:layout_constraintBottom_toBottomOf="@id/botao_entrar"

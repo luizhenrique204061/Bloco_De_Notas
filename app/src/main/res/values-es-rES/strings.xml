@@ -75,7 +75,7 @@
     <string name="falha_os_nomes_de_usuario_sao_diferentes">Error al cambiar el nombre de usuario, los nombres que ingresaste son diferentes</string>
     <string name="voce_nao_esta_logado_no_momento">Ningún usuario ha iniciado sesión en este momento</string>
     <string name="nehum_email_em_uso_no_momento">Ningún correo electrónico en uso en este momento</string>
-    <string name="redefinicao_de_senha">Restablecimiento de contraseña</string>
+    <string name="redefinicao_de_senha">Al restablecer la contraseña, por motivos de seguridad, deberá iniciar sesión nuevamente utilizando su nueva contraseña.</string>
     <string name="entrar_com_google">Iniciar sesión con Google</string>
     <string name="usuario_logado_google_sucesso">Inicio de sesión con la cuenta de Google realizado correctamente</string>
     <string name="usuario_deslogado_google_sucesso">Usuario desconectado</string>
@@ -104,6 +104,13 @@
     <string name="pesquisa_pelo_titulo_tarefas">Buscar</string>
     <string name="botao_pesquisar_tarefas">Buscar</string>
     <string name="sem_correspondencia">No se encontraron coincidencias</string>
+    <string name="deseja_excluir_as_anotacoes">¿Estás seguro de que deseas eliminar las notas seleccionadas?</string>
+    <string name="deseja_excluir_as_tarefas">¿Estás seguro de que deseas eliminar las tareas seleccionadas?</string>
+    <string name="tem_certeza_que_deseja_excluir_anotacao">¿Está seguro de que desea eliminar esta nota?</string>
+    <string name="tem_certeza_que_deseja_excluir_tarefa">¿Está seguro de que desea eliminar esta tarea?</string>
+    <string name="o_backup_esta_desativado">La copia de seguridad está desactivada</string>
+    <string name="o_backup_esta_ativado">La copia de seguridad está activada</string>
+    <string name="tarefa_salva_com_sucesso">Tarea guardada con éxito</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

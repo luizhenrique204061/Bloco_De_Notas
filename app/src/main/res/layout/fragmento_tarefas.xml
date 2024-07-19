@@ -36,21 +36,46 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/digite_para_buscar"
-        android:layout_width="match_parent"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_secundario"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:inputType="text"
-        android:maxLines="1"
-        android:background="@drawable/background_buscar_cinza"
-        android:drawableLeft="@drawable/ic_buscar"
-        android:drawableRight="@drawable/ic_fechar"
-        android:hint="@string/pesquisa_pelo_titulo_anotacoes"
-        android:padding="12dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/background_buscar_azul_claro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <EditText
+            android:id="@+id/digite_para_buscar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_buscar"
+            android:hint="@string/pesquisa_pelo_titulo_anotacoes"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="12dp"
+            app:layout_constraintEnd_toStartOf="@id/apagar_pesquisa"
+            app:layout_constraintStart_toStartOf="@id/layout_secundario"
+            app:layout_constraintTop_toTopOf="@id/layout_secundario" />
+
+        <ImageView
+            android:id="@+id/apagar_pesquisa"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_fechar"
+            app:layout_constraintBottom_toBottomOf="@id/digite_para_buscar"
+            app:layout_constraintEnd_toEndOf="@id/layout_secundario"
+            app:layout_constraintStart_toEndOf="@id/digite_para_buscar"
+            app:layout_constraintTop_toTopOf="@id/digite_para_buscar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -62,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/digite_para_buscar"
+        app:layout_constraintTop_toBottomOf="@id/layout_secundario"
         tools:listitem="@layout/tarefa_item_tela_principal" />
 
     <TextView

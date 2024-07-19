@@ -5,13 +5,17 @@ import DB.DB
 import Modelo.Tarefa
 import Room.AppDataBase
 import Room.TarefaDao
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.android.gms.ads.AdRequest
@@ -20,9 +24,11 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityCriarTarefaBinding
+import com.olamundo.blocodenotas.databinding.DialogExclusaoActivityCriarTarefaBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
 
@@ -48,6 +54,8 @@ class CriarTarefa : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         loadTheme()
+
+        titulo = binding.tituloTarefa.text.toString()
 
         bancoDeDados = AppDataBase.getInstance(this).TarefaDao()
 
@@ -137,6 +145,9 @@ class CriarTarefa : AppCompatActivity() {
         atualizarTextoDoEditText() // Atualiza o texto antes de salvar
         if (titulo.isNotEmpty()) {
             criarTarefas(tarefaId, titulo, textoDoEditText, hora)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@CriarTarefa, getString(R.string.tarefa_salva_com_sucesso), Toast.LENGTH_SHORT).show()
+            }
             retornar()
         } else {
             Snackbar.make(binding.root, getString(R.string.preencha_todos_os_campos), Snackbar.LENGTH_SHORT).apply {
@@ -148,19 +159,49 @@ class CriarTarefa : AppCompatActivity() {
     }
 
     private suspend fun deletar() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        titulo = binding.tituloTarefa.text.toString()
+        val descricao = binding.descricaoTarefa.text.toString()
 
-        currentUser?.let {
-            val excluirTarefaFirebase = db.excluirTarefasUsuario(tarefaId)
-            if (excluirTarefaFirebase) {
-                // Se excluiu com sucesso do Firebase, exclui do Room
-                bancoDeDados.remover(tarefaId)
+        if (titulo.isEmpty() && textoDoEditText.isEmpty() && descricao.isEmpty()) {
+            retornar()
+        } else {
+            withContext(Dispatchers.Main) {
+                val dialogBinding = DialogExclusaoActivityCriarTarefaBinding.inflate(layoutInflater)
+                val exibirDialog = AlertDialog.Builder(this@CriarTarefa)
+                    .setView(dialogBinding.root)
+                    .setCancelable(false)
+                    .create() // Cria o AlertDialog, mas não o mostra ainda
+
+                // Configura o fundo do diálogo como transparente
+                exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                exibirDialog.show() // Mostra o AlertDialog
+
+                dialogBinding.botaoCancelar.setOnClickListener {
+                    exibirDialog.dismiss()
+                }
+
+                dialogBinding.botaoProsseguir.setOnClickListener {
+                    scope.launch {
+                        val currentUser = FirebaseAuth.getInstance().currentUser
+
+                        currentUser?.let {
+                            val excluirTarefaFirebase = db.excluirTarefasUsuario(tarefaId)
+                            if (excluirTarefaFirebase) {
+                                // Se excluiu com sucesso do Firebase, exclui do Room
+                                bancoDeDados.remover(tarefaId)
+                            }
+                        } ?: run {
+                            bancoDeDados.remover(tarefaId)
+                        }
+
+                        withContext(Dispatchers.Main) {
+                            retornar()
+                        }
+                    }
+                }
             }
-        } ?: run {
-            bancoDeDados.remover(tarefaId)
         }
-
-        finish()
     }
 
     private fun retornar() {
@@ -249,14 +290,30 @@ class CriarTarefa : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         titulo = binding.tituloTarefa.text.toString()
-        atualizarTextoDoEditText() // Atualiza o texto antes de salvar
-        if (titulo.isNotEmpty()) {
-            scope.launch {
+        val descricao = binding.descricaoTarefa.text.toString()
+
+        scope.launch {
+            if (titulo.isNotEmpty() && descricao.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                    adicionarTarefa(descricao)
+                    atualizarTextoDoEditText() // Atualiza o texto antes de salvar
+                }
                 criarTarefas(tarefaId, titulo, textoDoEditText, hora)
-                finish()
+                withContext(Dispatchers.Main) {
+                    finish()
+                }
+            } else if (listaTarefas.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                    if (descricao.isNotBlank()) {
+                        adicionarTarefa(descricao)
+                    }
+                    atualizarTextoDoEditText()
+                }
+                criarTarefas(tarefaId, titulo, textoDoEditText, hora)
             }
         }
     }
+
 
     private fun loadTheme() {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

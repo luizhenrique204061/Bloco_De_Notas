@@ -6,13 +6,16 @@ import Room.AppDataBase
 import Room.NotaDao
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.android.gms.ads.AdListener
@@ -23,6 +26,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityCriarNotaBinding
+import com.olamundo.blocodenotas.databinding.DialogExclusaoActivityCriarNotaBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +57,9 @@ class CriarNota : AppCompatActivity() {
 
         carregarAnuncioBanner()
 
+        titulo = binding.titulo.text.toString()
+        descricao = binding.descricao.text.toString()
+
         val id = intent.getLongExtra("id", 0L)
         val recuperarTitulo = intent.getStringExtra("titulo")
         val recuperarDescricao = intent.getStringExtra("descricao")
@@ -65,7 +72,8 @@ class CriarNota : AppCompatActivity() {
         }
 
         // Definindo a cor de seleção do texto para verde
-        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        val greenColor =
+            getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
         binding.titulo.highlightColor = greenColor
         binding.descricao.highlightColor = greenColor
 
@@ -292,20 +300,53 @@ class CriarNota : AppCompatActivity() {
     }
 
     private suspend fun deletar() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        titulo = binding.titulo.text.toString()
+        descricao = binding.descricao.text.toString()
 
-        if (currentUser != null) {
-            val excluirFirebase = db.excluirAnotacoesUsuario(notaId)
-            if (excluirFirebase) {
-                // Se excluiu com sucesso do Firebase, exclui do Room
-                bancoDeDados.remover(notaId)
-            }
-
+        if (titulo.isEmpty() && descricao.isEmpty()) {
+            finish()
         } else {
-            bancoDeDados.remover(notaId)
+            withContext(Dispatchers.Main) {
+                // Inflate a new instance of the dialog layout
+                val dialogBinding = DialogExclusaoActivityCriarNotaBinding.inflate(layoutInflater)
+                val exibirDialog = AlertDialog.Builder(this@CriarNota)
+                    .setView(dialogBinding.root)
+                    .setCancelable(false)
+                    .create() // Cria o AlertDialog, mas não o mostra ainda
+
+                // Configura o fundo do diálogo como transparente
+                exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                exibirDialog.show() // Mostra o AlertDialog
+
+                dialogBinding.botaoCancelar.setOnClickListener {
+                    exibirDialog.dismiss()
+                }
+
+                dialogBinding.botaoProsseguir.setOnClickListener {
+                    scope.launch {
+                        val currentUser = FirebaseAuth.getInstance().currentUser
+
+                        if (currentUser != null) {
+                            val excluirFirebase = db.excluirAnotacoesUsuario(notaId)
+                            if (excluirFirebase) {
+                                // Se excluiu com sucesso do Firebase, exclui do Room
+                                bancoDeDados.remover(notaId)
+                            }
+                        } else {
+                            bancoDeDados.remover(notaId)
+                        }
+                        withContext(Dispatchers.Main) {
+                            finish()
+                        }
+                    }
+                }
+            }
         }
-        finish()
     }
+
+
+
 
     private fun compartilharNota() {
         titulo = binding.titulo.text.toString()

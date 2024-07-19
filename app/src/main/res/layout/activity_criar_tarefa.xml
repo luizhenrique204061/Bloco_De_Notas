@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/adicionar_titulo_lista"
+        android:inputType="textCapSentences"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -34,25 +35,25 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bordas_lista_tarefas"
         android:hint="@string/adicionar_uma_tarefa_pendente"
-        app:layout_constraintEnd_toStartOf="@id/adiconar"
+        android:inputType="textCapSentences"
         android:padding="10dp"
+        app:layout_constraintEnd_toStartOf="@id/adiconar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titulo_tarefa" />
-
 
 
     <ImageView
         android:id="@+id/adiconar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:tint="@color/cinza_claro"
+        android:layout_marginStart="15dp"
         android:layout_marginEnd="10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_marginStart="15dp"
         app:layout_constraintBottom_toBottomOf="@id/descricao_tarefa"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/descricao_tarefa"
-        app:layout_constraintTop_toTopOf="@id/descricao_tarefa" />
+        app:layout_constraintTop_toTopOf="@id/descricao_tarefa"
+        app:tint="@color/cinza_claro" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTarefas"

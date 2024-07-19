@@ -75,7 +75,7 @@
     <string name="falha_os_nomes_de_usuario_sao_diferentes">Failed to change user name, the names you entered are different</string>
     <string name="voce_nao_esta_logado_no_momento">No user logged in at the moment</string>
     <string name="nehum_email_em_uso_no_momento">No email in use at the moment</string>
-    <string name="redefinicao_de_senha">Password reset</string>
+    <string name="redefinicao_de_senha">When resetting your password, for security reasons you will need to log in again using your new password.</string>
     <string name="entrar_com_google">Sign in with Google</string>
     <string name="usuario_logado_google_sucesso">Successfully logged in with Google account</string>
     <string name="usuario_deslogado_google_sucesso">User logged out</string>
@@ -104,6 +104,13 @@
     <string name="pesquisa_pelo_titulo_tarefas">Search</string>
     <string name="botao_pesquisar_tarefas">Search</string>
     <string name="sem_correspondencia">No matches found</string>
+    <string name="deseja_excluir_as_anotacoes">Are you sure you want to delete the selected notes?</string>
+    <string name="deseja_excluir_as_tarefas">Are you sure you want to delete the selected tasks?</string>
+    <string name="tem_certeza_que_deseja_excluir_anotacao">Are you sure you want to delete this note?</string>
+    <string name="tem_certeza_que_deseja_excluir_tarefa">Are you sure you want to delete this task?</string>
+    <string name="o_backup_esta_desativado">Backup is disabled</string>
+    <string name="o_backup_esta_ativado">Backup is enabled</string>
+    <string name="tarefa_salva_com_sucesso">Task saved successfully</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

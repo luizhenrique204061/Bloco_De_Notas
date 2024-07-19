@@ -9,7 +9,6 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     var isAnimating: Boolean = false
+    private lateinit var navView: NavigationView
     val db = DB()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,8 @@ class MainActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
+        //val navView: NavigationView = binding.navView //Esse é o código original
+        navView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
         appBarConfiguration = AppBarConfiguration(
@@ -62,20 +63,7 @@ class MainActivity : AppCompatActivity() {
         // Defina a cor do seletor do NavigationView
         //navView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.vermelho)
 
-        val headerView = navView.getHeaderView(0)
-        val textView: TextView = headerView.findViewById(R.id.nome)
-        val nomeUsuario = getString(R.string.nome_usuario)
 
-        val headerViewDeslogado = binding.navView.getHeaderView(0)
-        val textoBackup: TextView = headerViewDeslogado.findViewById(R.id.aviso_backup)
-
-        if (auth.currentUser != null) {
-            textoBackup.visibility = View.GONE
-        } else {
-            textoBackup.visibility = View.VISIBLE
-        }
-
-        db.recuperarNomeUsuario(nomeUsuario, textView)
 
         // Adicionar um listener para resgatar a navegação sempre que a NavigationView for usada
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -101,6 +89,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         handleNavigation(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val headerView = navView.getHeaderView(0)
+        val textView: TextView = headerView.findViewById(R.id.nome)
+        val nomeUsuario = getString(R.string.nome_usuario)
+
+        val headerViewDeslogado = binding.navView.getHeaderView(0)
+        val textoBackup: TextView = headerViewDeslogado.findViewById(R.id.aviso_backup)
+
+        val mensagemBackupDesativado: TextView = headerView.findViewById(R.id.mostrar_texto_de_backup_desativado)
+        val mensagemTextoBackupAtivado: TextView = headerView.findViewById(R.id.mostrar_texto_de_backup_ativado)
+
+        if (auth.currentUser != null) {
+            textoBackup.visibility = View.GONE
+            mensagemBackupDesativado.visibility = View.GONE
+            mensagemTextoBackupAtivado.visibility = View.VISIBLE
+        } else {
+            textoBackup.visibility = View.VISIBLE
+            mensagemBackupDesativado.visibility = View.VISIBLE
+            mensagemTextoBackupAtivado.visibility = View.GONE
+        }
+
+        db.recuperarNomeUsuario(nomeUsuario, textView)
     }
 
     private fun irParaTelaDeIdiomas() {
@@ -163,10 +176,17 @@ class MainActivity : AppCompatActivity() {
         val headerViewDeslogado = binding.navView.getHeaderView(0)
         val textoBackup: TextView = headerViewDeslogado.findViewById(R.id.aviso_backup)
 
+        val mensagemBackupDesativado: TextView = headerViewDeslogado.findViewById(R.id.mostrar_texto_de_backup_desativado)
+        val mensagemTextoBackupAtivado: TextView = headerViewDeslogado.findViewById(R.id.mostrar_texto_de_backup_ativado)
+
         if (auth.currentUser != null) {
             textoBackup.visibility = View.GONE
+            mensagemBackupDesativado.visibility = View.GONE
+            mensagemTextoBackupAtivado.visibility = View.VISIBLE
         } else {
             textoBackup.visibility = View.VISIBLE
+            mensagemBackupDesativado.visibility = View.VISIBLE
+            mensagemTextoBackupAtivado.visibility = View.GONE
         }
 
         // Navegar para a tela principal
@@ -193,6 +213,9 @@ class MainActivity : AppCompatActivity() {
         val headerView = binding.navView.getHeaderView(0)
         val textView: TextView = headerView.findViewById(R.id.nome)
         textView.visibility = View.GONE
+
+
+
     }
 
     fun iniciarAnimacaoSincronizacao() {

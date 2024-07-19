@@ -74,7 +74,7 @@
     <string name="falha_os_nomes_de_usuario_sao_diferentes">Falha na alteração, os nomes de usuários que você digitou são divergentes</string>
     <string name="voce_nao_esta_logado_no_momento">Nenhum usuário logado no momento</string>
     <string name="nehum_email_em_uso_no_momento">Nenhum email em uso no momento</string>
-    <string name="redefinicao_de_senha">Redefinição de senha</string>
+    <string name="redefinicao_de_senha">Ao redefinir a senha, por motivos de segurança você deverá logar novamente usando a sua nova senha.</string>
     <string name="entrar_com_google">Entrar com o Google</string>
     <string name="usuario_logado_google_sucesso">Login com a conta Google executado com sucesso</string>
     <string name="usuario_deslogado_google_sucesso">O usuário foi deslogado</string>
@@ -103,7 +103,13 @@
     <string name="pesquisa_pelo_titulo_tarefas">Pesquisar</string>
     <string name="botao_pesquisar_tarefas">Buscar</string>
     <string name="sem_correspondencia">Nenhuma correspondência encontrada</string>
-
+    <string name="deseja_excluir_as_anotacoes">Tem certeza que deseja excluir as anotações selecionadas?</string>
+    <string name="deseja_excluir_as_tarefas">Tem certeza que deseja excluir as tarefas selecionadas?</string>
+    <string name="tem_certeza_que_deseja_excluir_anotacao">Tem certeza que deseja excluir essa anotação?</string>
+    <string name="tem_certeza_que_deseja_excluir_tarefa">Tem certeza que deseja excluir essa tarefa?</string>
+    <string name="o_backup_esta_desativado">O backup está desativado</string>
+    <string name="o_backup_esta_ativado">O backup está ativado</string>
+    <string name="tarefa_salva_com_sucesso">Tarefa salva com sucesso</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

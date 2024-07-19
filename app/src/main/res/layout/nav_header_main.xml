@@ -29,20 +29,42 @@
 
     <TextView
         android:id="@+id/nome"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Olá"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/aviso_backup"
-        android:layout_marginTop="10dp"
-        android:textSize="15sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="@string/faca_login_para_realizar_backup"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/mostrar_texto_de_backup_desativado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:drawableRight="@drawable/ic_backup_desativado"
+        android:text="@string/o_backup_esta_desativado"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:id="@+id/mostrar_texto_de_backup_ativado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:drawableRight="@drawable/ic_backup_ativado"
+        android:text="@string/o_backup_esta_ativado"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="15sp"
+        android:visibility="gone" />
 
 </LinearLayout>

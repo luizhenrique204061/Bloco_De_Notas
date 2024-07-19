@@ -89,7 +89,7 @@
             android:id="@+id/progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminateTint="@color/verde_escuro"
+            android:indeterminateTint="@color/verde_claro"
             android:translationZ="10dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/botao_autenticar"

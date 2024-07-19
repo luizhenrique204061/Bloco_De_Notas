@@ -75,7 +75,7 @@
     <string name="falha_os_nomes_de_usuario_sao_diferentes">Ошибка при изменении имени пользователя, введенные вами имена отличаются</string>
     <string name="voce_nao_esta_logado_no_momento">В данный момент нет зарегистрированных пользователей</string>
     <string name="nehum_email_em_uso_no_momento">В данный момент нет используемых адресов электронной почты</string>
-    <string name="redefinicao_de_senha">Сброс пароля</string>
+    <string name="redefinicao_de_senha">При сбросе пароля по соображениям безопасности вам нужно будет снова войти в систему, используя новый пароль.</string>
     <string name="entrar_com_google">Войти с помощью Google</string>
     <string name="usuario_logado_google_sucesso">Вход в аккаунт Google выполнен успешно</string>
     <string name="usuario_deslogado_google_sucesso">Пользователь вышел из системы</string>
@@ -104,6 +104,13 @@
     <string name="pesquisa_pelo_titulo_tarefas">Поиск</string>
     <string name="botao_pesquisar_tarefas">Искать</string>
     <string name="sem_correspondencia">Совпадений не найдено</string>
+    <string name="deseja_excluir_as_anotacoes">Вы уверены, что хотите удалить выбранные заметки?</string>
+    <string name="deseja_excluir_as_tarefas">Вы уверены, что хотите удалить выбранные задачи?</string>
+    <string name="tem_certeza_que_deseja_excluir_anotacao">Вы уверены, что хотите удалить эту заметку?</string>
+    <string name="tem_certeza_que_deseja_excluir_tarefa">Вы уверены, что хотите удалить эту задачу?</string>
+    <string name="o_backup_esta_desativado">Резервное копирование отключено</string>
+    <string name="o_backup_esta_ativado">Резервное копирование включено</string>
+    <string name="tarefa_salva_com_sucesso">Задача успешно сохранена</string>
 
     <string name="default_web_client_id">203030070680-5htaeghre36ro4dmti3se7b7u3m0gg51.apps.googleusercontent.com</string>
 

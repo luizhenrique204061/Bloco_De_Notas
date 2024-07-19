@@ -12,19 +12,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -41,6 +42,7 @@ import com.olamundo.blocodenotas.CriarNota
 import com.olamundo.blocodenotas.CriarTarefa
 import com.olamundo.blocodenotas.MainActivity
 import com.olamundo.blocodenotas.R
+import com.olamundo.blocodenotas.databinding.DialogExlcusaoAnotacoesSelecionadasBinding
 import com.olamundo.blocodenotas.databinding.FragmentoTelaPrincipalBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +85,7 @@ class FragmentoTelaPrincipal : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -110,7 +112,7 @@ class FragmentoTelaPrincipal : Fragment() {
         val greenColor = requireContext().getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
         binding.digiteParaBuscar.highlightColor = greenColor
 
-       // carregarAnuncioTelaInteira()
+        // carregarAnuncioTelaInteira()
 
         val recyclerView = binding.recyclerview
         // mainActivity.setSupportActionBar(binding.toolbar)
@@ -154,66 +156,66 @@ class FragmentoTelaPrincipal : Fragment() {
             }
         })
 
-
-        val editTextBuscar = binding.digiteParaBuscar
-
-        // Configurando o OnTouchListener
-        editTextBuscar.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
-                    // Limpar o texto do EditText
-                    editTextBuscar.setText("")
-                    recolherTeclado()
-
-                    // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
-                    scope.launch {
-                        val buscarNotacoesRoom = bancoDeDados.buscarTodas()
-
-                        withContext(Dispatchers.Main) {
-                            adapterNotacoes.listaNotas.clear()
-                            adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
-                            adapterNotacoes.notifyDataSetChanged()
-
-                            // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
-                            if (adapterNotacoes.listaNotas.isEmpty()) {
-                                binding.semAnotacoes.visibility = View.VISIBLE
-                                binding.nenhumaCorrespondencia.visibility = View.GONE
-                            } else {
-                                binding.semAnotacoes.visibility = View.GONE
-                                binding.nenhumaCorrespondencia.visibility = View.GONE
-                            }
-                        }
-                    }
-                    return@setOnTouchListener true
-                }
-            }
-            false
-        }
-
-//        binding.apagarPesquisa.setOnClickListener {
-//            binding.digiteParaBuscar.setText("")
-//            recolherTeclado()
+        //O código abaixo faz com que o android:dranwerRight seja clicável
+//        val editTextBuscar = binding.digiteParaBuscar
 //
-//            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
-//            scope.launch {
-//                val buscarNotacoesRoom = bancoDeDados.buscarTodas()
+//        // Configurando o OnTouchListener
+//        editTextBuscar.setOnTouchListener { v, event ->
+//            if (event.action == MotionEvent.ACTION_UP) {
+//                if (event.rawX >= (editTextBuscar.right - editTextBuscar.compoundDrawables[2].bounds.width())) {
+//                    // Limpar o texto do EditText
+//                    editTextBuscar.setText("")
+//                    recolherTeclado()
 //
-//                withContext(Dispatchers.Main) {
-//                    adapterNotacoes.listaNotas.clear()
-//                    adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
-//                    adapterNotacoes.notifyDataSetChanged()
+//                    // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+//                    scope.launch {
+//                        val buscarNotacoesRoom = bancoDeDados.buscarTodas()
 //
-//                    // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
-//                    if (adapterNotacoes.listaNotas.isEmpty()) {
-//                        binding.semAnotacoes.visibility = View.VISIBLE
-//                        binding.nenhumaCorrespondencia.visibility = View.GONE
-//                    } else {
-//                        binding.semAnotacoes.visibility = View.GONE
-//                        binding.nenhumaCorrespondencia.visibility = View.GONE
+//                        withContext(Dispatchers.Main) {
+//                            adapterNotacoes.listaNotas.clear()
+//                            adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
+//                            adapterNotacoes.notifyDataSetChanged()
+//
+//                            // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+//                            if (adapterNotacoes.listaNotas.isEmpty()) {
+//                                binding.semAnotacoes.visibility = View.VISIBLE
+//                                binding.nenhumaCorrespondencia.visibility = View.GONE
+//                            } else {
+//                                binding.semAnotacoes.visibility = View.GONE
+//                                binding.nenhumaCorrespondencia.visibility = View.GONE
+//                            }
+//                        }
 //                    }
+//                    return@setOnTouchListener true
 //                }
 //            }
+//            false
 //        }
+
+        binding.apagarPesquisa.setOnClickListener {
+            binding.digiteParaBuscar.setText("")
+            recolherTeclado()
+
+            // Buscar todas as notas novamente e atualizar a visibilidade da mensagem
+            scope.launch {
+                val buscarNotacoesRoom = bancoDeDados.buscarTodas()
+
+                withContext(Dispatchers.Main) {
+                    adapterNotacoes.listaNotas.clear()
+                    adapterNotacoes.listaNotas.addAll(buscarNotacoesRoom)
+                    adapterNotacoes.notifyDataSetChanged()
+
+                    // Atualizar a visibilidade do "semAnotacoes" e "nenhumaCorrespondencia"
+                    if (adapterNotacoes.listaNotas.isEmpty()) {
+                        binding.semAnotacoes.visibility = View.VISIBLE
+                        binding.nenhumaCorrespondencia.visibility = View.GONE
+                    } else {
+                        binding.semAnotacoes.visibility = View.GONE
+                        binding.nenhumaCorrespondencia.visibility = View.GONE
+                    }
+                }
+            }
+        }
 
         adapterNotacoes = ListaNotasAdapter(
             requireContext(),
@@ -381,7 +383,12 @@ class FragmentoTelaPrincipal : Fragment() {
             val buscarTarefasRoomFragmentoTelaPrincipal = bancoDeDadosTarefa.buscarTodas()
             Log.i("BuscandoRoom", buscarNotacoesRoom.toString())
 
-            db.obterAnotacoesDoUsuario(requireContext(), listaNotas, adapterNotacoes, textViewSemAnotacoes)
+            db.obterAnotacoesDoUsuario(
+                requireContext(),
+                listaNotas,
+                adapterNotacoes,
+                textViewSemAnotacoes
+            )
 
 
             // Limpar e atualizar a lista no adapter
@@ -418,7 +425,7 @@ class FragmentoTelaPrincipal : Fragment() {
                     mainActivity.iniciarAnimacaoSincronizacao()
                     Handler().postDelayed({
                         mainActivity.pararAnimacao()
-                    },3000)
+                    }, 3000)
                     /*
                     Snackbar.make(binding.root, "Backup iniciado", Snackbar.LENGTH_SHORT).apply {
                         this.setBackgroundTint(Color.parseColor("#214C06"))
@@ -457,7 +464,7 @@ class FragmentoTelaPrincipal : Fragment() {
                     mainActivity.iniciarAnimacaoSincronizacao()
                     Handler().postDelayed({
                         mainActivity.pararAnimacao()
-                    },3000)
+                    }, 3000)
                     /*
                     Snackbar.make(binding.root, "Backup iniciado", Snackbar.LENGTH_SHORT).apply {
                         this.setBackgroundTint(Color.parseColor("#214C06"))
@@ -491,7 +498,7 @@ class FragmentoTelaPrincipal : Fragment() {
     private fun applyDarkTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_dark)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_dark)
-        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_branco)
+        binding.layoutSecundario.setBackgroundResource(R.drawable.background_buscar_branco)
         binding.digiteParaBuscar.setTextColor(Color.BLACK)
         binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
@@ -499,7 +506,7 @@ class FragmentoTelaPrincipal : Fragment() {
     private fun applyLightTheme() {
         binding.textoCriarAnotacao.setBackgroundResource(R.drawable.shape_texto_light)
         binding.textoCriarListaTarefas.setBackgroundResource(R.drawable.shape_texto_light)
-        binding.digiteParaBuscar.setBackgroundResource(R.drawable.background_buscar_cinza)
+        binding.layoutSecundario.setBackgroundResource(R.drawable.background_buscar_azul_claro)
         binding.digiteParaBuscar.setTextColor(Color.BLACK)
         binding.digiteParaBuscar.setHintTextColor(Color.BLACK)
     }
@@ -511,7 +518,10 @@ class FragmentoTelaPrincipal : Fragment() {
             val notasSelecionadas = adapterNotacoes.listaNotas.filter { it.isChecked }
             if (notasSelecionadas.isEmpty()) return@withContext
 
-            val zipFile = File(requireContext().filesDir, "${getString(R.string.nome_anotacoes_selecionadas)}.zip")
+            val zipFile = File(
+                requireContext().filesDir,
+                "${getString(R.string.nome_anotacoes_selecionadas)}.zip"
+            )
             val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
             notasSelecionadas.forEach { nota ->
@@ -542,54 +552,106 @@ class FragmentoTelaPrincipal : Fragment() {
             }
 
             withContext(Dispatchers.Main) {
-                startActivity(Intent.createChooser(intent, "Compartilhar notas via"))
+                //O código abaixo é o código original
+                // startActivity(Intent.createChooser(intent, "Compartilhar notas via"))
+                startActivityForResult(
+                    Intent.createChooser(intent, "Compartilhar notas via"),
+                    COMPARTILHAR_NOTAS_REQUEST_CODE
+                )
+                //O código abaixo esconde a toolbar do fragmento e mostra a tooblar da main activtiy
+                mainActivity.toggleToolbarVisibility(true)
+                binding.toolbar.visibility = View.GONE
             }
         }
     }
 
+    //Esse código aguarda o resultado do compartilhamento
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == COMPARTILHAR_NOTAS_REQUEST_CODE) {
+            // Manter os itens selecionados marcados até que o usuário retorne ao app.
+            adapterNotacoes.listaNotas.forEach { it.isChecked = false }
+            adapterNotacoes.notifyDataSetChanged()
+            adapterNotacoes.desativarModoSelecao()
+        }
+    }
+
     private suspend fun deletarNotasSelecionadas() {
-        withContext(Dispatchers.IO) {
-            val notasSelecionadas = adapterNotacoes.listaNotas.filter { it.isChecked }
-            if (notasSelecionadas.isEmpty()) {
-                Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
-                return@withContext
-            }
+        withContext(Dispatchers.Main) {
+            val dialogBinding = DialogExlcusaoAnotacoesSelecionadasBinding.inflate(layoutInflater)
+            val exibirDialog = AlertDialog.Builder(requireContext())
 
-            val currentUser = FirebaseAuth.getInstance().currentUser
+                .setView(dialogBinding.root)
+                .setCancelable(false)
+                .create() // Cria o AlertDialog, mas não o mostra ainda
 
-            notasSelecionadas.forEach { nota ->
-                Log.i("DeletarNotas", "Excluindo nota com ID: ${nota.id}")
+            // Configura o fundo do diálogo como transparente
+            exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                // Exclui do Firebase se o usuário estiver logado
-                if (currentUser != null) {
-                    val excluiuFirebase = db.excluirAnotacoesUsuario(nota.id)
-                    if (excluiuFirebase) {
-                        // Se excluiu com sucesso do Firebase, exclui do Room
-                        bancoDeDados.remover(nota.id)
-                    }
-                } else {
-                    // Se o usuário não estiver logado, apenas exclui do Room
-                    bancoDeDados.remover(nota.id)
-                }
-            }
+            exibirDialog.show() //Mostra o AlertDialog
 
-            // Atualiza a lista de notas exibida após a exclusão
-            val buscarNotacoes = bancoDeDados.buscarTodas()
-            adapterNotacoes.listaNotas.clear()
-            adapterNotacoes.listaNotas.addAll(buscarNotacoes)
-
-            // Notifica o adapter sobre as mudanças
-            withContext(Dispatchers.Main) {
-                adapterNotacoes.notifyDataSetChanged()
-                db.obterAnotacoesDoUsuario(requireContext(), listaNotas, adapterNotacoes, textViewSemAnotacoes)
-                if (buscarNotacoes.isEmpty()) {
-                    binding.semAnotacoes.visibility = View.VISIBLE
-                } else {
-                    binding.semAnotacoes.visibility = View.GONE
-                }
+            dialogBinding.botaoCancelar.setOnClickListener {
+                exibirDialog.dismiss()
                 mainActivity.toggleToolbarVisibility(true)
                 binding.toolbar.visibility = View.GONE
                 adapterNotacoes.desativarModoSelecao()
+            }
+
+            dialogBinding.botaoProsseguir.setOnClickListener {
+                scope.launch {
+                    withContext(Dispatchers.IO) {
+
+                        val notasSelecionadas = adapterNotacoes.listaNotas.filter { it.isChecked }
+                        if (notasSelecionadas.isEmpty()) {
+                            Log.i("DeletarNotas", "Nenhuma nota selecionada para exclusão")
+                            return@withContext
+                        }
+
+                        val currentUser = FirebaseAuth.getInstance().currentUser
+
+                        notasSelecionadas.forEach { nota ->
+                            Log.i("DeletarNotas", "Excluindo nota com ID: ${nota.id}")
+
+                            // Exclui do Firebase se o usuário estiver logado
+                            if (currentUser != null) {
+                                val excluiuFirebase = db.excluirAnotacoesUsuario(nota.id)
+                                if (excluiuFirebase) {
+                                    // Se excluiu com sucesso do Firebase, exclui do Room
+                                    bancoDeDados.remover(nota.id)
+                                }
+                            } else {
+                                // Se o usuário não estiver logado, apenas exclui do Room
+                                bancoDeDados.remover(nota.id)
+                            }
+                        }
+
+                        // Atualiza a lista de notas exibida após a exclusão
+                        val buscarNotacoes = bancoDeDados.buscarTodas()
+                        adapterNotacoes.listaNotas.clear()
+                        adapterNotacoes.listaNotas.addAll(buscarNotacoes)
+
+                        // Notifica o adapter sobre as mudanças
+                        withContext(Dispatchers.Main) {
+                            adapterNotacoes.notifyDataSetChanged()
+                            db.obterAnotacoesDoUsuario(
+                                requireContext(),
+                                listaNotas,
+                                adapterNotacoes,
+                                textViewSemAnotacoes
+                            )
+                            if (buscarNotacoes.isEmpty()) {
+                                binding.semAnotacoes.visibility = View.VISIBLE
+                            } else {
+                                binding.semAnotacoes.visibility = View.GONE
+                            }
+                            mainActivity.toggleToolbarVisibility(true)
+                            binding.toolbar.visibility = View.GONE
+                            adapterNotacoes.desativarModoSelecao()
+                        }
+                    }
+
+                    exibirDialog.dismiss()
+                }
             }
         }
     }
@@ -625,11 +687,15 @@ class FragmentoTelaPrincipal : Fragment() {
         if (linguagem != null) {
             selecionarIdioma(linguagem)
         } else {
-            Log.d("CarregarLocalidade", "Nenhuma linguagem encontrada nas preferências, usando idioma do dispositivo.")
+            Log.d(
+                "CarregarLocalidade",
+                "Nenhuma linguagem encontrada nas preferências, usando idioma do dispositivo."
+            )
         }
     }
 
     companion object {
         private const val REQUEST_CODE_UPDATE = 100
+        private const val COMPARTILHAR_NOTAS_REQUEST_CODE = 1001
     }
 }

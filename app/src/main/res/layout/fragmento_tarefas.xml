@@ -41,6 +41,7 @@
         android:id="@+id/layout_secundario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="3dp"
         android:background="@drawable/background_buscar_azul_claro"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +76,6 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     <androidx.recyclerview.widget.RecyclerView

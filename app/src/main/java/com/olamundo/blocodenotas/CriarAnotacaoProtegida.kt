@@ -294,16 +294,48 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         titulo = binding.titulo.text.toString()
         descricao = binding.descricao.text.toString()
-        if (titulo.isEmpty() && descricao.isEmpty()) {
+
+        if (recuperarTitulo != titulo || recuperarDescricao != descricao) {
+            if (titulo.isEmpty() && descricao.isEmpty()) {
 
 
-        } else if (titulo.isEmpty()) {
-            if (descricao.length > MAX_TITULO_LENGTH) {
-                val tituloFormatado = descricao.substring(0, MAX_TITULO_LENGTH)
-                titulo = tituloFormatado
+            } else if (titulo.isEmpty()) {
+                if (descricao.length > MAX_TITULO_LENGTH) {
+                    val tituloFormatado = descricao.substring(0, MAX_TITULO_LENGTH)
+                    titulo = tituloFormatado
 
+                    if (anotacaoId != null) {
+                        db.atualizarAnotacaoProtegida(anotacaoId!!, titulo, descricao, hora)
+                    } else {
+                        db.salvarAnotacoesProtegidas(titulo, descricao, hora)
+
+                    }
+
+                    Intent(this@CriarAnotacaoProtegida, TelaPrincipalProtegida::class.java).apply {
+                        startActivity(this)
+                    }
+
+                } else {
+                    titulo = descricao
+                    if (anotacaoId != null) {
+                        db.atualizarAnotacaoProtegida(anotacaoId!!, titulo, descricao, hora)
+                    } else {
+                        db.salvarAnotacoesProtegidas(titulo, descricao, hora)
+
+                    }
+
+                    Intent(this@CriarAnotacaoProtegida, TelaPrincipalProtegida::class.java).apply {
+                        startActivity(this)
+                    }
+                }
+
+                finish()
+
+            } else if (descricao.isEmpty()) {
+                descricao = titulo
                 if (anotacaoId != null) {
                     db.atualizarAnotacaoProtegida(anotacaoId!!, titulo, descricao, hora)
                 } else {
@@ -315,8 +347,9 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
                     startActivity(this)
                 }
 
+                finish()
+
             } else {
-                titulo = descricao
                 if (anotacaoId != null) {
                     db.atualizarAnotacaoProtegida(anotacaoId!!, titulo, descricao, hora)
                 } else {
@@ -327,39 +360,11 @@ class CriarAnotacaoProtegida : AppCompatActivity() {
                 Intent(this@CriarAnotacaoProtegida, TelaPrincipalProtegida::class.java).apply {
                     startActivity(this)
                 }
+                finish()
             }
-
-            finish()
-
-        } else if (descricao.isEmpty()) {
-            descricao = titulo
-            if (anotacaoId != null) {
-                db.atualizarAnotacaoProtegida(anotacaoId!!, titulo, descricao, hora)
-            } else {
-                db.salvarAnotacoesProtegidas(titulo, descricao, hora)
-
-            }
-
-            Intent(this@CriarAnotacaoProtegida, TelaPrincipalProtegida::class.java).apply {
-                startActivity(this)
-            }
-
-            finish()
-
-        } else {
-            if (anotacaoId != null) {
-                db.atualizarAnotacaoProtegida(anotacaoId!!, titulo, descricao, hora)
-            } else {
-                db.salvarAnotacoesProtegidas(titulo, descricao, hora)
-
-            }
-
-            Intent(this@CriarAnotacaoProtegida, TelaPrincipalProtegida::class.java).apply {
-                startActivity(this)
-            }
-            finish()
         }
-        super.onBackPressed()
+
+
     }
 
     private fun selecionarIdioma(linguagem: String) {

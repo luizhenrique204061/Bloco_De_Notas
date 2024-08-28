@@ -41,6 +41,9 @@ class CriarTarefa : AppCompatActivity() {
     private var textoDoEditText = ""
     val hora = System.currentTimeMillis()
     var tarefaId: Long = 0
+    private var id: Long? = null
+    private var recuperarTitulo: String? = null
+    private var recuperarDescricao: String? = null
     val scope = CoroutineScope(Dispatchers.IO)
     val db = DB()
     lateinit var mAdview: AdView
@@ -63,11 +66,11 @@ class CriarTarefa : AppCompatActivity() {
         val recyclerView = binding.recyclerViewTarefas
         recyclerView.adapter = adapterTarefas
 
-        carregarAnuncioBanner()
+        //carregarAnuncioBanner()
 
-        val id = intent.getLongExtra("id", 0L)
-        val recuperarTitulo = intent.getStringExtra("titulo")
-        val recuperarDescricao = intent.getStringExtra("descricao")
+        id = intent?.getLongExtra("id", 0L)
+        recuperarTitulo = intent?.getStringExtra("titulo")
+        recuperarDescricao = intent?.getStringExtra("descricao")
 
         if (id != 0L && recuperarTitulo != null && recuperarDescricao != null) {
             Log.i("RecuperarTarefa", "Id: $id")
@@ -76,12 +79,12 @@ class CriarTarefa : AppCompatActivity() {
 
             // titulo = recuperarTitulo // Inicializa a variável título
 
-            tarefaId = id
+            tarefaId = id!!
 
             titulo = binding.tituloTarefa.setText(recuperarTitulo).toString()
 
             // Dividir a descrição em itens e adicioná-los à lista de tarefas
-            val itensDescricao = recuperarDescricao.split(",").map { it.trim() }
+            val itensDescricao = recuperarDescricao!!.split(",").map { it.trim() }
             itensDescricao.forEach { descricao ->
                 val riscado = descricao.startsWith("~~") && descricao.endsWith("~~")
                 val descricaoLimpa = if (riscado) descricao.removeSurrounding("~~") else descricao
@@ -288,30 +291,30 @@ class CriarTarefa : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         titulo = binding.tituloTarefa.text.toString()
         val descricao = binding.descricaoTarefa.text.toString()
+        atualizarTextoDoEditText() // Atualiza o texto antes de verificar as alterações
 
-        scope.launch {
-            if (titulo.isNotEmpty() && descricao.isNotEmpty()) {
-                withContext(Dispatchers.Main) {
-                    adicionarTarefa(descricao)
-                    atualizarTextoDoEditText() // Atualiza o texto antes de salvar
-                }
-                criarTarefas(tarefaId, titulo, textoDoEditText, hora)
-                withContext(Dispatchers.Main) {
+        val houveAlteracao = titulo != recuperarTitulo || textoDoEditText != recuperarDescricao
+
+        if (houveAlteracao) {
+            scope.launch {
+                if (titulo.isNotEmpty() || textoDoEditText.isNotEmpty()) {
+                    criarTarefas(tarefaId, titulo, textoDoEditText, hora)
+                    finish()
+
+                } else if (descricao.isNotEmpty()) {
+                    titulo = descricao
+                    criarTarefas(tarefaId, titulo, descricao, hora)
+                    finish()
+                } else if (listaTarefas.isNotEmpty()) {
+                    criarTarefas(tarefaId, titulo, descricao, hora)
                     finish()
                 }
-            } else if (listaTarefas.isNotEmpty()) {
-                withContext(Dispatchers.Main) {
-                    if (descricao.isNotBlank()) {
-                        adicionarTarefa(descricao)
-                    }
-                    atualizarTextoDoEditText()
-                }
-                criarTarefas(tarefaId, titulo, textoDoEditText, hora)
             }
         }
+
+        super.onBackPressed()
     }
 
 

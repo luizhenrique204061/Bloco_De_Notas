@@ -13,7 +13,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +43,9 @@ class CriarNota : AppCompatActivity() {
     private lateinit var titulo: String
     val db = DB()
     private lateinit var descricao: String
+    private var recuperarTitulo: String? = null
+    private var recuperarDescricao: String? = null
+    private var id: Long? = null
     lateinit var mAdview: AdView
     override fun onCreate(savedInstanceState: Bundle?) {
         carregarLocalidade()
@@ -55,20 +57,20 @@ class CriarNota : AppCompatActivity() {
         bancoDeDados = AppDataBase.getInstance(this).NotaDao()
 
 
-        carregarAnuncioBanner()
+        //carregarAnuncioBanner()
 
         titulo = binding.titulo.text.toString()
         descricao = binding.descricao.text.toString()
 
-        val id = intent.getLongExtra("id", 0L)
-        val recuperarTitulo = intent.getStringExtra("titulo")
-        val recuperarDescricao = intent.getStringExtra("descricao")
+        id = intent?.getLongExtra("id", 0L)
+        recuperarTitulo = intent?.getStringExtra("titulo")
+        recuperarDescricao = intent?.getStringExtra("descricao")
 
         if (id != null && recuperarTitulo != null && recuperarDescricao != null) {
-            notaId = id
+            notaId = id!!
             titulo = binding.titulo.setText(recuperarTitulo).toString()
             descricao = binding.descricao.setText(recuperarDescricao).toString()
-            updateQuantidadeCaracteres(recuperarTitulo.length)
+            updateQuantidadeCaracteres(recuperarTitulo!!.length)
         }
 
         // Definindo a cor de seleção do texto para verde
@@ -377,23 +379,18 @@ class CriarNota : AppCompatActivity() {
 
 
     override fun onBackPressed() {
+        super.onBackPressed()
         titulo = binding.titulo.text.toString()
         descricao = binding.descricao.text.toString()
 
-        when {
-            titulo.isEmpty() && descricao.isEmpty() -> {
-                scope.launch {
-                    withContext(Dispatchers.Main) {
-                        //  Toast.makeText(this@CriarNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
-                        Intent(this@CriarNota, MainActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                }
+        val houveAlteracao = recuperarTitulo != titulo || recuperarDescricao != descricao
+
+        if (houveAlteracao) {
+            if (titulo.isEmpty() && descricao.isEmpty()) {
+
 
             }
-
-            titulo.isEmpty() -> {
+            else if (titulo.isEmpty()) {
                 if (descricao.length > MAX_TITULO_LENGTH) {
                     val tituloFormatado = descricao.substring(0, MAX_TITULO_LENGTH)
                     titulo = tituloFormatado
@@ -431,8 +428,7 @@ class CriarNota : AppCompatActivity() {
                 }
 
             }
-
-            descricao.isEmpty() -> {
+            else if (descricao.isEmpty()) {
                 descricao = titulo
                 scope.launch {
                     criarNota(notaId, titulo, descricao, hora)
@@ -449,8 +445,7 @@ class CriarNota : AppCompatActivity() {
                     }
                 }
             }
-
-            else -> {
+            else {
                 scope.launch {
                     criarNota(notaId, titulo, descricao, hora)
                     withContext(Dispatchers.Main) {
@@ -462,7 +457,6 @@ class CriarNota : AppCompatActivity() {
                 }
             }
         }
-        super.onBackPressed()
     }
 
     private fun selecionarIdioma(linguagem: String) {

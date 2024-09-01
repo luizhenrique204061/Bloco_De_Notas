@@ -12,6 +12,10 @@ data class Notas(
     val descricao: String = "",
     val data: Long = 0,
     var isChecked: Boolean = false
-) : Serializable {
+) : Serializable
+/* //Código alternativo para serializar, sem o construtor secundário.
+:Serializable {
     constructor() : this(0, "", "", 0, false)
 }
+
+ */

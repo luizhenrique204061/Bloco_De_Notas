@@ -211,13 +211,17 @@ class FragmentoTelaPrincipalProtegida : Fragment() {
     }
 
     override fun onResume() {
+        super.onResume()
+
+        binding.digiteParaBuscar.setText("")
+
         db.obterAnotacoesProtegidas(
             listaNotasProtegidas,
             adapterNotacoesProtegidas,
             textViewSemAnotacoes,
             textViewSemCorrespondencia
         )
-        super.onResume()
+
     }
 
     override fun onDestroyView() {

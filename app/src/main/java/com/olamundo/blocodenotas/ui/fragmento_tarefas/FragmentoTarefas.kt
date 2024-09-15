@@ -319,6 +319,8 @@ class FragmentoTarefas : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        binding.digiteParaBuscar.setText("")
+
         scope.launch {
             // Buscar anotações e tarefas do banco de dados
             val buscarTarefasRoom = bancoDeDadosTarefa.buscarTodas()

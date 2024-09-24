@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Заметки</string>
+    <string name="app_name">Умный Блокнот</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="titulo">Заголовок</string>
     <string name="descricao">Напишите что-нибудь...</string>

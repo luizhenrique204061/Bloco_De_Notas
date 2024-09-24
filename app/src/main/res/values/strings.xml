@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bloco De Notas</string>
+    <string name="app_name">Bloco De Notas Inteligente</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="titulo">Título</string>
     <string name="descricao">Escreva algo...</string>

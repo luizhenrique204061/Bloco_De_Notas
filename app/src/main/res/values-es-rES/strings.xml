@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Bloc de Notas</string>
+    <string name="app_name">Bloc De Notas Inteligente</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="titulo">Título</string>
     <string name="descricao">Escribe algo...</string>

@@ -525,8 +525,6 @@ class DB {
                         return@addSnapshotListener
                     }
 
-                    // Lista temporária para armazenar novas anotações
-                    val novasNotas = mutableListOf<Notas>()
 
                     // Limpa a lista atual de notas
                     lista_notas.clear()
@@ -540,11 +538,9 @@ class DB {
 
                         // Se a nota não existir na lista, adiciona à lista temporária de novas notas
                         if (notaExistente == null) {
-                            novasNotas.add(nota)
+                            lista_notas.add(nota)
                         }
 
-                        // Adiciona a nota à lista de notas
-                        lista_notas.add(nota)
                     }
 
                     // Notifica o adapter sobre as mudanças na lista de notas
@@ -558,8 +554,8 @@ class DB {
                     }
 
                     // Se houver novas notas, salva-as no banco de dados local (Room)
-                    if (novasNotas.isNotEmpty()) {
-                        salvarNotasNoRoom(context, novasNotas)
+                    if (lista_notas.isNotEmpty()) {
+                        salvarNotasNoRoom(context, lista_notas)
                     }
                 }
         } else {
@@ -591,9 +587,6 @@ class DB {
                         return@addSnapshotListener
                     }
 
-                    // Lista temporária para armazenar novas anotações
-                    val novasTarefas = mutableListOf<Tarefa>()
-
                     // Limpa a lista atual de notas
                     lista_tarefas_tela_principal.clear()
 
@@ -606,11 +599,9 @@ class DB {
 
                         // Se a nota não existir na lista, adiciona à lista temporária de novas notas
                         if (notaExistente == null) {
-                            novasTarefas.add(tarefa)
+                            lista_tarefas_tela_principal.add(tarefa)
                         }
 
-                        // Adiciona a nota à lista de tarefas
-                        lista_tarefas_tela_principal.add(tarefa)
                     }
 
                     // Notifica o adapter sobre as mudanças na lista de notas
@@ -624,8 +615,8 @@ class DB {
                     }
 
                     // Se houver novas notas, salva-as no banco de dados local (Room)
-                    if (novasTarefas.isNotEmpty()) {
-                        salvarTarefasNoRoom(context, novasTarefas)
+                    if (lista_tarefas_tela_principal.isNotEmpty()) {
+                        salvarTarefasNoRoom(context, lista_tarefas_tela_principal)
                     }
                 }
         } else {

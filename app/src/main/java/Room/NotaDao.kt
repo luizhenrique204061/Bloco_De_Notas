@@ -5,12 +5,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface NotaDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun salva(notas: Notas)
+
+    @Update()
+    suspend fun atualizar(notas: Notas)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun inserirTodas(notas: MutableList<Notas>)

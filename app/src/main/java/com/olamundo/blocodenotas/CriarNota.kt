@@ -377,6 +377,11 @@ class CriarNota : AppCompatActivity() {
         startActivity(Intent.createChooser(intent, "Compartilhar nota via"))
     }
 
+    suspend fun atualizarNota(id: Long, titulo: String, descricao: String, data: Long) {
+        val nota = Notas(id, titulo, descricao, data)
+        bancoDeDados.atualizar(nota)
+    }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -412,7 +417,7 @@ class CriarNota : AppCompatActivity() {
                 } else {
                     titulo = descricao
                     scope.launch {
-                        criarNota(notaId, titulo, descricao, hora)
+                        atualizarNota(notaId, titulo, descricao, hora)
                         Log.d(
                             "CriarNota",
                             "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
@@ -431,7 +436,7 @@ class CriarNota : AppCompatActivity() {
             else if (descricao.isEmpty()) {
                 descricao = titulo
                 scope.launch {
-                    criarNota(notaId, titulo, descricao, hora)
+                    atualizarNota(notaId, titulo, descricao, hora)
                     Log.d(
                         "CriarNota",
                         "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
@@ -447,7 +452,7 @@ class CriarNota : AppCompatActivity() {
             }
             else {
                 scope.launch {
-                    criarNota(notaId, titulo, descricao, hora)
+                    atualizarNota(notaId, titulo, descricao, hora)
                     withContext(Dispatchers.Main) {
                         //   Toast.makeText(this@CriarNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                         Intent(this@CriarNota, MainActivity::class.java).apply {

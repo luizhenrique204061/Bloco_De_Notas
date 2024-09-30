@@ -26,10 +26,10 @@ import java.util.UUID
 class DB {
 
     fun salvarNomeUsuario(nome: String) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        if (usuarioId != null) {
+
 
             val nomeUsuario = hashMapOf(
                 "nome" to nome
@@ -49,11 +49,10 @@ class DB {
     }
 
     fun atualizarNomeUsuario(nome: String) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        if (usuarioId != null) {
             val documentoReferencia = db.collection("Usuarios").document(usuarioId)
 
             documentoReferencia.update("nome", nome)
@@ -69,11 +68,10 @@ class DB {
     }
 
     fun atualizarAnotacaoProtegida(anotacaoId: String, titulo: String, descricao: String, data: Long) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
-        currentUser?.let {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
             val documentoReferencia = db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId)
                 .collection("Anotacoes_Protegidas").document(anotacaoId)
 
@@ -95,11 +93,11 @@ class DB {
     }
 
     fun mostrarUsuarioActivityAlterarNome(nomeUsuario: TextView) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        if (usuarioId != null) {
+
 
             val documentoReferencia = db.collection("Usuarios").document(usuarioId)
 
@@ -111,12 +109,11 @@ class DB {
         }
     }
 
-    fun recuperarNomeUsuario(nomeUsuario: String, textView: TextView) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+    fun recuperarNomeUsuario(nomeUsuario: String, textView: TextView, context: Context) {
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
-        if (currentUser != null) {
+        if (usuarioId != null) {
             textView.visibility = View.VISIBLE
-            val usuarioId = currentUser.uid
 
             val documentoReferencia = db.collection("Usuarios").document(usuarioId)
 
@@ -125,7 +122,6 @@ class DB {
                     val nome = snapshot.getString("nome")
                     if (nome != null) {
                         // Concatenar a string desejada com o nome do usuário recuperado
-                        val context = textView.context
                         val mensagem = context.getString(R.string.ola_nome_do_usuario, nome)
                         textView.text = mensagem
                     }
@@ -156,11 +152,10 @@ class DB {
 
     fun salvarAnotacoesProtegidas(titulo: String, descricao: String, data: Long) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val anotacaoId = UUID.randomUUID().toString()
 
-        currentUser?.let {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
 
             val notasProtegidasMap = hashMapOf(
                 "titulo" to titulo,
@@ -191,10 +186,9 @@ class DB {
         textViewNenhumaCorrespondencia: TextView
     ) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        currentUser?.let {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
 
             val documentoReferencia =
                 db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId)
@@ -244,10 +238,9 @@ class DB {
 
     fun excluirAnotacoesProtegidas(anotacaoId: String) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        currentUser?.let {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
 
             if (anotacaoId.isNotEmpty()) {
                 val documentoReferencia = db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId)
@@ -267,10 +260,10 @@ class DB {
     }
 
     fun excluirTodasAsAnotacoesProtegidas() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        if (usuarioId != null) {
+
             db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId)
                 .collection("Anotacoes_Protegidas")
                 .get()
@@ -287,9 +280,8 @@ class DB {
 
     fun salvarAnotacoesNaNuvem(id: Long, titulo: String, descricao: String, data: Long) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
+        if (usuarioId != null) {
 
             val notasMap = hashMapOf(
                 "id" to id,
@@ -314,11 +306,10 @@ class DB {
     }
 
     fun salvarTarefasNaNuvem(id: Long, titulo: String, descricao: String, data: Long) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
-        currentUser?.let {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
 
             val tarefasMap = hashMapOf(
                 "id" to id,
@@ -345,15 +336,14 @@ class DB {
 
     suspend fun excluirAnotacoesUsuario(id: Long): Boolean {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        return if (currentUser != null) {
-            val usuarioId = currentUser.uid
-            val documentoReferencia = db.collection("Anotacoes_Usuario").document(usuarioId)
-                .collection("Anotacoes").document(id.toString())
+        return if (usuarioId != null) {
 
             try {
-                documentoReferencia.delete().await()
+                db.collection("Anotacoes_Usuario").document(usuarioId)
+                    .collection("Anotacoes").document(id.toString())
+                    .delete().await()
                 Log.i("Excluir", "Sucesso ao excluir Anotação")
                 true
             } catch (e: Exception) {
@@ -368,15 +358,14 @@ class DB {
 
     suspend fun excluirTarefasUsuario(id: Long): Boolean {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        return if (currentUser != null) {
-            val usuarioId = currentUser.uid
-            val documentoReferencia = db.collection("Tarefas_Usuario").document(usuarioId)
-                .collection("Tarefas").document(id.toString())
+        return if (usuarioId != null) {
 
             try {
-                documentoReferencia.delete().await()
+                db.collection("Tarefas_Usuario").document(usuarioId)
+                    .collection("Tarefas").document(id.toString())
+                    .delete().await()
                 Log.i("Excluir", "Sucesso ao excluir Tarefa")
                 true
             } catch (e: Exception) {
@@ -390,12 +379,10 @@ class DB {
     }
 
     fun excluirDadosDoUsaurio() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
-
+        if (usuarioId != null) {
             val documentoReferencia = db.collection("Usuarios").document(usuarioId)
 
             documentoReferencia.delete()
@@ -438,10 +425,9 @@ class DB {
     }
 
     fun excluirTodasAsAnotacoesDoUsuario() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        if (usuarioId != null) {
             db.collection("Anotacoes_Usuario").document(usuarioId)
                 .collection("Anotacoes")
                 .get()
@@ -457,10 +443,9 @@ class DB {
     }
 
     fun excluirTodasAsTarefasDoUsuario() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
             db.collection("Tarefas_Usuario").document(usuarioId)
                 .collection("Tarefas")
                 .get()
@@ -478,10 +463,10 @@ class DB {
     fun excluirAnotacoesDoUsuarioNaNuvem(usuarioId: String, anotacaoId: String) {
         val db = FirebaseFirestore.getInstance()
 
-        val documentoReferencia = db.collection("Anotacoes_Usuario").document(usuarioId)
+        db.collection("Anotacoes_Usuario").document(usuarioId)
             .collection("Anotacoes").document(anotacaoId)
+            .delete().addOnCompleteListener {
 
-        documentoReferencia.delete().addOnCompleteListener {
             Log.i("DB", "Sucesso ao excluir anotação do usuário")
         }.addOnFailureListener {
             Log.e("DB", "Erro ao excluir anotação do usuário")
@@ -508,10 +493,9 @@ class DB {
         textViewAnotacoes: TextView
     ) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
 
             db.collection("Anotacoes_Usuario").document(usuarioId).collection("Anotacoes")
                 .addSnapshotListener { snapshot, error ->
@@ -558,7 +542,7 @@ class DB {
                         salvarNotasNoRoom(context, lista_notas)
                     }
                 }
-        } else {
+        } ?: run {
             Log.e("AuthError", "Usuário não autenticado")
         }
     }
@@ -570,10 +554,9 @@ class DB {
         textViewTarefas: TextView
     ) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        if (currentUser != null) {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
 
             db.collection("Tarefas_Usuario").document(usuarioId).collection("Tarefas")
                 .addSnapshotListener { snapshot, error ->
@@ -619,7 +602,7 @@ class DB {
                         salvarTarefasNoRoom(context, lista_tarefas_tela_principal)
                     }
                 }
-        } else {
+        } ?: run {
             Log.e("AuthError", "Usuário não autenticado")
         }
     }
@@ -649,10 +632,9 @@ class DB {
         textViewSemCorrespondencia: TextView
     ) {
         val db = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
-        currentUser?.let {
-            val usuarioId = currentUser.uid
+        usuarioId?.let {
             val palavrachaveLowerCase = palavrachave.toLowerCase()
 
             db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId).collection("Anotacoes_Protegidas")

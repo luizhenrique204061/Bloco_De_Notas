@@ -290,6 +290,11 @@ class CriarTarefa : AppCompatActivity() {
         }
     }
 
+    suspend fun atualizarTarefa(id: Long, titulo: String, descricao: String, hora: Long) {
+        val tarefas = Tarefa(id, titulo, descricao, hora)
+        bancoDeDados.atualizar(tarefas)
+    }
+
     override fun onBackPressed() {
         titulo = binding.tituloTarefa.text.toString()
         val descricao = binding.descricaoTarefa.text.toString()
@@ -300,15 +305,15 @@ class CriarTarefa : AppCompatActivity() {
         if (houveAlteracao) {
             scope.launch {
                 if (titulo.isNotEmpty() || textoDoEditText.isNotEmpty()) {
-                    criarTarefas(tarefaId, titulo, textoDoEditText, hora)
+                    atualizarTarefa(tarefaId, titulo, textoDoEditText, hora)
                     finish()
 
                 } else if (descricao.isNotEmpty()) {
                     titulo = descricao
-                    criarTarefas(tarefaId, titulo, descricao, hora)
+                    atualizarTarefa(tarefaId, titulo, descricao, hora)
                     finish()
                 } else if (listaTarefas.isNotEmpty()) {
-                    criarTarefas(tarefaId, titulo, descricao, hora)
+                    atualizarTarefa(tarefaId, titulo, descricao, hora)
                     finish()
                 }
             }

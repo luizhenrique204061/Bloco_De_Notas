@@ -1,6 +1,5 @@
 package Room
 
-import Modelo.Notas
 import Modelo.Tarefa
 import androidx.room.Dao
 import androidx.room.Insert
@@ -13,6 +12,9 @@ interface TarefaDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun salvarTarefa(tarefa: Tarefa)
+
+    @Update()
+    suspend fun atualizar(tarefa: Tarefa)
 
     @Query("SELECT * FROM tabela_tarefas")
     suspend fun buscarTodas(): MutableList<Tarefa>

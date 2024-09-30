@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             mensagemTextoBackupAtivado.visibility = View.GONE
         }
 
-        db.recuperarNomeUsuario(nomeUsuario, textView)
+        db.recuperarNomeUsuario(nomeUsuario, textView, this)
     }
 
     private fun irParaTelaDeIdiomas() {

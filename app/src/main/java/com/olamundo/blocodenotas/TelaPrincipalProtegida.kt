@@ -78,7 +78,7 @@ class TelaPrincipalProtegida : AppCompatActivity() {
         val textView: TextView = headerView.findViewById(R.id.nome_tela_protegida)
         val nomeUsuario = getString(R.string.nome_usuario)
 
-        db.recuperarNomeUsuario(nomeUsuario, textView)
+        db.recuperarNomeUsuario(nomeUsuario, textView, this)
     }
 
     private fun signOut() {

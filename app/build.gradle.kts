@@ -14,8 +14,8 @@ android {
         applicationId = "com.olamundo.blocodenotas"
         minSdk = 24
         targetSdk = 34
-        versionCode = 37
-        versionName = "4.7"
+        versionCode = 39
+        versionName = "4.9"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -14,8 +14,8 @@ android {
         applicationId = "com.olamundo.blocodenotas"
         minSdk = 24
         targetSdk = 34
-        versionCode = 39
-        versionName = "4.9"
+        versionCode = 40
+        versionName = "5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -88,9 +88,9 @@ dependencies {
 
 configurations.all {
     resolutionStrategy.eachDependency {
-        if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin-stdlib")) {
+        if (requested.group == "org.jetbrains.kotlin" && requested.name == "kotlin-stdlib") {
             useVersion("1.9.23")
-            because("Evitar conflitos com versões mais recentes incompatíveis")
+            because("Forçar versão compatível com KSP e Kotlin 1.9.23")
         }
     }
 }

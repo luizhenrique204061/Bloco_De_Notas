@@ -7,22 +7,20 @@ plugins {
 
 android {
     namespace = "com.olamundo.blocodenotas"
-    compileSdk = 34
-
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.olamundo.blocodenotas"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 40
-        versionName = "5.0"
+        targetSdk = 36
+        versionCode = 41
+        versionName = "5.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
-
 
     buildTypes {
         release {
@@ -33,23 +31,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
     kotlinOptions {
         jvmTarget = "21"
     }
-    viewBinding {
-        enable = true
-    }
+
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -62,35 +59,23 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
 
-    //Room dataBase
+    // Room Database
     val room_version = "2.7.2"
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
-    //Firebase
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
-   // implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
-    //Admob
+    // AdMob
     implementation("com.google.android.gms:play-services-ads:23.1.0")
 
-    //Atualizações
+    // Atualizações
     implementation("com.google.android.play:app-update:2.1.0")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
-
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.jetbrains.kotlin" && requested.name == "kotlin-stdlib") {
-            useVersion("1.9.23")
-            because("Forçar versão compatível com KSP e Kotlin 1.9.23")
-        }
-    }
 }

@@ -4,6 +4,7 @@ import Modelo.Notas
 import Room.AppDataBase
 import Room.NotaDao
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -13,10 +14,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
 import com.olamundo.blocodenotas.databinding.ActivityAbrirNotaBinding
@@ -37,52 +41,78 @@ class AbrirNota : AppCompatActivity() {
     val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var titulo: String
     private lateinit var descricao: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityAbrirNotaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val isModoEscuro = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        // 1. Define a cor de fundo da barra de notificações
+        window.statusBarColor = if (isModoEscuro) {
+            ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.white)
+        }
+
+        // 2. Controla o contraste dos ícones (escuros no tema claro, brancos no tema escuro)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !isModoEscuro
+            isAppearanceLightNavigationBars = !isModoEscuro
+        }
+
+        // 3. Aplica o recuo evitando sobreposição na barra de notificações e botões de gestos
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // 4. Manipulador retrocompatível do botão/gesto de voltar
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val tituloAtual = binding.titulo.text.toString()
+                val descricaoAtual = binding.descricao.text.toString()
+
+                if (tituloAtual.isNotEmpty() || descricaoAtual.isNotEmpty()) {
+                    scope.launch {
+                        criarNota(notaId, tituloAtual, descricaoAtual, hora)
+                        withContext(Dispatchers.Main) {
+                            startActivity(Intent(this@AbrirNota, MainActivity::class.java))
+                            finish()
+                        }
+                    }
+                } else {
+                    startActivity(Intent(this@AbrirNota, MainActivity::class.java))
+                    finish()
+                }
+            }
+        })
+
         setSupportActionBar(binding.toolbar)
         bancoDeDados = AppDataBase.getInstance(this).NotaDao()
         abrirNotas()
 
-        // Definindo a cor de seleção do texto para verde
-        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        val greenColor = getColor(R.color.verde_claro)
         binding.titulo.highlightColor = greenColor
         binding.descricao.highlightColor = greenColor
 
-
-        //Adicionando TextWatcher para monitorar o título
         binding.titulo.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Nenhuma ação necessária antes da mudança de texto
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Nenhuma ação necessária antes da mudança de texto
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                //Atualizar o TextView com contagem de caracteres
                 val tituloLength = s?.length ?: 0
                 binding.contadorCaracteres.text = "$tituloLength/${MAX_TITULO_LENGTH}"
 
-                //Verifica se o limite foi atingido
                 if (tituloLength >= MAX_TITULO_LENGTH) {
-                    // Alterar a cor do contador para vermelho
                     binding.contadorCaracteres.setTextColor(Color.RED)
-
-                    // Remover o último caractere excedente
                     s?.delete(MAX_TITULO_LENGTH, tituloLength)
-
-                    // Mover o cursor para o final do texto
                     binding.titulo.setSelection(binding.titulo.length())
                 } else {
-                    //Caso contrário, manter a cor padrão do contador
                     binding.contadorCaracteres.setTextColor(Color.parseColor("#676767"))
                 }
             }
-
         })
     }
 
@@ -97,13 +127,10 @@ class AbrirNota : AppCompatActivity() {
                 scope.launch {
                     salvar()
                 }
-
             }
-
             R.id.menu_compartilhar -> {
                 compartilharNota()
             }
-
             R.id.menu_remover -> {
                 scope.launch {
                     deletar()
@@ -112,6 +139,7 @@ class AbrirNota : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     private suspend fun criarNota(id: Long, titulo: String, descricao: String, data: Long) {
         val nota = Notas(id, titulo, descricao, data)
         bancoDeDados.salva(nota)
@@ -131,12 +159,8 @@ class AbrirNota : AppCompatActivity() {
                     }
             }
         } else if (titulo.isEmpty()) {
-                criarNota(notaId, titulo, descricao, hora)
-                Log.d(
-                    "CriarNota",
-                    "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
-                )
-
+            criarNota(notaId, titulo, descricao, hora)
+            Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
 
             scope.launch {
                 withContext(Dispatchers.Main) {
@@ -144,15 +168,12 @@ class AbrirNota : AppCompatActivity() {
                     Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
+                    finish()
                 }
             }
         } else if (descricao.isEmpty()) {
-                criarNota(notaId, titulo, descricao, hora)
-                Log.d(
-                    "CriarNota",
-                    "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
-                )
-
+            criarNota(notaId, titulo, descricao, hora)
+            Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
 
             scope.launch {
                 withContext(Dispatchers.Main) {
@@ -160,20 +181,19 @@ class AbrirNota : AppCompatActivity() {
                     Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
+                    finish()
                 }
             }
         } else {
             criarNota(notaId, titulo, descricao, hora)
-            Log.d(
-                "CriarNota",
-                "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao"
-            )
+            Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
             scope.launch {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
                     Intent(this@AbrirNota, MainActivity::class.java).apply {
                         startActivity(this)
                     }
+                    finish()
                 }
             }
         }
@@ -184,7 +204,6 @@ class AbrirNota : AppCompatActivity() {
         finish()
     }
 
-
     private fun abrirNotas() {
         val uri: Uri? = intent.data
 
@@ -193,12 +212,10 @@ class AbrirNota : AppCompatActivity() {
                 val inputStream = contentResolver.openInputStream(uri)
                 val reader = BufferedReader(InputStreamReader(inputStream))
                 val content = reader.readText()
-                inputStream!!.close()
+                inputStream?.close()
                 reader.close()
 
-
                 binding.descricao.setText(content)
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this, getString(R.string.erro_abrir_arquivo), Toast.LENGTH_SHORT).show()
@@ -211,7 +228,6 @@ class AbrirNota : AppCompatActivity() {
         descricao = binding.descricao.text.toString()
 
         val txtDados = "${titulo}\n${descricao}"
-
         val nomeArquivo = "$titulo.txt"
         val arquivo = File(filesDir, nomeArquivo)
 
@@ -231,64 +247,6 @@ class AbrirNota : AppCompatActivity() {
         }
 
         startActivity(Intent.createChooser(intent, "Compartilhar nota via"))
-    }
-
-    override fun onBackPressed() {
-        titulo = binding.titulo.text.toString()
-        descricao = binding.descricao.text.toString()
-
-        when {
-            titulo.isEmpty() && descricao.isEmpty() -> {
-                scope.launch {
-                    withContext(Dispatchers.Main) {
-              //          Toast.makeText(this@AbrirNota, getString(R.string.nenhum_texto_digitado), Toast.LENGTH_SHORT).show()
-                        Intent(this@AbrirNota, MainActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                }
-
-            }
-            titulo.isEmpty() -> {
-                scope.launch {
-                    criarNota(notaId, titulo, descricao, hora)
-                    Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
-
-                    withContext(Dispatchers.Main) {
-                      //  Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                        Intent(this@AbrirNota, MainActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                }
-
-            }
-            descricao.isEmpty() -> {
-                scope.launch {
-                    criarNota(notaId, titulo, descricao, hora)
-                    Log.d("CriarNota", "Nota salva com ID: $notaId - Título: $titulo, Descrição: $descricao")
-
-                    withContext(Dispatchers.Main) {
-                     //   Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                        Intent(this@AbrirNota, MainActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                }
-            }
-            else -> {
-                scope.launch {
-                    criarNota(notaId, titulo, descricao, hora)
-                    withContext(Dispatchers.Main) {
-                       // Toast.makeText(this@AbrirNota, getString(R.string.anotacao_salva_com_sucesso), Toast.LENGTH_SHORT).show()
-                        Intent(this@AbrirNota, MainActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                }
-            }
-        }
-        super.onBackPressed()
     }
 
     companion object {

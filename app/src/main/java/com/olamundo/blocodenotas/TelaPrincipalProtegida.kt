@@ -2,13 +2,18 @@ package com.olamundo.blocodenotas
 
 import DB.DB
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -18,6 +23,8 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.olamundo.blocodenotas.databinding.ActivityTelaPrincipalProtegidaBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class TelaPrincipalProtegida : AppCompatActivity() {
@@ -34,12 +41,33 @@ class TelaPrincipalProtegida : AppCompatActivity() {
         binding = ActivityTelaPrincipalProtegidaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val isModoEscuro = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        // Define a cor da barra de status conforme o tema
+        window.statusBarColor = if (isModoEscuro) {
+            ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.white)
+        }
+
+        // Controla o contraste dos ícones do sistema (escuros no tema claro, brancos no escuro)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !isModoEscuro
+            isAppearanceLightNavigationBars = !isModoEscuro
+        }
+
+        // Aplica o padding no container da Toolbar e conteúdo, evitando cortes
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarTelaPrincipalProtegida.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
         setSupportActionBar(binding.appBarTelaPrincipalProtegida.toolbar)
         auth = FirebaseAuth.getInstance()
         navView = binding.navView
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_tela_principal_protegida)
 
         appBarConfiguration = AppBarConfiguration(
@@ -47,15 +75,6 @@ class TelaPrincipalProtegida : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        /*
-        val headerView = navView.getHeaderView(0)
-        val textView: TextView = headerView.findViewById(R.id.nome_tela_protegida)
-        val nomeUsuario = getString(R.string.nome_usuario)
-
-        db.recuperarNomeUsuario(nomeUsuario, textView)
-
-         */
 
         navView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
@@ -82,11 +101,9 @@ class TelaPrincipalProtegida : AppCompatActivity() {
     }
 
     private fun signOut() {
-        // Deslogar do Firebase
         auth.signOut()
         Log.d("TelaPrincipalProtegida", "Usuário deslogado do Firebase")
 
-        // Mostrar Snackbar de confirmação de logout
         Snackbar.make(
             binding.root,
             getString(R.string.usuario_deslogado_com_sucesso_email),
@@ -98,14 +115,12 @@ class TelaPrincipalProtegida : AppCompatActivity() {
         }
         Log.d("TelaPrincipalProtegida", "Snackbar de logout mostrado")
 
-        // Navegar para a tela principal após o delay
-        Handler().postDelayed({
+        lifecycleScope.launch {
+            delay(3000)
             Log.d("TelaPrincipalProtegida", "Navegando para MainActivity")
-            Intent(this, MainActivity::class.java).apply {
-                startActivity(this)
-                finish()
-            }
-        }, 3000)
+            startActivity(Intent(this@TelaPrincipalProtegida, MainActivity::class.java))
+            finish()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -121,21 +136,13 @@ class TelaPrincipalProtegida : AppCompatActivity() {
         }
     }
 
-
-
     private fun selecionarIdioma(linguagem: String) {
         val localidade = Locale(linguagem)
         Locale.setDefault(localidade)
 
-        // Obter o objeto Configuration da atividade atual
         val configuration = resources.configuration
-
-        // Configurar a localidade para a Configuration
         configuration.setLocale(localidade)
-
-        // Atualizar a Configuration na atividade atual
         resources.updateConfiguration(configuration, resources.displayMetrics)
-
     }
 
     private fun carregarLocalidade() {

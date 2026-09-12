@@ -16,8 +16,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -54,6 +59,56 @@ class CriarTarefa : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val isModoEscuro = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        // 1. Sincroniza a barra de status com o tema ativo
+        window.statusBarColor = if (isModoEscuro) {
+            ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.white)
+        }
+
+        // 2. Controla o contraste dos ícones da barra (escuros no claro, brancos no escuro)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !isModoEscuro
+            isAppearanceLightNavigationBars = !isModoEscuro
+        }
+
+        // 3. Afasta a Toolbar do recorte da câmera e o rodapé da barra de gestos
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // 4. Manipulador retrocompatível para botão e gestos de voltar
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val tituloAtual = binding.tituloTarefa.text.toString()
+                val descricaoAtual = binding.descricaoTarefa.text.toString()
+                atualizarTextoDoEditText()
+
+                val houveAlteracao = tituloAtual != recuperarTitulo || textoDoEditText != recuperarDescricao
+
+                if (houveAlteracao) {
+                    scope.launch {
+                        if (tituloAtual.isNotEmpty() || textoDoEditText.isNotEmpty()) {
+                            atualizarTarefa(tarefaId, tituloAtual, textoDoEditText, hora)
+                        } else if (descricaoAtual.isNotEmpty()) {
+                            atualizarTarefa(tarefaId, descricaoAtual, descricaoAtual, hora)
+                        } else if (listaTarefas.isNotEmpty()) {
+                            atualizarTarefa(tarefaId, tituloAtual, descricaoAtual, hora)
+                        }
+                        withContext(Dispatchers.Main) {
+                            finish()
+                        }
+                    }
+                } else {
+                    finish()
+                }
+            }
+        })
+
         setSupportActionBar(binding.toolbar)
 
         loadTheme()
@@ -66,24 +121,14 @@ class CriarTarefa : AppCompatActivity() {
         val recyclerView = binding.recyclerViewTarefas
         recyclerView.adapter = adapterTarefas
 
-        //carregarAnuncioBanner()
-
         id = intent?.getLongExtra("id", 0L)
         recuperarTitulo = intent?.getStringExtra("titulo")
         recuperarDescricao = intent?.getStringExtra("descricao")
 
         if (id != 0L && recuperarTitulo != null && recuperarDescricao != null) {
-            Log.i("RecuperarTarefa", "Id: $id")
-            Log.i("RecuperarTarefa", "Título: $recuperarTitulo")
-            Log.i("RecuperarTarefa", "Descriçao: $recuperarDescricao")
-
-            // titulo = recuperarTitulo // Inicializa a variável título
-
             tarefaId = id!!
-
             titulo = binding.tituloTarefa.setText(recuperarTitulo).toString()
 
-            // Dividir a descrição em itens e adicioná-los à lista de tarefas
             val itensDescricao = recuperarDescricao!!.split(",").map { it.trim() }
             itensDescricao.forEach { descricao ->
                 val riscado = descricao.startsWith("~~") && descricao.endsWith("~~")
@@ -92,8 +137,7 @@ class CriarTarefa : AppCompatActivity() {
             }
         }
 
-        // Definindo a cor de seleção do texto para verde
-        val greenColor = getColor(R.color.verde_claro) // Certifique-se de ter definido a cor verde no colors.xml
+        val greenColor = getColor(R.color.verde_claro)
         binding.tituloTarefa.highlightColor = greenColor
         binding.descricaoTarefa.highlightColor = greenColor
 
@@ -115,37 +159,28 @@ class CriarTarefa : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_salvar -> {
-                scope.launch {
-                    salvar()
-                }
+                scope.launch { salvar() }
             }
-
             R.id.menu_compartilhar -> {
                 compartilharTarefa()
             }
-
             R.id.menu_remover -> {
-                scope.launch {
-                    deletar()
-                }
+                scope.launch { deletar() }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun carregarAnuncioBanner() {
-        //Anúncio do Tipo Banner
-
         MobileAds.initialize(this)
         mAdview = binding.adview
         val adRequest = AdRequest.Builder().build()
-        Log.i("Meu App", "Antes de carregar o anúncio")
         mAdview.loadAd(adRequest)
     }
 
     private suspend fun salvar() {
         titulo = binding.tituloTarefa.text.toString()
-        atualizarTextoDoEditText() // Atualiza o texto antes de salvar
+        atualizarTextoDoEditText()
         if (titulo.isNotEmpty()) {
             criarTarefas(tarefaId, titulo, textoDoEditText, hora)
             withContext(Dispatchers.Main) {
@@ -173,12 +208,10 @@ class CriarTarefa : AppCompatActivity() {
                 val exibirDialog = AlertDialog.Builder(this@CriarTarefa)
                     .setView(dialogBinding.root)
                     .setCancelable(false)
-                    .create() // Cria o AlertDialog, mas não o mostra ainda
+                    .create()
 
-                // Configura o fundo do diálogo como transparente
                 exibirDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-                exibirDialog.show() // Mostra o AlertDialog
+                exibirDialog.show()
 
                 dialogBinding.botaoCancelar.setOnClickListener {
                     exibirDialog.dismiss()
@@ -191,7 +224,6 @@ class CriarTarefa : AppCompatActivity() {
                         currentUser?.let {
                             val excluirTarefaFirebase = db.excluirTarefasUsuario(tarefaId)
                             if (excluirTarefaFirebase) {
-                                // Se excluiu com sucesso do Firebase, exclui do Room
                                 bancoDeDados.remover(tarefaId)
                             }
                         } ?: run {
@@ -226,10 +258,8 @@ class CriarTarefa : AppCompatActivity() {
         atualizarTextoDoEditText()
 
         val txtDados = "${titulo}\n${textoDoEditText}"
-
         val nomeArquivo = "$titulo.txt"
         val arquivo = File(filesDir, nomeArquivo)
-
         arquivo.writeText(txtDados)
 
         val uri = FileProvider.getUriForFile(
@@ -250,12 +280,9 @@ class CriarTarefa : AppCompatActivity() {
 
     private fun adicionarTarefa(descricao: String, riscado: Boolean = false) {
         titulo = binding.tituloTarefa.text.toString()
-        // Adicionar nova tarefa à lista
         val novaTarefa = Tarefa(tarefaId, titulo, descricao, hora, false, riscado)
         listaTarefas.add(novaTarefa)
-        // Notificar o adapter da inserção de um novo item
         adapterTarefas.notifyItemInserted(listaTarefas.size - 1)
-        Log.i("CriarTarefa", "Tarefa adicionada: ${novaTarefa.descricao}")
     }
 
     private fun atualizarTextoDoEditText() {
@@ -263,22 +290,15 @@ class CriarTarefa : AppCompatActivity() {
             if (it.isRiscado) "~~${it.descricao}~~" else it.descricao
         }
         textoDoEditText = tarefasText
-        Log.i("CriarTarefaCapturado", "Texto no EditText: $textoDoEditText")
     }
 
     private fun selecionarIdioma(linguagem: String) {
         val localidade = Locale(linguagem)
         Locale.setDefault(localidade)
 
-        // Obter o objeto Configuration da atividade atual
         val configuration = resources.configuration
-
-        // Configurar a localidade para a Configuration
         configuration.setLocale(localidade)
-
-        // Atualizar a Configuration na atividade atual
         resources.updateConfiguration(configuration, resources.displayMetrics)
-
     }
 
     private fun carregarLocalidade() {
@@ -294,34 +314,6 @@ class CriarTarefa : AppCompatActivity() {
         val tarefas = Tarefa(id, titulo, descricao, hora)
         bancoDeDados.atualizar(tarefas)
     }
-
-    override fun onBackPressed() {
-        titulo = binding.tituloTarefa.text.toString()
-        val descricao = binding.descricaoTarefa.text.toString()
-        atualizarTextoDoEditText() // Atualiza o texto antes de verificar as alterações
-
-        val houveAlteracao = titulo != recuperarTitulo || textoDoEditText != recuperarDescricao
-
-        if (houveAlteracao) {
-            scope.launch {
-                if (titulo.isNotEmpty() || textoDoEditText.isNotEmpty()) {
-                    atualizarTarefa(tarefaId, titulo, textoDoEditText, hora)
-                    finish()
-
-                } else if (descricao.isNotEmpty()) {
-                    titulo = descricao
-                    atualizarTarefa(tarefaId, titulo, descricao, hora)
-                    finish()
-                } else if (listaTarefas.isNotEmpty()) {
-                    atualizarTarefa(tarefaId, titulo, descricao, hora)
-                    finish()
-                }
-            }
-        }
-
-        super.onBackPressed()
-    }
-
 
     private fun loadTheme() {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

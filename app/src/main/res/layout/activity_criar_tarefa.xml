@@ -10,14 +10,15 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="?android:attr/textColorPrimary"
+        app:navigationIconTint="?android:attr/textColorPrimary"
+        app:popupTheme="@style/Theme.BlocoDeNotas.PopupOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_salvar_compartilhar_remover"
-        app:title="@string/criar_tarefa"
-        app:titleTextColor="@color/white" />
+        app:title="@string/criar_tarefa" />
 
     <EditText
         android:id="@+id/titulo_tarefa"

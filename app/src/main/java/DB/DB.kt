@@ -635,7 +635,8 @@ class DB {
         val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
 
         usuarioId?.let {
-            val palavrachaveLowerCase = palavrachave.toLowerCase()
+            // Substitua .toLowerCase() por .lowercase()
+            val palavrachaveLowerCase = palavrachave.lowercase()
 
             db.collection("Anotacoes_Usuario_Protegidas").document(usuarioId).collection("Anotacoes_Protegidas")
                 .addSnapshotListener { snapshot, error ->
@@ -649,8 +650,9 @@ class DB {
                         for (documento in snapshot.documents) {
                             val anotacoesProtegidas = documento.toObject(NotasProtegidas::class.java)
                             anotacoesProtegidas?.let {
-                                val termoDescricao = anotacoesProtegidas.titulo?.toLowerCase()
-                                if (termoDescricao!!.contains(palavrachaveLowerCase)) {
+                                // Substitua por .lowercase() e trate o nulo com segurança sem usar '!!'
+                                val termoDescricao = anotacoesProtegidas.titulo?.lowercase()
+                                if (termoDescricao?.contains(palavrachaveLowerCase) == true) {
                                     lista_anotacoes_tela_principal_protegida.add(anotacoesProtegidas)
                                 }
                             }

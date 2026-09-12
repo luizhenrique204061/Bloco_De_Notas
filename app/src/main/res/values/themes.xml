@@ -1,15 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme (Tema Claro) -->
     <style name="Base.Theme.BlocoDeNotas" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/black</item>
+        <!-- Cores primárias do tema claro -->
+        <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
+        <item name="colorOnPrimary">@color/black</item>
         <item name="colorControlActivated">@color/verde_claro</item>
 
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <!-- Cores dos textos principais -->
+        <item name="android:textColorPrimary">@color/black</item>
 
+        <!-- Barra de Status branca com ícones pretos/cinzas -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Barra de Navegação inferior clara com botões escuros -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <style name="Theme.BlocoDeNotas" parent="Base.Theme.BlocoDeNotas" />
@@ -21,30 +29,26 @@
 
     <style name="TEXTO">
         <item name="android:textColor">@color/white</item>
-
     </style>
 
     <style name="TEXTO_LOGIN">
-
         <item name="android:textColor">@color/black</item>
-
     </style>
 
     <style name="BACKGROUND_CARD_VIEW">
-
         <item name="android:background">@color/dark_mode_android</item>
-
     </style>
 
     <style name="TelaPrincipal" parent="Theme.AppCompat.DayNight.NoActionBar">
-
         <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryVariant">@color/black</item>
-
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.BlocoDeNotas.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <!-- Overlay da Toolbar: alterado para Light para que o título e o ícone '≡' fiquem pretos -->
+    <style name="Theme.BlocoDeNotas.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Theme.BlocoDeNotas.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

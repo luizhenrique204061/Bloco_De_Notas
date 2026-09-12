@@ -6,18 +6,21 @@
         android:id="@+id/menu_salvar"
         android:icon="@drawable/ic_salvar"
         android:title="@string/salvar"
+        app:iconTint="?android:attr/textColorPrimary"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_compartilhar"
         android:icon="@drawable/ic_compartilhar"
         android:title="@string/compartilhar"
+        app:iconTint="?android:attr/textColorPrimary"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_remover"
         android:icon="@drawable/ic_remover"
         android:title="@string/remover"
+        app:iconTint="?android:attr/textColorPrimary"
         app:showAsAction="ifRoom" />
 
 </menu>

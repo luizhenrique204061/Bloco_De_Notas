@@ -7,24 +7,31 @@
     tools:context=".TelaPrincipalProtegida">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.BlocoDeNotas.AppBarOverlay">
+        android:background="?attr/colorPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/black"
-            app:popupTheme="@style/Theme.BlocoDeNotas.PopupOverlay">
+            android:background="?attr/colorPrimary"
+            app:navigationIconTint="?android:attr/textColorPrimary"
+            app:popupTheme="@style/Theme.BlocoDeNotas.PopupOverlay"
+            app:titleTextColor="?android:attr/textColorPrimary">
 
             <ImageView
                 android:id="@+id/imagem_cadeado"
                 android:layout_width="40dp"
+                android:layout_height="30dp"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_cadeado"
+                android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_height="30dp"/>
+                android:src="@drawable/ic_cadeado"
+                app:tint="?android:attr/textColorPrimary" />
 
         </androidx.appcompat.widget.Toolbar>
 
